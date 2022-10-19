@@ -42,6 +42,7 @@ if(DEFINED CMAKE_TOOLCHAIN_FILE)
   # set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   # Find the packages needed
 	# like: find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
+  find_package(glm CONFIG REQUIRED)
 else()
 	message(STATUS "Using CMake find modules")
   # Find the packages needed

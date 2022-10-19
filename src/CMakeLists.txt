@@ -29,6 +29,7 @@ if(DEFINED CMAKE_TOOLCHAIN_FILE)
   target_link_libraries(owert PRIVATE
     # add needed libraries
     # like: sfml-system
+    glm::glm
   )
 else()
   target_link_libraries(owert PRIVATE
