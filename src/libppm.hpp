@@ -45,6 +45,25 @@ struct PPMFileData {
 };
 
 /**
+ * @brief Generates a test image to see if everything is working.
+ * @param data The info of the file to be generated.
+ */
+void generateTestImage(PPMFileData& data) {
+  for (auto row = data.m_height - 1; row >= 0; --row) {
+    std::cout << "\rScanlines remaining: " << row << ' ' << std::flush;
+    for (auto col = 0; col < data.m_width; ++col) {
+      const Color color {
+        static_cast<double>(col) / (data.m_width  - 1),
+        static_cast<double>(row) / (data.m_height - 1),
+        0.25
+      };
+      data.m_pixels.push_back(color);
+    }
+  }
+  std::cout << "\rScanlines processing finished.\n";
+}
+
+/**
  * @brief Generates a ppm file.
  * @param data The data of the ppm file.
  */
