@@ -22,7 +22,9 @@ namespace libppm {
 // **** forward declarations ****
 struct Color;
 using Pixels = std::vector<Color>;
-void writePixel(std::ostream& file, const Color& color);
+void writePixel(std::ostream& out, const Color& color);
+void writePixel(std::ostream& out, double r, double g, double b);
+void writePixel(std::ostream& out, int r, int g, int b);
 // **** forward declarations ****
 
 /**
@@ -95,6 +97,31 @@ inline void writePixel(std::ostream& out, const Color& color) {
   out << static_cast<int>(magic_num * color.r) << ' '
       << static_cast<int>(magic_num * color.g) << ' '
       << static_cast<int>(magic_num * color.b) << '\n';
+}
+
+/**
+ * @brief Writes a pixel (rgb [0, 255] triplet) to the given stream.
+ * @param out The output stream. Recommended to be a file.
+ * @param r The red value [0, 1].
+ * @param g The green value [0, 1].
+ * @param b The blue value [0, 1].
+ */
+inline void writePixel(std::ostream& out, double r, double g, double b) {
+  constexpr auto magic_num {255.999};
+  out << static_cast<int>(magic_num * r) << ' '
+      << static_cast<int>(magic_num * g) << ' '
+      << static_cast<int>(magic_num * b) << '\n';
+}
+
+/**
+ * @brief Writes a pixel (rgb [0, 255] triplet) to the given stream.
+ * @param out The output stream. Recommended to be a file.
+ * @param r The red value [0, 255].
+ * @param g The green value [0, 255].
+ * @param b The blue value [0, 255].
+ */
+inline void writePixel(std::ostream& out, int r, int g, int b) {
+  out <<  r << ' ' << g << ' ' << b << '\n';
 }
 
 } // namespace libppm
