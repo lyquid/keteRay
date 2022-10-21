@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-namespace libppm {
+namespace ppm {
 
 // **** forward declarations ****
 struct Color;
