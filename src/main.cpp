@@ -13,13 +13,12 @@ int main(int argc, char* argv[]) {
   for (auto row = data.m_height - 1; row >= 0; --row) {
     std::cout << "\rScanlines remaining: " << row << ' ' << std::flush;
     for (auto col = 0; col < data.m_width; ++col) {
-      constexpr auto magic_num {255.999};
-      const libppm::Color i_color {
-        static_cast<int>(magic_num * static_cast<double>(col) / (data.m_width  - 1)),
-        static_cast<int>(magic_num * static_cast<double>(row) / (data.m_height - 1)),
-        static_cast<int>(magic_num * 0.25)
+      const libppm::Color color {
+        static_cast<double>(col) / (data.m_width  - 1),
+        static_cast<double>(row) / (data.m_height - 1),
+        0.25
       };
-      data.m_pixels.push_back(i_color);
+      data.m_pixels.push_back(color);
     }
   }
   std::cout << "\rScanlines processing finished.\n";

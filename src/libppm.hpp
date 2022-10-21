@@ -19,13 +19,23 @@
 
 namespace libppm {
 
+// **** forward declarations ****
+struct Color;
+using Pixels = std::vector<Color>;
+void writePixel(std::ostream& file, const Color& color);
+// **** forward declarations ****
+
+/**
+ * @brief A RGB color [0, 1].
+ */
 struct Color {
-  Color(int red, int green, int blue): r {red}, g {green}, b {blue} {}
-  int r{}, g{}, b{};
+  Color(double red, double green, double blue): r(red), g(green), b(blue) {}
+  double r{}, g{}, b{};
 };
 
-using Pixels = std::vector<Color>;
-
+/**
+ * @brief Struct containing the info needed to generate a ppm file.
+ */
 struct PPMFileData {
   const int   m_channels_per_color {3};
   int         m_height {};
@@ -34,17 +44,31 @@ struct PPMFileData {
   int         m_width {};
 };
 
+/**
+ * @brief Generates a ppm file.
+ * @param data The data of the ppm file.
+ */
 void makePPMFile(const PPMFileData& data) {
   std::ofstream image_file {data.m_name};
   // header for ppm file
   image_file << "P3\n" << data.m_width << ' ' << data.m_height << "\n255\n";
   // write pixels to file. 1 RGB triplet per row
   for (auto i = 0u; i < data.m_pixels.size(); ++i) {
-    image_file << data.m_pixels[i].r << ' ';
-    image_file << data.m_pixels[i].g << ' ';
-    image_file << data.m_pixels[i].b << '\n';
+    writePixel(image_file, data.m_pixels[i]);
   }
   image_file.close();
+}
+
+/**
+ * @brief Writes a pixel (rgb [0, 255] triplet) to the given stream.
+ * @param out The output stream. Recommended to be a file.
+ * @param color A color in rgb [0, 1] format.
+ */
+inline void writePixel(std::ostream& out, const Color& color) {
+  constexpr auto magic_num {255.999};
+  out << static_cast<int>(magic_num * color.r) << ' '
+      << static_cast<int>(magic_num * color.g) << ' '
+      << static_cast<int>(magic_num * color.b) << '\n';
 }
 
 } // namespace libppm
