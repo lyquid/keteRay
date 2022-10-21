@@ -1,7 +1,8 @@
 #include "libppm.hpp"
-#include <glm/vec3.hpp>
+#include "ray.hpp"
 
 int main(int argc, char* argv[]) {
+  ktp::Ray ray {};
   // image data
   libppm::PPMFileData data {};
   data.m_name = "render.ppm";
