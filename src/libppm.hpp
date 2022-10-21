@@ -71,11 +71,18 @@ void makePPMFile(const PPMFileData& data) {
   std::ofstream image_file {data.m_name};
   // header for ppm file
   image_file << "P3\n" << data.m_width << ' ' << data.m_height << "\n255\n";
+  std::size_t percent {0u};
   // write pixels to file. 1 RGB triplet per row
-  for (auto i = 0u; i < data.m_pixels.size(); ++i) {
+  for (std::size_t i = 0u; i < data.m_pixels.size(); ++i) {
     writePixel(image_file, data.m_pixels[i]);
+    // if percentage changes, print it
+    if (percent != static_cast<std::size_t>((i * 100u) / data.m_pixels.size())) {
+      percent = static_cast<std::size_t>((i * 100u) / data.m_pixels.size());
+      std::cout << "\rGenerating ppm file: " << percent << "% " << std::flush;
+    }
   }
   image_file.close();
+  std::cout << "\rPPM file generated successfully!\n";
 }
 
 /**

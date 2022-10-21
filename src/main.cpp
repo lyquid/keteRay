@@ -11,9 +11,7 @@ int main(int argc, char* argv[]) {
   // pixels
   libppm::generateTestImage(data);
   // file generation
-  std::cout << "Generating ppm file...";
   libppm::makePPMFile(data);
-  std::cout << "\rRender generated successfully!";
 
   return 0;
 }
