@@ -35,6 +35,26 @@ struct Color {
   double r{}, g{}, b{};
 };
 
+inline Color operator+(const Color& col1, const Color& col2) {
+  return Color(col1.r + col2.r, col1.g + col2.g, col1.b + col2.b);
+}
+
+inline Color operator-(const Color& col1, const Color& col2) {
+  return Color(col1.r - col2.r, col1.g - col2.g, col1.b - col2.b);
+}
+
+inline Color operator*(double t, const Color& color) {
+  return Color(t * color.r, t * color.g, t * color.b);
+}
+
+inline Color operator*(const Color& color, double t) {
+  return t * color;
+}
+
+inline Color operator/(Color color, double t) {
+  return (1 / t) * color;
+}
+
 /**
  * @brief Struct containing the info needed to generate a ppm file.
  */
