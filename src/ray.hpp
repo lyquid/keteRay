@@ -23,18 +23,18 @@ using Vector = glm::dvec3;;
 class Ray {
  public:
 
-  Ray() = default;
-  Ray(const glm::vec3& origin, const glm::vec3& direction): m_direction(direction), m_origin(origin) {}
+  constexpr Ray() = default;
+  constexpr Ray(const glm::vec3& origin, const glm::vec3& direction): m_direction(direction), m_origin(origin) {}
 
-  Point at(double t) const { return m_origin + t * m_direction; }
-  auto direction() const { return m_direction; }
+  constexpr Point at(double t) const { return m_origin + t * m_direction; }
+  constexpr auto direction() const { return m_direction; }
   Vector normalizeDirection() const { return glm::normalize(m_direction); }
-  auto origin() const { return m_origin; }
+  constexpr auto origin() const { return m_origin; }
 
  private:
 
   Vector m_direction {};
-  Point m_origin {};
+  Point  m_origin {};
 };
 
 } // namespace ktp

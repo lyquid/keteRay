@@ -3,7 +3,7 @@
 
 ppm::Color ray_color(const ktp::Ray& ray) {
   const auto unit_direction {ray.normalizeDirection()};
-  auto t {0.5 * (unit_direction.y + 1.0)};
+  const auto t {0.5 * (unit_direction.y + 1.0)};
   return (1.0 - t) * ppm::Color(1.0, 1.0, 1.0) + t * ppm::Color(0.5, 0.7, 1.0);
 }
 
