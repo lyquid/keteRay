@@ -2,14 +2,15 @@
 
 auto hitSphere(const ktp::Point& center, double radius, const ktp::Ray& ray) {
   const ktp::Vector oc {ray.origin() - center};
-  const auto a {glm::dot(ray.direction(), ray.direction())};
-  const auto b {2.0 * glm::dot(oc, ray.direction())};
-  const auto c {glm::dot(oc, oc) - radius * radius};
-  const auto discriminant {b * b - 4.0 * a * c};
+  const auto a {glm::length2(ray.direction())};
+  const auto half_b {glm::dot(oc, ray.direction())};
+  const auto c {glm::length2(oc) - radius * radius};
+  const auto discriminant {half_b * half_b - a * c};
+
   if (discriminant < 0.0) {
     return -1.0;
   } else {
-    return (-b - glm::sqrt(discriminant)) / (2.0 * a);
+    return (-half_b - glm::sqrt(discriminant)) / a;
   }
 }
 

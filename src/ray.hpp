@@ -13,6 +13,7 @@
 #define RAY_HPP_
 
 #include <glm/geometric.hpp>
+#include <glm/gtx/norm.hpp>
 #include <glm/vec3.hpp>
 
 namespace ktp {
