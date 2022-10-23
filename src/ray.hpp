@@ -17,8 +17,9 @@
 
 namespace ktp {
 
+using Color  = glm::dvec3;
 using Point  = glm::dvec3;
-using Vector = glm::dvec3;;
+using Vector = glm::dvec3;
 
 class Ray {
  public:
@@ -30,6 +31,7 @@ class Ray {
   constexpr auto direction() const { return m_direction; }
   Vector normalizeDirection() const { return glm::normalize(m_direction); }
   constexpr auto origin() const { return m_origin; }
+  Color rayColor() const ;
 
  private:
 

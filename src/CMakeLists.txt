@@ -1,5 +1,6 @@
 add_executable(owert
   main.cpp
+  ray.cpp
   # add more cpp files to compile!
   # ej. game.cpp
 )
