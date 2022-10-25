@@ -9,12 +9,13 @@
  *
  */
 
-#ifndef OWERT_HPP_
-#define OWERT_HPP_
+#ifndef KTP_OWERT_HPP_
+#define KTP_OWERT_HPP_
 
 #include "libppm.hpp"
 #include <glm/vec3.hpp>
 #include <limits>
+#include <random>
 
 namespace ktp {
 
@@ -26,6 +27,12 @@ constexpr auto k_INFINITY {std::numeric_limits<double>::infinity()};
 
 inline ppm::Color colorToPPM(const Color& color) {
   return ppm::Color{color.r, color.g, color.b};
+}
+
+inline auto randomDouble() {
+  std::uniform_real_distribution<double> dist(0.0, 1.0);
+  std::mt19937 generator {};
+  return dist(generator);
 }
 
 } // namespace ktp

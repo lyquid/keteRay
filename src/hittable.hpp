@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef HITTABLE_HPP_
-#define HITTABLE_HPP_
+#ifndef KTP_HITTABLE_HPP_
+#define KTP_HITTABLE_HPP_
 
 #include "owert.hpp"
 #include <memory>

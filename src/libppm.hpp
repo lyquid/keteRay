@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef LIBPPM_HPP_
-#define LIBPPM_HPP_
+#ifndef KTP_LIBPPM_HPP_
+#define KTP_LIBPPM_HPP_
 
 #include <iostream>
 #include <fstream>

@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef SPHERE_HPP_
-#define SPHERE_HPP_
+#ifndef KTP_SPHERE_HPP_
+#define KTP_SPHERE_HPP_
 
 #include "hittable.hpp"
 #include "owert.hpp"
