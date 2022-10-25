@@ -70,7 +70,7 @@ struct PPMFileData {
  * @brief Generates a test image to see if everything is working.
  * @param data The info of the file to be generated.
  */
-void generateTestImage(PPMFileData& data) {
+inline void generateTestImage(PPMFileData& data) {
   for (auto row = data.m_height - 1; row >= 0; --row) {
     std::cout << "\rScanlines remaining: " << row << ' ' << std::flush;
     for (auto col = 0; col < data.m_width; ++col) {
@@ -89,7 +89,7 @@ void generateTestImage(PPMFileData& data) {
  * @brief Generates a ppm file.
  * @param data The data of the ppm file.
  */
-void makePPMFile(const PPMFileData& data) {
+inline void makePPMFile(const PPMFileData& data) {
   std::ofstream image_file {data.m_name};
   // header for ppm file
   image_file << "P3\n" << data.m_width << ' ' << data.m_height << "\n255\n";

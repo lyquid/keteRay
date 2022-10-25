@@ -12,15 +12,12 @@
 #ifndef RAY_HPP_
 #define RAY_HPP_
 
-#include <glm/geometric.hpp>
-#include <glm/gtx/norm.hpp>
-#include <glm/vec3.hpp>
+#include <glm/geometric.hpp> // glm::normalize
+#include "owert.hpp"
 
 namespace ktp {
 
-using Color  = glm::dvec3;
-using Point  = glm::dvec3;
-using Vector = glm::dvec3;
+class Hittable;
 
 class Ray {
  public:
@@ -32,7 +29,7 @@ class Ray {
   constexpr auto direction() const { return m_direction; }
   Vector normalizeDirection() const { return glm::normalize(m_direction); }
   constexpr auto origin() const { return m_origin; }
-  Color rayColor() const ;
+  Color rayColor(const Hittable& world) const ;
 
  private:
 

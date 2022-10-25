@@ -1,8 +1,8 @@
 add_executable(owert
   main.cpp
+  hittable.cpp
   ray.cpp
-  # add more cpp files to compile!
-  # ej. game.cpp
+  sphere.cpp
 )
 target_compile_features(owert PUBLIC cxx_std_17)
 set_target_properties(owert PROPERTIES CXX_EXTENSIONS OFF)
