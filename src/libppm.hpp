@@ -23,7 +23,6 @@ namespace ppm {
 struct Color;
 using Pixels = std::vector<Color>;
 void writePixel(std::ostream& out, const Color& color);
-void writePixel(std::ostream& out, const Color& color, int samples_per_pixel);
 // **** forward declarations ****
 
 /**
@@ -73,10 +72,8 @@ inline Color operator/(Color color, double t) {
 struct PPMFileData {
   const int   m_channels_per_color {3};
   int         m_height {};
-  int         m_max_depth {50};
   std::string m_name {};
   Pixels      m_pixels {};
-  int         m_samples_per_pixel {1};
   int         m_width {};
 };
 
@@ -110,11 +107,7 @@ inline void makePPMFile(const PPMFileData& data) {
   std::size_t percent {0u};
   // write pixels to file. 1 RGB triplet per row
   for (std::size_t i = 0u; i < data.m_pixels.size(); ++i) {
-    if (data.m_samples_per_pixel <= 1) {
-      writePixel(image_file, data.m_pixels[i]);
-    } else {
-      writePixel(image_file, data.m_pixels[i], data.m_samples_per_pixel);
-    }
+    writePixel(image_file, data.m_pixels[i]);
     // if percentage changes, print it
     if (percent != static_cast<std::size_t>((i * 100u) / data.m_pixels.size())) {
       percent = static_cast<std::size_t>((i * 100u) / data.m_pixels.size());
@@ -131,29 +124,10 @@ inline void makePPMFile(const PPMFileData& data) {
  * @param color A color in rgb [0, 1] format.
  */
 inline void writePixel(std::ostream& out, const Color& color) {
-  constexpr auto magic_num {255.999};
-  out << static_cast<int>(magic_num * color.r) << ' '
-      << static_cast<int>(magic_num * color.g) << ' '
-      << static_cast<int>(magic_num * color.b) << '\n';
-}
-
-/**
- * @brief Writes a pixel (rgb [0, 255] triplet) to the given stream.
- * @param out The output stream. Recommended to be a file.
- * @param color A color in rgb [0, 1] format.
- * @param samples_per_pixel The samples per pixel.
- */
-inline void writePixel(std::ostream& out, const Color& color, int samples_per_pixel) {
-  const auto scale {1.0 / samples_per_pixel};
-
-  const auto r {color.r * scale};
-  const auto g {color.g * scale};
-  const auto b {color.b * scale};
-
   constexpr auto magic_num {256};
-  out << static_cast<int>(magic_num * clamp(r, 0.0, 0.999)) << ' '
-      << static_cast<int>(magic_num * clamp(g, 0.0, 0.999)) << ' '
-      << static_cast<int>(magic_num * clamp(b, 0.0, 0.999)) << '\n';
+  out << static_cast<int>(magic_num * clamp(color.r, 0.0, 0.999)) << ' '
+      << static_cast<int>(magic_num * clamp(color.g, 0.0, 0.999)) << ' '
+      << static_cast<int>(magic_num * clamp(color.b, 0.0, 0.999)) << '\n';
 }
 
 } // namespace libppm
