@@ -12,8 +12,8 @@
 #ifndef KTP_RAY_HPP_
 #define KTP_RAY_HPP_
 
+#include "keteray.hpp"
 #include <glm/geometric.hpp> // glm::normalize
-#include "owert.hpp"
 
 namespace ktp {
 

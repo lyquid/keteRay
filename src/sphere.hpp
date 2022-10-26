@@ -13,7 +13,7 @@
 #define KTP_SPHERE_HPP_
 
 #include "hittable.hpp"
-#include "owert.hpp"
+#include "keteray.hpp"
 
 namespace ktp {
 

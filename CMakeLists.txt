@@ -5,9 +5,9 @@ if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 project(
-  owert
+  keteRay
   VERSION 0.1.0
-  DESCRIPTION "One weekend ray tracer"
+  DESCRIPTION "One weekend ray tracer by ketepincho."
   LANGUAGES CXX
 )
 
@@ -39,7 +39,7 @@ endif()
 if(DEFINED CMAKE_TOOLCHAIN_FILE)
 	message(STATUS "Using vcpkg toolchain file")
   # For Windows: Prevent overriding the parent project's compiler/linker settings
-  # set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   # Find the packages needed
 	# like: find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
   find_package(glm CONFIG REQUIRED)

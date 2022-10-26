@@ -12,7 +12,7 @@
 #ifndef KTP_HITTABLE_HPP_
 #define KTP_HITTABLE_HPP_
 
-#include "owert.hpp"
+#include "keteray.hpp"
 #include <memory>
 #include <vector>
 

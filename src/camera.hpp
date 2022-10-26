@@ -12,7 +12,7 @@
 #ifndef KTP_CAMERA_HPP_
 #define KTP_CAMERA_HPP_
 
-#include "owert.hpp"
+#include "keteray.hpp"
 #include "ray.hpp"
 
 namespace ktp {
