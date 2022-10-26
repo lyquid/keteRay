@@ -23,6 +23,7 @@ using Color  = glm::dvec3;
 using Point  = glm::dvec3;
 using Vector = glm::dvec3;
 
+class Camera;
 class Ray;
 class Hittable;
 
@@ -31,6 +32,14 @@ constexpr auto k_INFINITY {std::numeric_limits<double>::infinity()};
 inline ppm::Color colorToPPM(const Color& color) {
   return ppm::Color{color.r, color.g, color.b};
 }
+
+struct RenderData {
+  Camera*   m_camera {nullptr};
+  int       m_samples_per_pixel {};
+  Hittable* m_world {nullptr};
+};
+
+void keteRay(const RenderData& render_data, ppm::PPMFileData& file_data);
 
 double randomDouble(double min = 0.0, double max = 1.0);
 
@@ -45,7 +54,7 @@ Vector randomVector(double min = 0.0, double max = 1.0);
 // Lambertian diffuse.
 inline Vector randomUnitVector() { return glm::normalize(randomVector()); }
 
-Color rayColor(const Ray& ray, const Hittable& world, int depth);
+Color rayColor(const Ray& ray, const Hittable* world, int depth);
 
 } // namespace ktp
 
