@@ -28,7 +28,7 @@ ktp::Color ktp::rayColor(const ktp::Ray& ray, const ktp::Hittable& world, int de
   // exceeded the ray bounce limit, no more light is gathered.
   if (depth <= 0) return Color(0.0, 0.0, 0.0);
 
-  if (world.hit(ray, 0.0, k_INFINITY, record)) {
+  if (world.hit(ray, 0.001, k_INFINITY, record)) {
     Point target {record.m_point + record.m_normal + randomInUnitSphere()};
     return 0.5 * rayColor(Ray(record.m_point, target - record.m_point), world, depth - 1);
   }
