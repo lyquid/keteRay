@@ -39,10 +39,11 @@ int main(int argc, char* argv[]) {
           pixel_color += rayColor(ray, world, max_depth);
         }
         const auto scale {1.0 / samples_per_pixel};
-        pixel_color.r = pixel_color.r * scale;
-        pixel_color.g = pixel_color.g * scale;
-        pixel_color.b = pixel_color.b * scale;
+        pixel_color *= scale;
       }
+      // gamma correction
+      pixel_color = glm::sqrt(pixel_color);
+      // final pixel color to the data
       data.m_pixels.push_back(ktp::colorToPPM(pixel_color));
     }
   }
