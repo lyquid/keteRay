@@ -29,7 +29,7 @@ void writePixel(std::ostream& out, const Color& color, int samples_per_pixel);
 /**
  * @brief Clamps a value between 2 numbers.
  * @param x The value to check.
- * @param min The minimun numbers.
+ * @param min The minimun number.
  * @param max The maximun number.
  * @return double A number that is always between min and max.
  */
@@ -73,6 +73,7 @@ inline Color operator/(Color color, double t) {
 struct PPMFileData {
   const int   m_channels_per_color {3};
   int         m_height {};
+  int         m_max_depth {50};
   std::string m_name {};
   Pixels      m_pixels {};
   int         m_samples_per_pixel {1};

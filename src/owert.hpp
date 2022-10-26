@@ -15,7 +15,6 @@
 #include "libppm.hpp"
 #include <glm/vec3.hpp>
 #include <limits>
-#include <random>
 
 namespace ktp {
 
@@ -23,17 +22,22 @@ using Color  = glm::dvec3;
 using Point  = glm::dvec3;
 using Vector = glm::dvec3;
 
+class Ray;
+class Hittable;
+
 constexpr auto k_INFINITY {std::numeric_limits<double>::infinity()};
 
 inline ppm::Color colorToPPM(const Color& color) {
   return ppm::Color{color.r, color.g, color.b};
 }
 
-inline auto randomDouble(double min = 0.0, double max = 1.0) {
-  static std::uniform_real_distribution<double> dist(min, max);
-  static std::mt19937 generator {};
-  return dist(generator);
-}
+double randomDouble(double min = 0.0, double max = 1.0);
+
+Vector randomInUnitSphere();
+
+Vector randomVector(double min = 0.0, double max = 1.0);
+
+Color rayColor(const Ray& ray, const Hittable& world, int depth);
 
 } // namespace ktp
 

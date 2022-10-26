@@ -1,7 +1,7 @@
 add_executable(owert
   main.cpp
   hittable.cpp
-  ray.cpp
+  owert.cpp
   sphere.cpp
 )
 target_compile_features(owert PUBLIC cxx_std_17)

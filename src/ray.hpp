@@ -17,8 +17,6 @@
 
 namespace ktp {
 
-class Hittable;
-
 class Ray {
  public:
 
@@ -29,7 +27,6 @@ class Ray {
   constexpr auto direction() const { return m_direction; }
   Vector normalizeDirection() const { return glm::normalize(m_direction); }
   constexpr auto origin() const { return m_origin; }
-  Color rayColor(const Hittable& world) const ;
 
  private:
 
