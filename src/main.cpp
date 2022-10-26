@@ -11,10 +11,15 @@ int main(int argc, char* argv[]) {
   constexpr auto samples_per_pixel {100};
   // image data
   ppm::PPMFileData data {};
-  data.m_name = "render.ppm";
+  // data.m_name = "render.ppm";
   data.m_width  = 1024;
   data.m_height = static_cast<int>(data.m_width / camera.aspectRatio());
   data.m_pixels.reserve(data.m_width * data.m_height);
+  data.m_name =
+    "render_"
+    + std::to_string(data.m_width) + "x"
+    + std::to_string(data.m_height) + "_"
+    + std::to_string(samples_per_pixel) + "_samples.ppm";
   // world
   ktp::HittableList world {};
   world.add(std::make_shared<ktp::Sphere>(ktp::Point(0.0,    0.0, -1.0),   0.5));
