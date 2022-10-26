@@ -13,6 +13,7 @@
 #define KTP_OWERT_HPP_
 
 #include "libppm.hpp"
+#include <glm/gtx/norm.hpp>
 #include <glm/vec3.hpp>
 #include <limits>
 
@@ -33,9 +34,16 @@ inline ppm::Color colorToPPM(const Color& color) {
 
 double randomDouble(double min = 0.0, double max = 1.0);
 
+// Alternate diffuse.
+Vector randomInHemisphere(const Vector& normal);
+
+// Hack diffuse
 Vector randomInUnitSphere();
 
 Vector randomVector(double min = 0.0, double max = 1.0);
+
+// Lambertian diffuse.
+inline Vector randomUnitVector() { return glm::normalize(randomVector()); }
 
 Color rayColor(const Ray& ray, const Hittable& world, int depth);
 

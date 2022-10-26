@@ -1,7 +1,6 @@
 #include "hittable.hpp"
 #include "owert.hpp"
 #include "ray.hpp"
-#include <glm/gtx/norm.hpp>
 #include <chrono>
 #include <random>
 
@@ -9,6 +8,11 @@ double ktp::randomDouble(double min, double max) {
   static std::uniform_real_distribution<double> dist(min, max);
   static std::mt19937 generator {};
   return dist(generator);
+}
+
+ktp::Vector ktp::randomInHemisphere(const ktp::Vector& normal) {
+  Vector in_unit_sphere {randomInUnitSphere()};
+  return glm::dot(in_unit_sphere, normal) > 0.0 ? in_unit_sphere : -in_unit_sphere;
 }
 
 ktp::Vector ktp::randomInUnitSphere() {
@@ -29,7 +33,12 @@ ktp::Color ktp::rayColor(const ktp::Ray& ray, const ktp::Hittable& world, int de
   if (depth <= 0) return Color(0.0, 0.0, 0.0);
 
   if (world.hit(ray, 0.001, k_INFINITY, record)) {
-    Point target {record.m_point + record.m_normal + randomInUnitSphere()};
+    // hack diffuse
+    // Point target {record.m_point + record.m_normal + randomInUnitSphere()};
+    // Lambertian diffuse
+    Point target {record.m_point + record.m_normal + randomUnitVector()};
+    // alternate diffuse
+    // Point target {record.m_point + randomInHemisphere(record.m_normal)};
     return 0.5 * rayColor(Ray(record.m_point, target - record.m_point), world, depth - 1);
   }
 
