@@ -23,9 +23,21 @@ namespace ppm {
 struct Color;
 using Pixels = std::vector<Color>;
 void writePixel(std::ostream& out, const Color& color);
-void writePixel(std::ostream& out, double r, double g, double b);
-void writePixel(std::ostream& out, int r, int g, int b);
+void writePixel(std::ostream& out, const Color& color, int samples_per_pixel);
 // **** forward declarations ****
+
+/**
+ * @brief Clamps a value between 2 numbers.
+ * @param x The value to check.
+ * @param min The minimun numbers.
+ * @param max The maximun number.
+ * @return double A number that is always between min and max.
+ */
+inline double clamp(double x, double min, double max) {
+  if (x < min) return min;
+  if (x > max) return max;
+  return x;
+}
 
 /**
  * @brief A RGB color [0, 1].
@@ -63,6 +75,7 @@ struct PPMFileData {
   int         m_height {};
   std::string m_name {};
   Pixels      m_pixels {};
+  int         m_samples_per_pixel {1};
   int         m_width {};
 };
 
@@ -96,7 +109,11 @@ inline void makePPMFile(const PPMFileData& data) {
   std::size_t percent {0u};
   // write pixels to file. 1 RGB triplet per row
   for (std::size_t i = 0u; i < data.m_pixels.size(); ++i) {
-    writePixel(image_file, data.m_pixels[i]);
+    if (data.m_samples_per_pixel <= 1) {
+      writePixel(image_file, data.m_pixels[i]);
+    } else {
+      writePixel(image_file, data.m_pixels[i], data.m_samples_per_pixel);
+    }
     // if percentage changes, print it
     if (percent != static_cast<std::size_t>((i * 100u) / data.m_pixels.size())) {
       percent = static_cast<std::size_t>((i * 100u) / data.m_pixels.size());
@@ -122,26 +139,20 @@ inline void writePixel(std::ostream& out, const Color& color) {
 /**
  * @brief Writes a pixel (rgb [0, 255] triplet) to the given stream.
  * @param out The output stream. Recommended to be a file.
- * @param r The red value [0, 1].
- * @param g The green value [0, 1].
- * @param b The blue value [0, 1].
+ * @param color A color in rgb [0, 1] format.
+ * @param samples_per_pixel The samples per pixel.
  */
-inline void writePixel(std::ostream& out, double r, double g, double b) {
-  constexpr auto magic_num {255.999};
-  out << static_cast<int>(magic_num * r) << ' '
-      << static_cast<int>(magic_num * g) << ' '
-      << static_cast<int>(magic_num * b) << '\n';
-}
+inline void writePixel(std::ostream& out, const Color& color, int samples_per_pixel) {
+  const auto scale {1.0 / samples_per_pixel};
 
-/**
- * @brief Writes a pixel (rgb [0, 255] triplet) to the given stream.
- * @param out The output stream. Recommended to be a file.
- * @param r The red value [0, 255].
- * @param g The green value [0, 255].
- * @param b The blue value [0, 255].
- */
-inline void writePixel(std::ostream& out, int r, int g, int b) {
-  out <<  r << ' ' << g << ' ' << b << '\n';
+  const auto r {color.r * scale};
+  const auto g {color.g * scale};
+  const auto b {color.b * scale};
+
+  constexpr auto magic_num {256};
+  out << static_cast<int>(magic_num * clamp(r, 0.0, 0.999)) << ' '
+      << static_cast<int>(magic_num * clamp(g, 0.0, 0.999)) << ' '
+      << static_cast<int>(magic_num * clamp(b, 0.0, 0.999)) << '\n';
 }
 
 } // namespace libppm

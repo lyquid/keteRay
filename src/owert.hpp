@@ -29,9 +29,9 @@ inline ppm::Color colorToPPM(const Color& color) {
   return ppm::Color{color.r, color.g, color.b};
 }
 
-inline auto randomDouble() {
-  std::uniform_real_distribution<double> dist(0.0, 1.0);
-  std::mt19937 generator {};
+inline auto randomDouble(double min = 0.0, double max = 1.0) {
+  static std::uniform_real_distribution<double> dist(min, max);
+  static std::mt19937 generator {};
   return dist(generator);
 }
 
