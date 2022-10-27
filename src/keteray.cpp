@@ -35,6 +35,7 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data) {
       file_data.m_pixels.push_back(colorToPPM(pixel_color));
     }
   }
+  std::cout << "\rRendering finished.                                      \n";
 }
 
 double ktp::randomDouble(double min, double max) {
