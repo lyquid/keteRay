@@ -1,3 +1,4 @@
+#include "keteray.hpp"
 #include "ray.hpp"
 #include "sphere.hpp"
 #include <glm/gtx/norm.hpp> // glm::dot, glm::length2
@@ -20,8 +21,9 @@ bool ktp::Sphere::hit(const Ray& ray, double t_min, double t_max, HitRecord& rec
 
   record.m_t = root;
   record.m_point = ray.at(record.m_t);
-  Vector outward_normal {(record.m_point - m_center) / m_radius};
+  const Vector outward_normal {(record.m_point - m_center) / m_radius};
   record.setFaceNormal(ray, outward_normal);
+  record.m_material = m_material;
 
   return true;
 }

@@ -13,7 +13,6 @@
 #define KTP_SPHERE_HPP_
 
 #include "hittable.hpp"
-#include "keteray.hpp"
 
 namespace ktp {
 
@@ -21,15 +20,17 @@ class Sphere: public Hittable {
  public:
 
   Sphere() = default;
-  Sphere(const Point& center, double radius): m_center(center), m_radius(radius) {}
+  Sphere(const Point& center, double radius, MaterialPtr material):
+    m_center(center), m_radius(radius), m_material(material) {}
   auto center() const { return m_center; }
   bool hit(const Ray& ray, double t_min, double t_max, HitRecord& record) const override;
   auto radius() const { return m_radius; }
 
  private:
 
-  Point  m_center {};
-  double m_radius {};
+  Point       m_center {};
+  MaterialPtr m_material {nullptr};
+  double      m_radius {};
 };
 
 } // namespace ktp

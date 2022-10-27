@@ -2,6 +2,7 @@ add_executable(keteray
   main.cpp
   hittable.cpp
   keteray.cpp
+  material.cpp
   sphere.cpp
 )
 target_compile_features(keteray PUBLIC cxx_std_17)

@@ -18,13 +18,18 @@
 
 namespace ktp {
 
+class Material;
 class Ray;
 
+using HittablePtr = std::shared_ptr<Hittable>;
+using MaterialPtr = std::shared_ptr<Material>;
+
 struct HitRecord {
-  bool   m_front_face {};
-  Vector m_normal {};
-  Point  m_point {};
-  double m_t {};
+  bool        m_front_face {};
+  MaterialPtr m_material {nullptr};
+  Vector      m_normal {};
+  Point       m_point {};
+  double      m_t {};
 
   void setFaceNormal(const Ray& ray, const Vector& outward_normal);
 };
@@ -38,14 +43,14 @@ class Hittable {
 class HittableList: public Hittable {
  public:
   HittableList() = default;
-  HittableList(std::shared_ptr<Hittable> object) { add(object); }
+  HittableList(HittablePtr object) { add(object); }
 
-  void add(std::shared_ptr<Hittable> object) { m_objects.push_back(object); }
+  void add(HittablePtr object) { m_objects.push_back(object); }
   void clear() { m_objects.clear(); }
   bool hit(const Ray& ray, double t_min, double t_max, HitRecord& record) const override;
 
  private:
-  std::vector<std::shared_ptr<Hittable>> m_objects {};
+  std::vector<HittablePtr> m_objects {};
 };
 
 } // namespace ktp

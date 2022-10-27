@@ -1,8 +1,8 @@
 #include "camera.hpp"
 #include "hittable.hpp"
 #include "keteray.hpp"
+#include "material.hpp"
 #include "ray.hpp"
-#include <glm/gtx/norm.hpp>
 #include <chrono>
 #include <random>
 
@@ -39,6 +39,11 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data) {
   std::cout << "\rRendering finished.                                      \n";
 }
 
+bool ktp::nearZero(const Vector& v) {
+  constexpr auto s {1e-8};
+  return glm::abs(v.x) < s && glm::abs(v.y) < s && glm::abs(v.z) < s;
+}
+
 double ktp::randomDouble(double min, double max) {
   static std::uniform_real_distribution<double> dist(min, max);
   static std::mt19937 generator {};
@@ -72,13 +77,12 @@ ktp::Color ktp::rayColor(const Ray& ray, const Hittable* world, int depth) {
   if (depth <= 0) return Color(0.0, 0.0, 0.0);
 
   if (world->hit(ray, 0.001, k_INFINITY, record)) {
-    // hack diffuse
-    // Point target {record.m_point + record.m_normal + randomInUnitSphere()};
-    // Lambertian diffuse
-    const Point target {record.m_point + record.m_normal + randomUnitVector()};
-    // alternate diffuse
-    // Point target {record.m_point + randomInHemisphere(record.m_normal)};
-    return 0.5 * rayColor(Ray(record.m_point, target - record.m_point), world, depth - 1);
+    Ray scattered {};
+    Color attenuation {};
+    if (record.m_material->scatter(ray, record, attenuation, scattered)) {
+      return attenuation * rayColor(scattered, world, depth - 1);
+    }
+    return Color(0.0, 0.0, 0.0);
   }
 
   const auto t {0.5 * (ray.normalizeDirection().y + 1.0)};
