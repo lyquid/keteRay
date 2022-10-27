@@ -2,6 +2,7 @@
 #include "hittable.hpp"
 #include "keteray.hpp"
 #include "ray.hpp"
+#include <glm/gtx/norm.hpp>
 #include <chrono>
 #include <random>
 
@@ -45,7 +46,7 @@ double ktp::randomDouble(double min, double max) {
 }
 
 ktp::Vector ktp::randomInHemisphere(const Vector& normal) {
-  Vector in_unit_sphere {randomInUnitSphere()};
+  const Vector in_unit_sphere {randomInUnitSphere()};
   return glm::dot(in_unit_sphere, normal) > 0.0 ? in_unit_sphere : -in_unit_sphere;
 }
 
@@ -55,6 +56,10 @@ ktp::Vector ktp::randomInUnitSphere() {
     if (glm::length2(p) >= 1.0) continue;
     return p;
   }
+}
+
+ktp::Vector ktp::randomUnitVector() {
+  return glm::normalize(randomVector());
 }
 
 ktp::Vector ktp::randomVector(double min, double max) {
@@ -70,13 +75,12 @@ ktp::Color ktp::rayColor(const Ray& ray, const Hittable* world, int depth) {
     // hack diffuse
     // Point target {record.m_point + record.m_normal + randomInUnitSphere()};
     // Lambertian diffuse
-    Point target {record.m_point + record.m_normal + randomUnitVector()};
+    const Point target {record.m_point + record.m_normal + randomUnitVector()};
     // alternate diffuse
     // Point target {record.m_point + randomInHemisphere(record.m_normal)};
     return 0.5 * rayColor(Ray(record.m_point, target - record.m_point), world, depth - 1);
   }
 
-  Vector unit_direction {ray.normalizeDirection()};
-  auto t {0.5 * (unit_direction.y + 1.0)};
+  const auto t {0.5 * (ray.normalizeDirection().y + 1.0)};
   return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
