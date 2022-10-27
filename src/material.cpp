@@ -15,7 +15,7 @@ bool ktp::Lambertian::scatter(const Ray& ray, const HitRecord& record, Color& at
 
 bool ktp::Metal::scatter(const Ray& ray, const HitRecord& record, Color& attenuation, Ray& scattered) const {
   Vector reflected {reflect(glm::normalize(ray.direction()), record.m_normal)};
-  scattered = Ray(record.m_point, reflected);
+  scattered = Ray(record.m_point, reflected + m_fuzz * randomInUnitSphere());
   attenuation = m_albedo;
   return (glm::dot(scattered.direction(), record.m_normal) > 0.0);
 }

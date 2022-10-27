@@ -46,7 +46,9 @@ class Lambertian: public Material {
 
 class Metal: public Material {
  public:
-  Metal(const Color& albedo): m_albedo(albedo) {}
+  Metal(const Color& albedo, double fuzz = 0.0):
+    m_albedo(albedo),
+    m_fuzz(fuzz < 1.0 ? fuzz : 1.0) {}
   bool scatter(
     const Ray& ray,
     const HitRecord& record,
@@ -54,7 +56,8 @@ class Metal: public Material {
     Ray& scattered
   ) const override;
  private:
-  Color m_albedo {};
+  Color  m_albedo {};
+  double m_fuzz {};
 };
 
 } // namespace ktp

@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
   const ktp::MaterialPtr material_ground {std::make_shared<ktp::Lambertian>(ktp::Color(0.8, 0.8, 0.0))};
   const ktp::MaterialPtr material_center {std::make_shared<ktp::Lambertian>(ktp::Color(0.7, 0.3, 0.3))};
   const ktp::MaterialPtr material_left   {std::make_shared<ktp::Metal>(ktp::Color(0.8, 0.8, 0.8))};
-  const ktp::MaterialPtr material_right  {std::make_shared<ktp::Metal>(ktp::Color(0.8, 0.6, 0.2))};
+  const ktp::MaterialPtr material_right  {std::make_shared<ktp::Metal>(ktp::Color(0.8, 0.6, 0.2), 0.5)};
   world.add(std::make_shared<ktp::Sphere>(ktp::Point( 0.0, -100.5, -1.0), 100.0, material_ground));
   world.add(std::make_shared<ktp::Sphere>(ktp::Point( 0.0,    0.0, -1.0),   0.5, material_center));
   world.add(std::make_shared<ktp::Sphere>(ktp::Point(-1.0,    0.0, -1.0),   0.5, material_left));
