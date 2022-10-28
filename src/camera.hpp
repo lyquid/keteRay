@@ -19,19 +19,21 @@ namespace ktp {
 
 class Camera {
  public:
- auto aspectRatio() const { return aspect_ratio; }
+
+  Camera(double vfov = 90.0, double aspect_ratio = 16.0 / 9.0);
+
+  auto aspectRatio() const { return m_aspect_ratio; }
   Ray getRay(double u, double v) const {
-    return Ray(origin, lower_left_corner + u * horizontal + v * vertical - origin);
+    return Ray(m_origin, m_lower_left_corner + u * m_horizontal + v * m_vertical - m_origin);
   }
+
  private:
-  double aspect_ratio {16.0 / 9.0};
-  double viewport_height {2.0};
-  double viewport_width {aspect_ratio * viewport_height};
-  double focal_length {1.0};
-  Point origin {0.0, 0.0, 0.0};
-  Vector horizontal {viewport_width, 0.0, 0.0};
-  Vector vertical {0.0, viewport_height, 0.0};
-  Point lower_left_corner {origin - horizontal / 2.0 - vertical / 2.0 - Vector(0.0, 0.0, focal_length)};
+
+  double m_aspect_ratio {};
+  Point  m_lower_left_corner {};
+  Point  m_origin {};
+  Vector m_horizontal {};
+  Vector m_vertical {};
 };
 
 }

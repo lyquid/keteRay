@@ -1,5 +1,6 @@
 add_executable(keteray
   main.cpp
+  camera.cpp
   hittable.cpp
   keteray.cpp
   material.cpp
