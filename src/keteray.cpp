@@ -88,3 +88,10 @@ ktp::Color ktp::rayColor(const Ray& ray, const Hittable* world, int depth) {
   const auto t {0.5 * (ray.normalizeDirection().y + 1.0)};
   return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
+
+ktp::Vector ktp::refract(const Vector& uv, const Vector& n, double etai_over_etat) {
+  const auto cos_theta {fmin(glm::dot(-uv, n), 1.0)};
+  const Vector r_out_perp {etai_over_etat * (uv + cos_theta * n)};
+  const Vector r_out_parallel {-glm::sqrt(glm::abs(1.0 - glm::length2(r_out_perp))) * n};
+  return r_out_perp + r_out_parallel;
+}

@@ -60,6 +60,20 @@ class Metal: public Material {
   double m_fuzz {};
 };
 
+class Dielectric: public Material {
+ public:
+  Dielectric(double index_of_refraction): m_ir(index_of_refraction) {}
+  bool scatter(
+    const Ray& ray,
+    const HitRecord& record,
+    Color& attenuation,
+    Ray& scattered
+  ) const override;
+ private:
+  static double reflectance(double cosine, double ref_idx);
+  double m_ir {};
+};
+
 } // namespace ktp
 
 #endif

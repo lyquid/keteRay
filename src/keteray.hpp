@@ -68,6 +68,8 @@ inline Vector reflect(const Vector& v, const Vector& normal) {
   return v - 2 * glm::dot(v, normal) * normal;
 }
 
+Vector refract(const Vector& uv, const Vector& n, double etai_over_etat);
+
 } // namespace ktp
 
 #endif

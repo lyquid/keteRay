@@ -10,7 +10,7 @@
 struct Args {
   std::string m_file_name {"render"};
   int         m_samples {100};
-  int         m_width {400};
+  int         m_width {1400};
 };
 
 using StringsVector = std::vector<std::string>;
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
   const Args args {processArgs(StringsVector(argv, argv + argc))};
   // camera
   Camera camera {};
-  // ktp::Camera camera {ktp::Point(-2, 2, 1), ktp::Point(0, 0, -1), ktp::Vector(0, 1, 0), 20.0};
+  // Camera camera {Point(2, 2, 1), Point(0, 0, -1), Vector(0, 1, 0), 90.0};
   // image data
   ppm::PPMFileData file_data {};
   file_data.m_width  = args.m_width;
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
   HittableList world {};
   const MaterialPtr material_ground {std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0))};
   const MaterialPtr material_center {std::make_shared<Lambertian>(Color(0.7, 0.3, 0.3))};
-  const MaterialPtr material_left   {std::make_shared<Metal>(Color(0.8, 0.8, 0.8))};
+  const MaterialPtr material_left   {std::make_shared<Dielectric>(1.5)};
   const MaterialPtr material_right  {std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.5)};
   world.add(std::make_shared<Sphere>(Point( 0.0, -100.5, -1.0), 100.0, material_ground));
   world.add(std::make_shared<Sphere>(Point( 0.0,    0.0, -1.0),   0.5, material_center));
