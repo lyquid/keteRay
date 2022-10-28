@@ -21,6 +21,7 @@ int main(int argc, char* argv[]) {
   const Args args {processArgs(StringsVector(argv, argv + argc))};
   // camera
   ktp::Camera camera {};
+  // ktp::Camera camera {ktp::Point(-2, 2, 1), ktp::Point(0, 0, -1), ktp::Vector(0, 1, 0), 20.0};
   // image data
   ppm::PPMFileData file_data {};
   file_data.m_width  = args.m_width;

@@ -12,7 +12,6 @@
 #ifndef KTP_CAMERA_HPP_
 #define KTP_CAMERA_HPP_
 
-#include "keteray.hpp"
 #include "ray.hpp"
 
 namespace ktp {
@@ -20,11 +19,37 @@ namespace ktp {
 class Camera {
  public:
 
-  Camera(double vfov = 90.0, double aspect_ratio = 16.0 / 9.0);
+  Camera(): Camera(90.0, 16.0 / 9.0) {}
 
+  /**
+   * @brief Constructs a new Camera object.
+   * @param vfov Vertical field of view in degrees.
+   * @param aspect_ratio The aspect ratio. V/H.
+   */
+  Camera(double vfov, double aspect_ratio):
+    Camera(
+      Point(0.0, 0.0, 0.0),  // look_from
+      Point(0.0, 0.0, -1.0), // look_at
+      Vector(0.0, 1.0, 0.0), // vup
+      vfov,
+      aspect_ratio
+    ) {}
+
+  Camera(
+    Point look_from,
+    Point look_at,
+    Vector vup,
+    double vfov = 90.0,
+    double aspect_ratio = 16.0 / 9.0);
+
+  /**
+   * @brief Use this to know the actual aspect ratio of the camera.
+   * @return The aspect ratio currently in use.
+   */
   auto aspectRatio() const { return m_aspect_ratio; }
-  Ray getRay(double u, double v) const {
-    return Ray(m_origin, m_lower_left_corner + u * m_horizontal + v * m_vertical - m_origin);
+
+  Ray getRay(double s, double t) const {
+    return Ray(m_origin, m_lower_left_corner + s * m_horizontal + t * m_vertical - m_origin);
   }
 
  private:
