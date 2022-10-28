@@ -17,10 +17,11 @@ using StringsVector = std::vector<std::string>;
 Args processArgs(const StringsVector& args);
 
 int main(int argc, char* argv[]) {
+  using namespace ktp;
   // args processing
   const Args args {processArgs(StringsVector(argv, argv + argc))};
   // camera
-  ktp::Camera camera {};
+  Camera camera {};
   // ktp::Camera camera {ktp::Point(-2, 2, 1), ktp::Point(0, 0, -1), ktp::Vector(0, 1, 0), 20.0};
   // image data
   ppm::PPMFileData file_data {};
@@ -32,24 +33,24 @@ int main(int argc, char* argv[]) {
     + std::to_string(file_data.m_height) + "_"
     + std::to_string(args.m_samples)     + "_samples.ppm";
   // world
-  ktp::HittableList world {};
-  const ktp::MaterialPtr material_ground {std::make_shared<ktp::Lambertian>(ktp::Color(0.8, 0.8, 0.0))};
-  const ktp::MaterialPtr material_center {std::make_shared<ktp::Lambertian>(ktp::Color(0.7, 0.3, 0.3))};
-  const ktp::MaterialPtr material_left   {std::make_shared<ktp::Metal>(ktp::Color(0.8, 0.8, 0.8))};
-  const ktp::MaterialPtr material_right  {std::make_shared<ktp::Metal>(ktp::Color(0.8, 0.6, 0.2), 0.5)};
-  world.add(std::make_shared<ktp::Sphere>(ktp::Point( 0.0, -100.5, -1.0), 100.0, material_ground));
-  world.add(std::make_shared<ktp::Sphere>(ktp::Point( 0.0,    0.0, -1.0),   0.5, material_center));
-  world.add(std::make_shared<ktp::Sphere>(ktp::Point(-1.0,    0.0, -1.0),   0.5, material_left));
-  world.add(std::make_shared<ktp::Sphere>(ktp::Point( 1.0,    0.0, -1.0),   0.5, material_right));
+  HittableList world {};
+  const MaterialPtr material_ground {std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0))};
+  const MaterialPtr material_center {std::make_shared<Lambertian>(Color(0.7, 0.3, 0.3))};
+  const MaterialPtr material_left   {std::make_shared<Metal>(Color(0.8, 0.8, 0.8))};
+  const MaterialPtr material_right  {std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.5)};
+  world.add(std::make_shared<Sphere>(Point( 0.0, -100.5, -1.0), 100.0, material_ground));
+  world.add(std::make_shared<Sphere>(Point( 0.0,    0.0, -1.0),   0.5, material_center));
+  world.add(std::make_shared<Sphere>(Point(-1.0,    0.0, -1.0),   0.5, material_left));
+  world.add(std::make_shared<Sphere>(Point( 1.0,    0.0, -1.0),   0.5, material_right));
   // render data
-  ktp::RenderData render_data {};
+  RenderData render_data {};
   render_data.m_camera = &camera;
   render_data.m_samples_per_pixel = args.m_samples;
   render_data.m_world = &world;
   // render
   std::cout << "Begin rendering at " << file_data.m_width << 'x' << file_data.m_height
             << '@' << render_data.m_samples_per_pixel << "spp.\n";
-  ktp::keteRay(render_data, file_data);
+  keteRay(render_data, file_data);
   // file generation
   ppm::makePPMFile(file_data);
 
