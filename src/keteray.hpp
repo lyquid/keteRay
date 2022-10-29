@@ -49,6 +49,8 @@ void keteRay(const RenderData& render_data, ppm::PPMFileData& file_data);
  */
 bool nearZero(const Vector& v);
 
+Color randomColor(double min = 0.0, double max = 1.0);
+
 double randomDouble(double min = 0.0, double max = 1.0);
 
 // Alternate diffuse.

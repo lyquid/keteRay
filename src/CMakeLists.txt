@@ -4,6 +4,7 @@ add_executable(keteray
   hittable.cpp
   keteray.cpp
   material.cpp
+  scene.cpp
   sphere.cpp
 )
 

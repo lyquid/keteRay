@@ -44,6 +44,10 @@ bool ktp::nearZero(const Vector& v) {
   return glm::abs(v.x) < s && glm::abs(v.y) < s && glm::abs(v.z) < s;
 }
 
+ktp::Color ktp::randomColor(double min, double max) {
+  return Color(randomDouble(min, max), randomDouble(min, max), randomDouble(min, max));
+}
+
 double ktp::randomDouble(double min, double max) {
   static std::uniform_real_distribution<double> dist(min, max);
   static std::mt19937 generator {};
