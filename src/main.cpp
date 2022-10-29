@@ -1,4 +1,5 @@
 #include "camera.hpp"
+#include "config.hpp"
 #include "hittable.hpp"
 #include "keteray.hpp"
 #include "material.hpp"
@@ -7,31 +8,34 @@
 #include <algorithm>
 #include <memory>
 
-struct Args {
-  std::string m_file_name {"render"};
-  int         m_samples {100};
-  int         m_width {1400};
-};
-
 using StringsVector = std::vector<std::string>;
-Args processArgs(const StringsVector& args);
+void processArgs(const StringsVector& args, ktp::RenderConfig& render_config);
 
 int main(int argc, char* argv[]) {
   using namespace ktp;
+  // config file
+  CameraConfig camera_config {};
+  RenderConfig render_config {};
+  parseConfigFile(camera_config, render_config);
   // args processing
-  const Args args {processArgs(StringsVector(argv, argv + argc))};
+  processArgs(StringsVector(argv, argv + argc), render_config);
   // camera
-  Camera camera {};
-  // Camera camera {Point(2, 2, 1), Point(0, 0, -1), Vector(0, 1, 0), 90.0};
+  Camera camera {
+    camera_config.m_look_from,
+    camera_config.m_look_at,
+    camera_config.m_vertical,
+    camera_config.m_zoom,
+    camera_config.m_aspect_ratio
+  };
   // image data
   ppm::PPMFileData file_data {};
-  file_data.m_width  = args.m_width;
+  file_data.m_width  = render_config.m_width;
   file_data.m_height = static_cast<int>(file_data.m_width / camera.aspectRatio());
   file_data.m_pixels.reserve(file_data.m_width * file_data.m_height);
-  file_data.m_name = args.m_file_name    + "_"
-    + std::to_string(file_data.m_width)  + "x"
-    + std::to_string(file_data.m_height) + "_"
-    + std::to_string(args.m_samples)     + "_samples.ppm";
+  file_data.m_name = render_config.m_file_name + "_"
+    + std::to_string(file_data.m_width)        + "x"
+    + std::to_string(file_data.m_height)       + "_"
+    + std::to_string(render_config.m_samples)  + "_samples.ppm";
   // world
   HittableList world {};
   const MaterialPtr material_ground {std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0))};
@@ -40,12 +44,12 @@ int main(int argc, char* argv[]) {
   const MaterialPtr material_right  {std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.5)};
   world.add(std::make_shared<Sphere>(Point( 0.0, -100.5, -1.0), 100.0, material_ground));
   world.add(std::make_shared<Sphere>(Point( 0.0,    0.0, -1.0),   0.5, material_center));
-  world.add(std::make_shared<Sphere>(Point(-1.0,    0.0, -1.0),   0.5, material_left));
+  world.add(std::make_shared<Sphere>(Point(-1.0,    0.0, -1.0),  -0.5, material_left));
   world.add(std::make_shared<Sphere>(Point( 1.0,    0.0, -1.0),   0.5, material_right));
   // render data
   RenderData render_data {};
   render_data.m_camera = &camera;
-  render_data.m_samples_per_pixel = args.m_samples;
+  render_data.m_samples_per_pixel = render_config.m_samples;
   render_data.m_world = &world;
   // render
   std::cout << "Begin rendering at " << file_data.m_width << 'x' << file_data.m_height
@@ -57,19 +61,17 @@ int main(int argc, char* argv[]) {
   return 0;
 }
 
-Args processArgs(const StringsVector& args) {
-  Args processed_args {};
+void processArgs(const StringsVector& args, ktp::RenderConfig& render_config) {
   for (const auto& arg: args) {
     if (arg.find("samples") != std::string::npos
      || arg.find("-s")      != std::string::npos) {
-      processed_args.m_samples = std::stoi(arg.substr(arg.find("=") + 1));
+      render_config.m_samples = std::stoi(arg.substr(arg.find("=") + 1));
       continue;
     }
     if (arg.find("width") != std::string::npos
      || arg.find("-w")    != std::string::npos) {
-      processed_args.m_width = std::stoi(arg.substr(arg.find("=") + 1));
+      render_config.m_width = std::stoi(arg.substr(arg.find("=") + 1));
       continue;
     }
   }
-  return processed_args;
 }

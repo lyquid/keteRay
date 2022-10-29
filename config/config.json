@@ -1,0 +1,14 @@
+{
+  "camera": {
+    "aspectRatio": {"w": 16.0, "h": 9.0},
+    "lookFrom": [0.0, 0.0,  0.0],
+    "lookAt":   [0.0, 0.0, -1.0],
+    "vertical": [0.0, 1.0,  0.0],
+    "zoom": 90
+  },
+  "render": {
+    "fileName": "render",
+    "samples": 100,
+    "width": 400
+  }
+}

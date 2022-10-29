@@ -6,6 +6,13 @@ add_executable(keteray
   material.cpp
   sphere.cpp
 )
+
+add_library(keteray_config
+  config.cpp
+)
+
+configure_file(../config/config.json ./ COPYONLY)
+
 target_compile_features(keteray PUBLIC cxx_std_17)
 set_target_properties(keteray PROPERTIES CXX_EXTENSIONS OFF)
 
@@ -33,6 +40,10 @@ if(DEFINED CMAKE_TOOLCHAIN_FILE)
     # add needed libraries
     # like: sfml-system
     glm::glm
+    keteray_config
+  )
+  target_link_libraries(keteray_config PRIVATE
+    nlohmann_json::nlohmann_json
   )
 else()
   target_link_libraries(keteray PRIVATE

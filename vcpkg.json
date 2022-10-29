@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "One weekend ray tracer by ketepincho.",
   "dependencies": [
-    "glm"
+    "glm",
+    "nlohmann-json"
   ]
 }
