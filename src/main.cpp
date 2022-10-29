@@ -24,8 +24,10 @@ int main(int argc, char* argv[]) {
     camera_config.m_look_from,
     camera_config.m_look_at,
     camera_config.m_vertical,
-    camera_config.m_zoom,
-    camera_config.m_aspect_ratio
+    camera_config.m_focus_dist,
+    camera_config.m_vfov,
+    camera_config.m_aspect_ratio,
+    camera_config.m_aperture
   };
   // image data
   ppm::PPMFileData file_data {};

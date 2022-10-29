@@ -1,6 +1,8 @@
 {
   "camera": {
+    "aperture": 1.0,
     "aspectRatio": {"w": 16.0, "h": 9.0},
+    "focusDist": 0.0,
     "lookFrom": [0.0, 0.0,  0.0],
     "lookAt":   [0.0, 0.0, -1.0],
     "vertical": [0.0, 1.0,  0.0],

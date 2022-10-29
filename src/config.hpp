@@ -22,11 +22,13 @@ namespace ktp {
 using json = nlohmann::json;
 
 struct CameraConfig {
+  double m_aperture {1.0};
   double m_aspect_ratio {16.0 / 9.0};
+  double m_focus_dist {0.0};
   Vector m_look_at   {0.0, 0.0, -1.0};
   Vector m_look_from {0.0, 0.0,  0.0};
   Vector m_vertical  {0.0, 1.0,  0.0};
-  double m_zoom {90.0};
+  double m_vfov {90.0};
 };
 
 struct RenderConfig {

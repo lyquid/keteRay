@@ -54,6 +54,8 @@ double randomDouble(double min = 0.0, double max = 1.0);
 // Alternate diffuse.
 Vector randomInHemisphere(const Vector& normal);
 
+Vector randomInUnitDisk();
+
 // Hack diffuse
 Vector randomInUnitSphere();
 

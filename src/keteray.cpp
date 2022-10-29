@@ -55,6 +55,14 @@ ktp::Vector ktp::randomInHemisphere(const Vector& normal) {
   return glm::dot(in_unit_sphere, normal) > 0.0 ? in_unit_sphere : -in_unit_sphere;
 }
 
+ktp::Vector ktp::randomInUnitDisk() {
+  while (true) {
+    const auto p {Vector(randomDouble(-1.0, 1.0), randomDouble(-1.0, 1.0), 0.0)};
+    if (glm::length2(p) >= 1.0) continue;
+    return p;
+  }
+}
+
 ktp::Vector ktp::randomInUnitSphere() {
   while (true) {
     const auto p {randomVector(-1.0, 1.0)};

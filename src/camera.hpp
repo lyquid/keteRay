@@ -39,8 +39,11 @@ class Camera {
     Point look_from,
     Point look_at,
     Vector vup,
+    double focus_dist,
     double vfov = 90.0,
-    double aspect_ratio = 16.0 / 9.0);
+    double aspect_ratio = 16.0 / 9.0,
+    double aperture = 0.0
+  );
 
   /**
    * @brief Use this to know the actual aspect ratio of the camera.
@@ -49,7 +52,9 @@ class Camera {
   auto aspectRatio() const { return m_aspect_ratio; }
 
   Ray getRay(double s, double t) const {
-    return Ray(m_origin, m_lower_left_corner + s * m_horizontal + t * m_vertical - m_origin);
+    const Vector rd {m_lens_radius * randomInUnitDisk()};
+    const Vector offset {m_u * rd.x + m_v * rd.y};
+    return Ray(m_origin + offset, m_lower_left_corner + s * m_horizontal + t * m_vertical - m_origin - offset);
   }
 
  private:
@@ -59,6 +64,8 @@ class Camera {
   Point  m_origin {};
   Vector m_horizontal {};
   Vector m_vertical {};
+  Vector m_u {}, m_v {}, m_w {};
+  double m_lens_radius {};
 };
 
 }
