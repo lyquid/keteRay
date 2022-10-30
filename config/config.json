@@ -1,16 +1,16 @@
 {
   "camera": {
-    "aperture": 1.0,
+    "aperture": 0.0,
     "aspectRatio": {"w": 16.0, "h": 9.0},
-    "focusDist": 0.0,
-    "lookFrom": [0.0, 0.0,  0.0],
-    "lookAt":   [0.0, 0.0, -1.0],
+    "focusDist": 10.0,
+    "lookFrom": [13.0, 2.0,  3.0],
+    "lookAt":   [0.0, 0.0, 0.0],
     "vertical": [0.0, 1.0,  0.0],
-    "vFov": 90
+    "vFov": 20
   },
   "render": {
     "fileName": "render",
-    "samples": 100,
+    "samples": 1,
     "width": 400
   }
 }
