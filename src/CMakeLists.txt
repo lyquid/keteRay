@@ -1,6 +1,10 @@
 add_executable(keteray
   main.cpp
+)
+
+add_library(libKeteray
   camera.cpp
+  config.cpp
   hittable.cpp
   keteray.cpp
   material.cpp
@@ -8,8 +12,8 @@ add_executable(keteray
   sphere.cpp
 )
 
-add_library(keteray_config
-  config.cpp
+add_library(guiKeteray
+  gui.cpp
 )
 
 configure_file(../config/config.json ./ COPYONLY)
@@ -37,14 +41,20 @@ elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 endif()
 
 if(DEFINED CMAKE_TOOLCHAIN_FILE)
-  target_link_libraries(keteray PRIVATE
-    # add needed libraries
-    # like: sfml-system
+  target_link_libraries(libKeteray
     glm::glm
-    keteray_config
-  )
-  target_link_libraries(keteray_config PRIVATE
     nlohmann_json::nlohmann_json
+  )
+  target_link_libraries(guiKeteray PRIVATE
+    imgui::imgui
+    ImGui-SFML::ImGui-SFML
+    sfml-system
+    sfml-graphics
+    sfml-window
+  )
+  target_link_libraries(keteray PRIVATE
+    libKeteray
+    guiKeteray
   )
 else()
   target_link_libraries(keteray PRIVATE

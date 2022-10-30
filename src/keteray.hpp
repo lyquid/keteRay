@@ -1,5 +1,5 @@
 /**
- * @file owert.hpp
+ * @file keteray.hpp
  * @author Alejandro Castillo Blanco (alexcastilloblanco@gmail.com)
  * @brief Utilities for the app.
  * @version 0.1
@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef KTP_OWERT_HPP_
-#define KTP_OWERT_HPP_
+#ifndef KTP_KETERAY_HPP_
+#define KTP_KETERAY_HPP_
 
 #include "libppm.hpp"
 #include <glm/gtx/norm.hpp>

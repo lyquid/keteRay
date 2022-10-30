@@ -1,12 +1,12 @@
 #include "camera.hpp"
 #include "config.hpp"
+#include "gui.hpp"
 #include "hittable.hpp"
 #include "keteray.hpp"
 #include "material.hpp"
-#include "ray.hpp"
 #include "scene.hpp"
 #include "sphere.hpp"
-#include <algorithm>
+#include <algorithm> // find
 #include <memory>
 
 using StringsVector = std::vector<std::string>;
@@ -54,12 +54,14 @@ int main(int argc, char* argv[]) {
   render_data.m_camera = &camera;
   render_data.m_samples_per_pixel = render_config.m_samples;
   render_data.m_world = &world;
+  // GUI
+  gui::start(&render_data, &file_data);
   // render
   std::cout << "Begin rendering at " << file_data.m_width << 'x' << file_data.m_height
             << '@' << render_data.m_samples_per_pixel << "spp.\n";
-  keteRay(render_data, file_data);
+  // keteRay(render_data, file_data);
   // file generation
-  ppm::makePPMFile(file_data);
+  // ppm::makePPMFile(file_data);
 
   return 0;
 }

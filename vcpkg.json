@@ -2,9 +2,12 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
   "name": "keteray",
   "version": "0.1.0",
-  "description": "One weekend ray tracer by ketepincho.",
+  "description": "One weekend++ ray tracer by ketepincho.",
   "dependencies": [
     "glm",
-    "nlohmann-json"
+    "imgui",
+    "imgui-sfml",
+    "nlohmann-json",
+    "sfml"
   ]
 }
