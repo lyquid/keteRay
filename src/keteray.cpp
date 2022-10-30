@@ -50,7 +50,7 @@ ktp::Color ktp::randomColor(double min, double max) {
 
 double ktp::randomDouble(double min, double max) {
   static std::uniform_real_distribution<double> dist(min, max);
-  static std::mt19937 generator {};
+  static std::mt19937 generator (std::chrono::steady_clock::now().time_since_epoch().count());
   return dist(generator);
 }
 
