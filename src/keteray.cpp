@@ -6,24 +6,37 @@
 #include <chrono>
 #include <random>
 
+std::string ktp::createFileName(const RenderData& render_data, const ppm::PPMFileData& file_data) {
+  return file_data.m_name + "_"
+    + std::to_string(render_data.m_width)             + "x"
+    + std::to_string(render_data.m_height)            + "_"
+    + std::to_string(render_data.m_samples_per_pixel) + "_samples.ppm";
+}
+
 void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data) {
+  // config of file_data
+  file_data.m_width  = render_data.m_width;
+  file_data.m_height = render_data.m_height;
+  file_data.m_pixels.reserve(file_data.m_width * file_data.m_height);
+  file_data.m_file_name = createFileName(render_data, file_data);
   // Recursion depth for rayColor
   constexpr auto max_depth {50};
-  for (int j = file_data.m_height - 1; j >= 0; --j) {
+  // here we go!
+  for (int j = render_data.m_height - 1; j >= 0; --j) {
     std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
-    for (int i = 0; i < file_data.m_width; ++i) {
+    for (int i = 0; i < render_data.m_width; ++i) {
       Color pixel_color {};
       if (render_data.m_samples_per_pixel <= 1) {
         // no multisampling
-        const auto u {static_cast<double>(i) / (file_data.m_width  - 1)};
-        const auto v {static_cast<double>(j) / (file_data.m_height - 1)};
+        const auto u {static_cast<double>(i) / (render_data.m_width  - 1)};
+        const auto v {static_cast<double>(j) / (render_data.m_height - 1)};
         const Ray ray {render_data.m_camera->getRay(u, v)};
         pixel_color = rayColor(ray, render_data.m_world, max_depth);
       } else {
         // multisampling
         for (int s = 0; s < render_data.m_samples_per_pixel; ++s) {
-          const auto u {(i + randomDouble()) / (file_data.m_width  - 1)};
-          const auto v {(j + randomDouble()) / (file_data.m_height - 1)};
+          const auto u {(i + randomDouble()) / (render_data.m_width  - 1)};
+          const auto v {(j + randomDouble()) / (render_data.m_height - 1)};
           const Ray ray {render_data.m_camera->getRay(u, v)};
           pixel_color += rayColor(ray, render_data.m_world, max_depth);
         }

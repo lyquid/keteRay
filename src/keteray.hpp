@@ -16,6 +16,7 @@
 #include <glm/gtx/norm.hpp>
 #include <glm/vec3.hpp>
 #include <limits>
+#include <string>
 
 namespace ktp {
 
@@ -31,13 +32,17 @@ constexpr auto k_INFINITY {std::numeric_limits<double>::infinity()};
 
 struct RenderData {
   Camera*   m_camera {nullptr};
+  int       m_height {};
   int       m_samples_per_pixel {};
+  int       m_width {};
   Hittable* m_world {nullptr};
 };
 
 inline ppm::Color colorToPPM(const Color& color) {
   return ppm::Color{color.r, color.g, color.b};
 }
+
+std::string createFileName(const RenderData& render_data, const ppm::PPMFileData& file_data);
 
 void keteRay(const RenderData& render_data, ppm::PPMFileData& file_data);
 

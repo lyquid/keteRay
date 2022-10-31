@@ -8,8 +8,10 @@
     "vertical": [0.0, 1.0,  0.0],
     "vFov": 20
   },
+  "file": {
+    "name": "render"
+  },
   "render": {
-    "fileName": "render",
     "samples": 1,
     "width": 400
   }

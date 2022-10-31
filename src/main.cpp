@@ -16,29 +16,13 @@ int main(int argc, char* argv[]) {
   using namespace ktp;
   // config file
   CameraConfig camera_config {};
+  FileConfig   file_config {};
   RenderConfig render_config {};
-  parseConfigFile(camera_config, render_config);
+  parseConfigFile(camera_config, file_config, render_config);
   // args processing
   processArgs(StringsVector(argv, argv + argc), render_config);
   // camera
-  Camera camera {
-    camera_config.m_look_from,
-    camera_config.m_look_at,
-    camera_config.m_vertical,
-    camera_config.m_focus_dist,
-    camera_config.m_vfov,
-    camera_config.m_aspect_ratio,
-    camera_config.m_aperture
-  };
-  // image data
-  ppm::PPMFileData file_data {};
-  file_data.m_width  = render_config.m_width;
-  file_data.m_height = static_cast<int>(file_data.m_width / camera.aspectRatio());
-  file_data.m_pixels.reserve(file_data.m_width * file_data.m_height);
-  file_data.m_name = render_config.m_file_name + "_"
-    + std::to_string(file_data.m_width)        + "x"
-    + std::to_string(file_data.m_height)       + "_"
-    + std::to_string(render_config.m_samples)  + "_samples.ppm";
+  Camera camera {camera_config};
   // world
   HittableList world {randomScene()};
   // const MaterialPtr material_ground {std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0))};
@@ -52,16 +36,16 @@ int main(int argc, char* argv[]) {
   // render data
   RenderData render_data {};
   render_data.m_camera = &camera;
+  render_data.m_width = render_config.m_width;
+  render_data.m_height = static_cast<int>(render_data.m_width / camera.aspectRatio());
   render_data.m_samples_per_pixel = render_config.m_samples;
   render_data.m_world = &world;
+  // image data
+  ppm::PPMFileData file_data {};
+  file_data.m_name = file_config.m_name;
+  file_data.m_file_name = createFileName(render_data, file_data);
   // GUI
-  gui::start(&render_data, &file_data);
-  // render
-  std::cout << "Begin rendering at " << file_data.m_width << 'x' << file_data.m_height
-            << '@' << render_data.m_samples_per_pixel << "spp.\n";
-  // keteRay(render_data, file_data);
-  // file generation
-  // ppm::makePPMFile(file_data);
+  gui::start(&render_data, &camera_config, &file_data);
 
   return 0;
 }

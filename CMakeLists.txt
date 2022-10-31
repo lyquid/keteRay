@@ -49,9 +49,13 @@ if(DEFINED CMAKE_TOOLCHAIN_FILE)
   find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 else()
 	message(STATUS "Using CMake find modules")
+  add_subdirectory(lib/imgui-1.88)
+  add_subdirectory(lib/imgui-sfml)
   # Find the packages needed
 	# like: find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
   find_package(glm)
+  find_package(nlohmann_json CONFIG REQUIRED)
+  find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 endif()
 
 add_subdirectory(src)

@@ -71,6 +71,7 @@ inline Color operator/(Color color, double t) {
  */
 struct PPMFileData {
   const int   m_channels_per_color {3};
+  std::string m_file_name {};
   int         m_height {};
   std::string m_name {};
   Pixels      m_pixels {};
@@ -101,7 +102,7 @@ inline void generateTestImage(PPMFileData& data) {
  * @param data The data of the ppm file.
  */
 inline void makePPMFile(const PPMFileData& data) {
-  std::ofstream image_file {data.m_name};
+  std::ofstream image_file {data.m_file_name};
   // header for ppm file
   image_file << "P3\n" << data.m_width << ' ' << data.m_height << "\n255\n";
   std::size_t percent {0u};

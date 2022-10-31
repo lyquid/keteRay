@@ -16,6 +16,16 @@
 
 namespace ktp {
 
+struct CameraConfig {
+  double m_aperture {1.0};
+  double m_aspect_ratio {16.0 / 9.0};
+  double m_focus_dist {0.0};
+  Vector m_look_at   {0.0, 0.0, -1.0};
+  Vector m_look_from {0.0, 0.0,  0.0};
+  Vector m_vertical  {0.0, 1.0,  0.0};
+  double m_vfov {90.0};
+};
+
 class Camera {
  public:
 
@@ -33,6 +43,17 @@ class Camera {
       Vector(0.0, 1.0, 0.0), // vup
       vfov,
       aspect_ratio
+    ) {}
+
+  Camera(const CameraConfig& config):
+    Camera(
+      config.m_look_from,
+      config.m_look_at,
+      config.m_vertical,
+      config.m_focus_dist,
+      config.m_vfov,
+      config.m_aspect_ratio,
+      config.m_aperture
     ) {}
 
   Camera(
@@ -56,6 +77,8 @@ class Camera {
     const Vector offset {m_u * rd.x + m_v * rd.y};
     return Ray(m_origin + offset, m_lower_left_corner + s * m_horizontal + t * m_vertical - m_origin - offset);
   }
+
+  void reset(const CameraConfig& config);
 
  private:
 

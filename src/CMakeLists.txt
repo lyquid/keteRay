@@ -56,9 +56,23 @@ if(DEFINED CMAKE_TOOLCHAIN_FILE)
     libKeteray
     guiKeteray
   )
-else()
-  target_link_libraries(keteray PRIVATE
+else() # no vcpkg
+  target_include_directories(guiKeteray PRIVATE ${keteRay_SOURCE_DIR}/lib/imgui-1.88)
+  target_include_directories(guiKeteray PRIVATE ${keteRay_SOURCE_DIR}/lib/imgui-sfml)
+  target_link_libraries(libKeteray
     glm
+    nlohmann_json::nlohmann_json
+  )
+  target_link_libraries(guiKeteray PRIVATE
+    imgui
+    imgui-sfml
+    sfml-system
+    sfml-graphics
+    sfml-window
+  )
+  target_link_libraries(keteray PRIVATE
+    libKeteray
+    guiKeteray
   )
 endif()
 

@@ -13,19 +13,25 @@
 #define KTP_GUI_HPP_
 
 namespace ppm { struct PPMFileData; }
-namespace sf  { class RenderWindow; }
 
 namespace ktp {
 
+struct CameraConfig;
 struct RenderData;
 
 namespace gui {
 
+extern CameraConfig* camera_data;
 extern ppm::PPMFileData* file_data;
 extern RenderData* render_data;
 
-void renderingThread(sf::RenderWindow* window);
-void start(RenderData* render_data_in, ppm::PPMFileData* file_data_in);
+void start(RenderData* render_data_in, CameraConfig* camera_in, ppm::PPMFileData* file_data_in);
+
+void layout();
+void cameraSection();
+void fileSection();
+void renderSection();
+
 
 } } // namespace gui/ktp
 
