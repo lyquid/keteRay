@@ -68,7 +68,7 @@ void ktp::gui::layout() {
   ImGui::Separator();
 
   if (ImGui::Button("Render")) {
-    std::cout << "Begin rendering at " << file_data->m_width << 'x' << file_data->m_height
+    std::cout << "Begin rendering at " << render_data->m_width << 'x' << render_data->m_height
               << '@' << render_data->m_samples_per_pixel << "spp.\n";
     keteRay(*render_data, *file_data);
     ppm::makePPMFile(*file_data);
@@ -117,7 +117,7 @@ void ktp::gui::renderSection() {
   if (ImGui::InputInt("Width", &render_data->m_width)) {
     file_data->m_file_name = createFileName(*render_data, *file_data);
   }
-  if (ImGui::InputInt("Width", &render_data->m_height)) {
+  if (ImGui::InputInt("Height", &render_data->m_height)) {
     file_data->m_file_name = createFileName(*render_data, *file_data);
   }
   if (ImGui::InputInt("Samples per pixel", &render_data->m_samples_per_pixel)) {
