@@ -1,6 +1,6 @@
 #include "hittable.hpp"
 #include "material.hpp"
-#include "ray.hpp"
+#include "../renderer/ray.hpp"
 
 bool ktp::Lambertian::scatter(const Ray& ray, const HitRecord& record, Color& attenuation, Ray& scattered) const {
   Vector scatter_direction {record.m_normal + randomUnitVector()};

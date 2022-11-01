@@ -1,7 +1,7 @@
 #include "camera.hpp"
-#include "hittable.hpp"
+#include "../world/hittable.hpp"
 #include "keteray.hpp"
-#include "material.hpp"
+#include "../world/material.hpp"
 #include "ray.hpp"
 #include <chrono>
 #include <random>

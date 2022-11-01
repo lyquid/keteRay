@@ -1,9 +1,9 @@
-#include "camera.hpp"
-#include "gui.hpp"
-#include "hittable.hpp"
-#include "keteray.hpp"
-#include "libppm.hpp"
-#include "scene.hpp"
+#include "../renderer/camera.hpp"
+#include "../gui/gui.hpp"
+#include "../world/hittable.hpp"
+#include "../renderer/keteray.hpp"
+#include "../libppm.hpp"
+#include "../world/scene.hpp"
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <imgui-SFML.h>

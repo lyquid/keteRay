@@ -12,7 +12,7 @@
 #ifndef KTP_MATERIAL_HPP_
 #define KTP_MATERIAL_HPP_
 
-#include "keteray.hpp"
+#include "../renderer/keteray.hpp"
 #include <memory>
 
 namespace ktp {

@@ -12,7 +12,7 @@
 #ifndef KTP_CONFIG_HPP_
 #define KTP_CONFIG_HPP_
 
-#include "keteray.hpp"
+// #include "keteray.hpp"
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>

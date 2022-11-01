@@ -12,7 +12,7 @@
 #ifndef KTP_KETERAY_HPP_
 #define KTP_KETERAY_HPP_
 
-#include "libppm.hpp"
+#include "../libppm.hpp"
 #include <glm/gtx/norm.hpp>
 #include <glm/vec3.hpp>
 #include <limits>

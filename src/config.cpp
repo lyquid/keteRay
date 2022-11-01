@@ -1,4 +1,4 @@
-#include "camera.hpp"
+#include "renderer/camera.hpp"
 #include "config.hpp"
 
 void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, RenderConfig& render_config) {

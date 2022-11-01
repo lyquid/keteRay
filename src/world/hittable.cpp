@@ -1,5 +1,5 @@
 #include "hittable.hpp"
-#include "ray.hpp"
+#include "../renderer/ray.hpp"
 
 void ktp::HitRecord::setFaceNormal(const Ray& ray, const Vector& outward_normal) {
   m_front_face = glm::dot(ray.direction(), outward_normal) < 0.0;

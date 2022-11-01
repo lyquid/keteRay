@@ -1,11 +1,11 @@
-#include "camera.hpp"
+#include "renderer/camera.hpp"
 #include "config.hpp"
-#include "gui.hpp"
-#include "hittable.hpp"
-#include "keteray.hpp"
-#include "material.hpp"
-#include "scene.hpp"
-#include "sphere.hpp"
+#include "gui/gui.hpp"
+#include "world/hittable.hpp"
+#include "./renderer/keteray.hpp"
+#include "world/material.hpp"
+#include "world/scene.hpp"
+#include "world/sphere.hpp"
 #include <algorithm> // find
 #include <memory>
 

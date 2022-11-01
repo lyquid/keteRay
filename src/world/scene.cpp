@@ -1,5 +1,5 @@
 #include "hittable.hpp"
-#include "keteray.hpp"
+#include "../renderer/keteray.hpp"
 #include "material.hpp"
 #include "scene.hpp"
 #include "sphere.hpp"
