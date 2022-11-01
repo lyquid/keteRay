@@ -9,6 +9,7 @@
 #include <imgui-SFML.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <thread>
 
 ktp::CameraConfig* ktp::gui::camera_data {nullptr};
 ppm::PPMFileData*  ktp::gui::file_data {nullptr};
@@ -65,18 +66,18 @@ void ktp::gui::layout() {
         rendering = true;
         std::cout << "Begin rendering at " << render_data->m_width << 'x' << render_data->m_height
                   << '@' << render_data->m_samples_per_pixel << "spp.\n";
-        keteRay(*render_data, *file_data);
-        ppm::makePPMFile(*file_data);
-        file_data->m_pixels.clear();
-        rendering = false;
+        std::thread render_thread {[] {
+          keteRay(*render_data, *file_data);
+          ppm::makePPMFile(*file_data);
+          rendering = false;
+        }};
+        render_thread.detach();
       }
       ImGui::SameLine();
       if (ImGui::Button("Randomize world")) {
         *render_data->m_world = randomScene();
       }
   ImGui::EndDisabled();
-
-  ImGui::End();
 }
 
 void ktp::gui::cameraSection(bool rendering) {
@@ -117,7 +118,7 @@ void ktp::gui::cameraSection(bool rendering) {
 
 void ktp::gui::fileSection(bool rendering) {
   ImGui::Text("Image file");
-  ImGui::BeginDisabled();
+  ImGui::BeginDisabled(true);
     ImGui::InputText("File name", &file_data->m_file_name);
   ImGui::EndDisabled();
 }
@@ -129,7 +130,7 @@ void ktp::gui::renderSection(bool rendering) {
     render_data->m_height = static_cast<int>(render_data->m_width / render_data->m_camera->aspectRatio());
     file_data->m_file_name = createFileName(*render_data, *file_data);
   }
-  ImGui::BeginDisabled();
+  ImGui::BeginDisabled(true);
     if (ImGui::InputInt("Height", &render_data->m_height)) {
       file_data->m_file_name = createFileName(*render_data, *file_data);
     }

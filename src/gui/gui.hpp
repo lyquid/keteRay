@@ -32,7 +32,6 @@ void cameraSection(bool rendering);
 void fileSection(bool rendering);
 void renderSection(bool rendering);
 
-
 } } // namespace gui/ktp
 
 #endif

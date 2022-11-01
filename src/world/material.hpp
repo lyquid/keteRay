@@ -17,7 +17,7 @@
 
 namespace ktp {
 
-class HitRecord;
+struct HitRecord;
 class Ray;
 
 class Material {

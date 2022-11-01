@@ -17,6 +17,7 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data) {
   // config of file_data
   file_data.m_width  = render_data.m_width;
   file_data.m_height = render_data.m_height;
+  file_data.m_pixels.clear();
   file_data.m_pixels.reserve(file_data.m_width * file_data.m_height);
   file_data.m_file_name = createFileName(render_data, file_data);
   // Recursion depth for rayColor
