@@ -28,9 +28,9 @@ extern RenderData* render_data;
 void start(RenderData* render_data_in, CameraConfig* camera_in, ppm::PPMFileData* file_data_in);
 
 void layout();
-void cameraSection();
-void fileSection();
-void renderSection();
+void cameraSection(bool rendering);
+void fileSection(bool rendering);
+void renderSection(bool rendering);
 
 
 } } // namespace gui/ktp
