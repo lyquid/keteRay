@@ -4,6 +4,7 @@
 #include "../renderer/keteray.hpp"
 #include "../libppm.hpp"
 #include "../world/scene.hpp"
+#include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <imgui-SFML.h>
@@ -81,10 +82,11 @@ void ktp::gui::layout() {
 }
 
 void ktp::gui::cameraSection(bool rendering) {
+  static double step {0.01};
   ImGui::Text("Camera");
   // aperture
   ImGui::BeginDisabled(rendering);
-  if (ImGui::InputDouble("Aperture", &camera_data->m_aperture)) {
+  if (ImGui::InputScalar("Aperture", ImGuiDataType_Double, &camera_data->m_aperture, &step, &step, "%.3f")) {
     render_data->m_camera->reset(*camera_data);
   }
   // aspect ratio
@@ -97,20 +99,30 @@ void ktp::gui::cameraSection(bool rendering) {
     ImGui::Checkbox("Locked", &aspect_ratio_locked);
   ImGui::EndDisabled();
   // focus distance
-  if (ImGui::InputDouble("Focus distance", &camera_data->m_focus_dist)) {
+  if (ImGui::InputScalar("Focus distance", ImGuiDataType_Double, &camera_data->m_focus_dist, &step, &step, "%.3f")) {
     render_data->m_camera->reset(*camera_data);
   }
-  // if (ImGui::InputDouble("Look at", &camera_data->m_look_at)) {
-
-  // }
-  // if (ImGui::InputDouble("Look from", &camera_data->m_look_from)) {
-
-  // }
-  // if (ImGui::InputDouble("Vertical", &camera_data->m_vertical)) {
-
-  // }
+  // look from
+  static float look_from[3] {(float)camera_data->m_look_from.x, (float)camera_data->m_look_from.y, (float)camera_data->m_look_from.z};
+  if (ImGui::InputFloat3("Look from", look_from, "%.2f")) {
+    camera_data->m_look_from = Vector(look_from[0], look_from[1], look_from[2]);
+    render_data->m_camera->reset(*camera_data);
+  }
+  // look at
+  static float look_at[3] {(float)camera_data->m_look_at.x, (float)camera_data->m_look_at.y, (float)camera_data->m_look_at.z};
+  if (ImGui::InputFloat3("Look at", look_at, "%.2f")) {
+    camera_data->m_look_at = Vector(look_at[0], look_at[1], look_at[2]);
+    render_data->m_camera->reset(*camera_data);
+  }
+  // vertical
+  static float vertical[3] {(float)camera_data->m_vertical.x, (float)camera_data->m_vertical.y, (float)camera_data->m_vertical.z};
+  if (ImGui::InputFloat3("Vertical", vertical, "%.2f")) {
+    camera_data->m_vertical = Vector(vertical[0], vertical[1], vertical[2]);
+    render_data->m_camera->reset(*camera_data);
+  }
   // vfov
-  if (ImGui::InputDouble("Vertical FoV (zoom)", &camera_data->m_vfov)) {
+  static double vfov_step {0.1};
+  if (ImGui::InputScalar("Vertical FoV", ImGuiDataType_Double, &camera_data->m_vfov, &vfov_step, &vfov_step, "%.2f")) {
     render_data->m_camera->reset(*camera_data);
   }
   ImGui::EndDisabled();
