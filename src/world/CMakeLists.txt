@@ -11,6 +11,6 @@ target_link_libraries(keteRayWorld PRIVATE
 )
 else()
 target_link_libraries(keteRayWorld PRIVATE
-  # glm::glm
+  glm
 )
 endif()

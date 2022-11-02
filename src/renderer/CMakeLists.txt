@@ -9,6 +9,6 @@ target_link_libraries(keteRayRenderer PRIVATE
 )
 else()
 target_link_libraries(keteRayRenderer PRIVATE
-  # glm::glm
+  glm
 )
 endif()
