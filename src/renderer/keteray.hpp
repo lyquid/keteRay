@@ -63,6 +63,10 @@ Vector randomInHemisphere(const Vector& normal);
 
 Vector randomInUnitDisk();
 
+inline int randomInt(int min, int max) {
+  return static_cast<int>(randomDouble(min, max + 1));
+}
+
 // Hack diffuse
 Vector randomInUnitSphere();
 

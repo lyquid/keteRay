@@ -48,5 +48,5 @@ ktp::HittableList ktp::randomScene() {
   const auto material3 {std::make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0)};
   world.add(std::make_shared<Sphere>(Point(4.0, 1.0, 0.0), 1.0, material3));
 
-  return world;
+  return HittableList(std::make_shared<BVHnode>(world));
 }

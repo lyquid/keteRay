@@ -36,7 +36,7 @@ if(DEFINED CMAKE_TOOLCHAIN_FILE)
   )
 else() # no vcpkg
   target_link_libraries(keteray PRIVATE
-    keteRayGUI
+    # keteRayGUI
     keteRayRenderer
     keteRayWorld
     nlohmann_json::nlohmann_json

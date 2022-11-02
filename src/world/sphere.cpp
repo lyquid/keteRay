@@ -3,6 +3,14 @@
 #include "sphere.hpp"
 #include <glm/gtx/norm.hpp> // glm::dot, glm::length2
 
+ bool ktp::Sphere::boundingBox(AABB& output_box) const {
+  output_box = AABB(
+    m_center - Vector(m_radius, m_radius, m_radius),
+    m_center + Vector(m_radius, m_radius, m_radius)
+  );
+  return true;
+ }
+
 bool ktp::Sphere::hit(const Ray& ray, double t_min, double t_max, HitRecord& record) const {
   const Vector oc {ray.origin() - m_center};
   const auto a {glm::length2(ray.direction())};

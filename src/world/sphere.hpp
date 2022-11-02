@@ -21,7 +21,8 @@ class Sphere: public Hittable {
 
   Sphere() = default;
   Sphere(const Point& center, double radius, MaterialPtr material):
-    m_center(center), m_radius(radius), m_material(material) {}
+    m_center(center), m_material(material), m_radius(radius) {}
+  bool boundingBox(AABB& output_box) const override;
   auto center() const { return m_center; }
   bool hit(const Ray& ray, double t_min, double t_max, HitRecord& record) const override;
   auto radius() const { return m_radius; }

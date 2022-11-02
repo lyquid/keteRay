@@ -8,6 +8,7 @@
 #include "world/sphere.hpp"
 #include <algorithm> // find
 #include <memory>
+#include <thread> // to delete when gui works
 
 using StringsVector = std::vector<std::string>;
 void processArgs(const StringsVector& args, ktp::RenderConfig& render_config);
@@ -46,6 +47,14 @@ int main(int argc, char* argv[]) {
   file_data.m_file_name = createFileName(render_data, file_data);
   // GUI
   gui::start(&render_data, &camera_config, &file_data);
+  // render **to delete**
+  // std::cout << "Begin rendering at " << render_data.m_width << 'x' << render_data.m_height
+  //           << '@' << render_data.m_samples_per_pixel << "spp.\n";
+  // std::thread render_thread {[&] {
+  //   keteRay(render_data, file_data);
+  //   ppm::makePPMFile(file_data);
+  // }};
+  // render_thread.join();
 
   return 0;
 }

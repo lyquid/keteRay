@@ -1,6 +1,7 @@
 #include "renderer/camera.hpp"
 #include "config.hpp"
 
+#ifndef __GNUC__
 void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, RenderConfig& render_config) {
   std::ifstream file {"config.json"};
   const json config {json::parse(file)};
@@ -19,3 +20,25 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
   render_config.m_samples = config["render"]["samples"];
   render_config.m_width   = config["render"]["width"];
 }
+#endif
+
+#ifdef __GNUC__
+void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, RenderConfig& render_config) {
+  std::ifstream file {"config.json"};
+  const json config {json::parse(file)};
+  // camera
+  const double w {config[0]["camera"]["aspectRatio"]["w"]}, h {config[0]["camera"]["aspectRatio"]["h"]};
+  camera_config.m_aspect_ratio = w / h;
+  camera_config.m_look_at    = jsonVectorToVector(config[0]["camera"]["lookAt"]);
+  camera_config.m_look_from  = jsonVectorToVector(config[0]["camera"]["lookFrom"]);
+  camera_config.m_vertical   = jsonVectorToVector(config[0]["camera"]["vertical"]);
+  camera_config.m_vfov       = config[0]["camera"]["vFov"];
+  camera_config.m_aperture   = config[0]["camera"]["aperture"];
+  camera_config.m_focus_dist = config[0]["camera"]["focusDist"];
+  // file
+  file_config.m_name = config[0]["file"]["name"];
+  // render
+  render_config.m_samples = config[0]["render"]["samples"];
+  render_config.m_width   = config[0]["render"]["width"];
+}
+#endif

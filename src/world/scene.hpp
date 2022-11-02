@@ -1,7 +1,7 @@
 /**
  * @file scene.hpp
  * @author Alejandro Castillo Blanco (alexcastilloblanco@gmail.com)
- * @brief
+ * @brief Random scene generation.
  * @version 0.1
  * @date 2022-10-30
  *
