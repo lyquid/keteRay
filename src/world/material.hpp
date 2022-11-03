@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef KTP_MATERIAL_HPP_
-#define KTP_MATERIAL_HPP_
+#ifndef KETERAY_SRC_WORLD_MATERIAL_HPP_
+#define KETERAY_SRC_WORLD_MATERIAL_HPP_
 
 #include "../renderer/keteray.hpp"
 #include <memory>

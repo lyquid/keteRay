@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef KTP_RENDERER_TYPES_HPP_
-#define KTP_RENDERER_TYPES_HPP_
+#ifndef KETERAY_SRC_RENDERER_TYPES_HPP_
+#define KETERAY_SRC_RENDERER_TYPES_HPP_
 
 #include <glm/vec3.hpp>
 #include <limits>

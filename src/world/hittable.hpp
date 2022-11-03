@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef KTP_HITTABLE_HPP_
-#define KTP_HITTABLE_HPP_
+#ifndef KETERAY_SRC_WORLD_HITTABLE_HPP_
+#define KETERAY_SRC_WORLD_HITTABLE_HPP_
 
 #include "../renderer/keteray.hpp"
 #include <memory>
@@ -74,7 +74,7 @@ class HittableList: public Hittable {
   bool hit(const Ray& ray, double t_min, double t_max, HitRecord& record) const override;
 
  private:
- 
+
   std::vector<HittablePtr> m_objects {};
 };
 

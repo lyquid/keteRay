@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef KTP_CONFIG_HPP_
-#define KTP_CONFIG_HPP_
+#ifndef KETERAY_SRC_CONFIG_HPP_
+#define KETERAY_SRC_CONFIG_HPP_
 
 #include <nlohmann/json.hpp>
 #include <fstream>

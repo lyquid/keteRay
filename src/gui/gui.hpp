@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef KTP_GUI_HPP_
-#define KTP_GUI_HPP_
+#ifndef KETERAY_SRC_GUI_GUI_HPP_
+#define KETERAY_SRC_GUI_GUI_HPP_
 
 namespace ppm { struct PPMFileData; }
 

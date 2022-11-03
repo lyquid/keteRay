@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef KTP_RENDERER_RANDOM_HPP_
-#define KTP_RENDERER_RANDOM_HPP_
+#ifndef KETERAY_SRC_RENDERER_RANDOM_HPP_
+#define KETERAY_SRC_RENDERER_RANDOM_HPP_
 
 #include "types.hpp"
 

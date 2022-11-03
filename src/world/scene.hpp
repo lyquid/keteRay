@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef KTP_SCENE_HPP_
-#define KTP_SCENE_HPP_
+#ifndef KETERAY_SRC_WORLD_SCENE_HPP_
+#define KETERAY_SRC_WORLD_SCENE_HPP_
 
 namespace ktp {
 
