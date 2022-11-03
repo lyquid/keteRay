@@ -23,7 +23,7 @@ bool ktp::Metal::scatter(const Ray& ray, const HitRecord& record, Color& attenua
 
 double ktp::Dielectric::reflectance(double cosine, double ref_idx) {
   // use Schlick's approximation for reflectance
-  auto r0 {(1 - ref_idx) / (1 + ref_idx)};
+  auto r0 {(1.0 - ref_idx) / (1.0 + ref_idx)};
   r0 = r0 * r0;
   return r0 + (1.0 - r0) * glm::pow((1.0 - cosine), 5.0);
 }

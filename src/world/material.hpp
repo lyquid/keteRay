@@ -13,13 +13,10 @@
 #define KETERAY_SRC_WORLD_MATERIAL_HPP_
 
 #include "texture.hpp"
-#include "../renderer/keteray.hpp"
-#include <memory>
+#include "world_types.hpp"
+#include "../renderer/types.hpp"
 
 namespace ktp {
-
-struct HitRecord;
-class Ray;
 
 class Material {
  public:
@@ -35,7 +32,7 @@ class Material {
 class Lambertian: public Material {
  public:
   Lambertian(const Color& albedo): m_albedo(std::make_shared<SolidColor>(albedo)) {}
-  Lambertian(std::shared_ptr<Texture> albedo): m_albedo(albedo) {}
+  Lambertian(TexturePtr albedo): m_albedo(albedo) {}
   bool scatter(
     const Ray& ray,
     const HitRecord& record,
@@ -43,7 +40,7 @@ class Lambertian: public Material {
     Ray& scattered
   ) const override;
  private:
-  std::shared_ptr<Texture> m_albedo {};
+  TexturePtr m_albedo {};
 };
 
 class Metal: public Material {

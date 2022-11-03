@@ -1,5 +1,4 @@
 #include "hittable.hpp"
-#include "../renderer/keteray.hpp"
 #include "../renderer/random.hpp"
 #include "../renderer/ray.hpp"
 #include <algorithm> // std::swap
@@ -35,7 +34,7 @@ ktp::AABB ktp::AABB::surroundingBox(const AABB& box0, const AABB& box1) {
 
 // BVHnode
 
-inline bool boxCompare(const ktp::HittablePtr a, const ktp::HittablePtr b, int axis) {
+inline bool boxCompare(const ktp::HittablePtr& a, const ktp::HittablePtr& b, int axis) {
   ktp::AABB box_a {};
   ktp::AABB box_b {};
 

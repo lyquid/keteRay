@@ -13,6 +13,7 @@
 #define KETERAY_SRC_WORLD_SPHERE_HPP_
 
 #include "hittable.hpp"
+#include "../renderer/types.hpp"
 
 namespace ktp {
 

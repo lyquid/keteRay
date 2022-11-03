@@ -12,17 +12,11 @@
 #ifndef KETERAY_SRC_WORLD_HITTABLE_HPP_
 #define KETERAY_SRC_WORLD_HITTABLE_HPP_
 
-#include "../renderer/keteray.hpp"
-#include <memory>
+#include "world_types.hpp"
+#include "../renderer/types.hpp"
 #include <vector>
 
 namespace ktp {
-
-class Material;
-class Ray;
-
-using HittablePtr = std::shared_ptr<Hittable>;
-using MaterialPtr = std::shared_ptr<Material>;
 
 struct HitRecord {
   bool        m_front_face {};

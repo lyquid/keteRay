@@ -1,4 +1,3 @@
-#include "../renderer/keteray.hpp"
 #include "../renderer/ray.hpp"
 #include "sphere.hpp"
 #include <glm/gtx/norm.hpp> // glm::dot, glm::length2

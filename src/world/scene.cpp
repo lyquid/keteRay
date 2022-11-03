@@ -2,8 +2,8 @@
 #include "material.hpp"
 #include "scene.hpp"
 #include "sphere.hpp"
-#include "../renderer/keteray.hpp"
 #include "../renderer/random.hpp"
+#include "../renderer/types.hpp"
 #include <memory>
 
 ktp::HittableList ktp::randomScene() {
@@ -18,7 +18,7 @@ ktp::HittableList ktp::randomScene() {
       const Point center {a + 0.9 * rng::randomDouble(), 0.2, b + 0.9 * rng::randomDouble()};
 
       if ((center - Point(4.0, 0.2, 0.0)).length() > 0.9) {
-        std::shared_ptr<Material> sphere_material {nullptr};
+        MaterialPtr sphere_material {nullptr};
 
         if (choose_mat < 0.8) {
           // diffuse
