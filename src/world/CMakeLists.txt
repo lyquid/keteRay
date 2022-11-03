@@ -3,6 +3,7 @@ add_library(keteRayWorld
   material.cpp
   scene.cpp
   sphere.cpp
+  texture.cpp
 )
 
 if(DEFINED CMAKE_TOOLCHAIN_FILE)

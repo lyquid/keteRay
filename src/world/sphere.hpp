@@ -22,6 +22,9 @@ class Sphere: public Hittable {
   Sphere() = default;
   Sphere(const Point& center, double radius, MaterialPtr material):
     m_center(center), m_material(material), m_radius(radius) {}
+
+  static void getSphereUV(const Point& p, double& u, double& v);
+
   bool boundingBox(AABB& output_box) const override;
   auto center() const { return m_center; }
   bool hit(const Ray& ray, double t_min, double t_max, HitRecord& record) const override;

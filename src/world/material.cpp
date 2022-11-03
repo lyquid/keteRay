@@ -10,7 +10,7 @@ bool ktp::Lambertian::scatter(const Ray& ray, const HitRecord& record, Color& at
     scatter_direction = record.m_normal;
   }
   scattered = Ray(record.m_point, scatter_direction);
-  attenuation = m_albedo;
+  attenuation = m_albedo->value(record.m_u, record.m_v, record.m_point);
   return true;
 }
 

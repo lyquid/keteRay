@@ -30,6 +30,8 @@ struct HitRecord {
   Vector      m_normal {};
   Point       m_point {};
   double      m_t {};
+  double      m_u {};
+  double      m_v {};
 
   void setFaceNormal(const Ray& ray, const Vector& outward_normal);
 };
