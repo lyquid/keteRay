@@ -8,7 +8,9 @@
 ktp::HittableList ktp::randomScene() {
   HittableList world {};
 
-  const auto ground_material {std::make_shared<Lambertian>(Color(0.5, 0.5, 0.5))};
+  const TexturePtr checker {std::make_shared<CheckerTexture>(Color(0.2, 0.3, 0.1), Color(0.9, 0.9, 0.9))};
+  const MaterialPtr ground_material {std::make_shared<Lambertian>(checker)};
+  // const auto ground_material {std::make_shared<Lambertian>(Color(0.5, 0.5, 0.5))};
   world.add(std::make_shared<Sphere>(Point(0.0, -1000.0, 0.0), 1000.0, ground_material));
 
   for (int a = -11; a < 11; ++a) {
@@ -39,13 +41,13 @@ ktp::HittableList ktp::randomScene() {
     }
   }
 
-  const auto material1 {std::make_shared<Dielectric>(1.5)};
-  world.add(std::make_shared<Sphere>(Point(0.0, 1.0, 0.0), 1.0, material1));
-
-  const auto material2 {std::make_shared<Lambertian>(Color(0.4, 0.2, 0.1))};
+  const MaterialPtr material2 {std::make_shared<Lambertian>(Color(0.4, 0.2, 0.1))};
   world.add(std::make_shared<Sphere>(Point(-4.0, 1.0, 0.0), 1.0, material2));
 
-  const auto material3 {std::make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0)};
+  const MaterialPtr material1 {std::make_shared<Dielectric>(1.5)};
+  world.add(std::make_shared<Sphere>(Point(0.0, 1.0, 0.0), 1.0, material1));
+
+  const MaterialPtr material3 {std::make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0)};
   world.add(std::make_shared<Sphere>(Point(4.0, 1.0, 0.0), 1.0, material3));
 
   return HittableList(std::make_shared<BVHnode>(world));

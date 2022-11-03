@@ -25,6 +25,7 @@ struct RenderData;
 class AABB;
 class BVHnode;
 class Camera;
+class CheckerTexture;
 class Dielectric;
 class Hittable;
 class HittableList;
