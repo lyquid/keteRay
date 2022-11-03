@@ -14,7 +14,7 @@
 
 namespace ktp {
 
-#include "world_types.hpp"
+#include "../types.hpp"
 
 HittableList randomScene();
 

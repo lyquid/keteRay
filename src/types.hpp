@@ -1,7 +1,7 @@
 /**
- * @file world_types.hpp
+ * @file types.hpp
  * @author Alejandro Castillo Blanco (alexcastilloblanco@gmail.com)
- * @brief Types for the world.
+ * @brief Types for the app.
  * @version 0.1
  * @date 2022-11-03
  *
@@ -9,31 +9,42 @@
  *
  */
 
-#ifndef KETERAY_SRC_WORLD_WORLD_TYPES_HPP_
-#define KETERAY_SRC_WORLD_WORLD_TYPES_HPP_
+#ifndef KETERAY_SRC_TYPES_HPP_
+#define KETERAY_SRC_TYPES_HPP_
 
+#include <glm/vec3.hpp>
+#include <limits>
 #include <memory>
 
 namespace ktp {
 
+struct CameraConfig;
 struct HitRecord;
+struct RenderData;
 
 class AABB;
 class BVHnode;
+class Camera;
 class Dielectric;
 class Hittable;
 class HittableList;
 class Lambertian;
 class Material;
 class Metal;
+class Ray;
+class SolidColor;
 class Sphere;
 class Texture;
-class SolidColor;
+
+using Color  = glm::dvec3;
+using Point  = glm::dvec3;
+using Vector = glm::dvec3;
 
 using HittablePtr = std::shared_ptr<Hittable>;
 using MaterialPtr = std::shared_ptr<Material>;
 using TexturePtr  = std::shared_ptr<Texture>;
 
-} // namespace ktp
+constexpr auto k_INFINITY {std::numeric_limits<double>::infinity()};
+}
 
 #endif

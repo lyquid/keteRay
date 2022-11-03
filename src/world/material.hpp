@@ -13,8 +13,7 @@
 #define KETERAY_SRC_WORLD_MATERIAL_HPP_
 
 #include "texture.hpp"
-#include "world_types.hpp"
-#include "../renderer/renderer_types.hpp"
+#include "../types.hpp"
 
 namespace ktp {
 

@@ -12,8 +12,7 @@
 #ifndef KETERAY_SRC_WORLD_HITTABLE_HPP_
 #define KETERAY_SRC_WORLD_HITTABLE_HPP_
 
-#include "world_types.hpp"
-#include "../renderer/renderer_types.hpp"
+#include "../types.hpp"
 #include <vector>
 
 namespace ktp {

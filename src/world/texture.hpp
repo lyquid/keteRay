@@ -12,7 +12,7 @@
 #ifndef KETERAY_SRC_WORLD_TEXTURE_HPP_
 #define KETERAY_SRC_WORLD_TEXTURE_HPP_
 
-#include "../renderer/renderer_types.hpp"
+#include "../types.hpp"
 
 namespace ktp {
 

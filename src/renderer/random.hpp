@@ -12,7 +12,7 @@
 #ifndef KETERAY_SRC_RENDERER_RANDOM_HPP_
 #define KETERAY_SRC_RENDERER_RANDOM_HPP_
 
-#include "renderer_types.hpp"
+#include "../types.hpp"
 
 namespace ktp { namespace rng {
 
