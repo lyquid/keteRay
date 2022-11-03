@@ -1,8 +1,9 @@
 #include "hittable.hpp"
-#include "../renderer/keteray.hpp"
 #include "material.hpp"
 #include "scene.hpp"
 #include "sphere.hpp"
+#include "../renderer/keteray.hpp"
+#include "../renderer/random.hpp"
 #include <memory>
 
 ktp::HittableList ktp::randomScene() {
@@ -13,21 +14,21 @@ ktp::HittableList ktp::randomScene() {
 
   for (int a = -11; a < 11; ++a) {
     for (int b = -11; b < 11; ++b) {
-      const auto choose_mat {randomDouble()};
-      const Point center {a + 0.9 * randomDouble(), 0.2, b + 0.9 * randomDouble()};
+      const auto choose_mat {rng::randomDouble()};
+      const Point center {a + 0.9 * rng::randomDouble(), 0.2, b + 0.9 * rng::randomDouble()};
 
       if ((center - Point(4.0, 0.2, 0.0)).length() > 0.9) {
         std::shared_ptr<Material> sphere_material {nullptr};
 
         if (choose_mat < 0.8) {
           // diffuse
-          const auto albedo {randomColor() * randomColor()};
+          const auto albedo {rng::randomColor() * rng::randomColor()};
           sphere_material = std::make_shared<Lambertian>(albedo);
           world.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
         } else if (choose_mat < 0.95) {
           // metal
-          const auto albedo {randomColor(0.5, 1.0)};
-          const auto fuzz {randomDouble(0.0, 0.5)};
+          const auto albedo {rng::randomColor(0.5, 1.0)};
+          const auto fuzz {rng::randomDouble(0.0, 0.5)};
           sphere_material = std::make_shared<Metal>(albedo, fuzz);
           world.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
         } else {

@@ -9,26 +9,15 @@
  *
  */
 
-#ifndef KTP_KETERAY_HPP_
-#define KTP_KETERAY_HPP_
+#ifndef KTP_RENDERER_KETERAY_HPP_
+#define KTP_RENDERER_KETERAY_HPP_
 
+#include "types.hpp"
 #include "../libppm.hpp"
-#include <glm/gtx/norm.hpp>
-#include <glm/vec3.hpp>
-#include <limits>
+#include <glm/geometric.hpp>
 #include <string>
 
 namespace ktp {
-
-using Color  = glm::dvec3;
-using Point  = glm::dvec3;
-using Vector = glm::dvec3;
-
-class Camera;
-class Ray;
-class Hittable;
-
-constexpr auto k_INFINITY {std::numeric_limits<double>::infinity()};
 
 struct RenderData {
   Camera*   m_camera {nullptr};
@@ -53,27 +42,6 @@ void keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, int& j)
  * False otherwise
  */
 bool nearZero(const Vector& v);
-
-Color randomColor(double min = 0.0, double max = 1.0);
-
-double randomDouble(double min = 0.0, double max = 1.0);
-
-// Alternate diffuse.
-Vector randomInHemisphere(const Vector& normal);
-
-Vector randomInUnitDisk();
-
-inline int randomInt(int min, int max) {
-  return static_cast<int>(randomDouble(min, max + 1));
-}
-
-// Hack diffuse
-Vector randomInUnitSphere();
-
-// Lambertian diffuse.
-Vector randomUnitVector();
-
-Vector randomVector(double min = 0.0, double max = 1.0);
 
 Color rayColor(const Ray& ray, const Hittable* world, int depth);
 

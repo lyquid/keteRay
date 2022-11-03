@@ -1,6 +1,6 @@
 #include "renderer/camera.hpp"
 #include "config.hpp"
-#include "gui/gui.hpp"
+// #include "gui/gui.hpp"
 #include "world/hittable.hpp"
 #include "./renderer/keteray.hpp"
 #include "world/material.hpp"
@@ -46,15 +46,16 @@ int main(int argc, char* argv[]) {
   file_data.m_name = file_config.m_name;
   file_data.m_file_name = createFileName(render_data, file_data);
   // GUI
-  gui::start(&render_data, &camera_config, &file_data);
+  // gui::start(&render_data, &camera_config, &file_data);
   // render **to delete**
-  // std::cout << "Begin rendering at " << render_data.m_width << 'x' << render_data.m_height
-  //           << '@' << render_data.m_samples_per_pixel << "spp.\n";
-  // std::thread render_thread {[&] {
-  //   keteRay(render_data, file_data);
-  //   ppm::makePPMFile(file_data);
-  // }};
-  // render_thread.join();
+  std::cout << "Begin rendering at " << render_data.m_width << 'x' << render_data.m_height
+            << '@' << render_data.m_samples_per_pixel << "spp.\n";
+  std::thread render_thread {[&] {
+    int progress {};
+    keteRay(render_data, file_data, progress);
+    ppm::makePPMFile(file_data);
+  }};
+  render_thread.join();
 
   return 0;
 }

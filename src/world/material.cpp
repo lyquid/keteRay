@@ -1,9 +1,10 @@
 #include "hittable.hpp"
 #include "material.hpp"
+#include "../renderer/random.hpp"
 #include "../renderer/ray.hpp"
 
 bool ktp::Lambertian::scatter(const Ray& ray, const HitRecord& record, Color& attenuation, Ray& scattered) const {
-  Vector scatter_direction {record.m_normal + randomUnitVector()};
+  Vector scatter_direction {record.m_normal + rng::randomUnitVector()};
   // degenerate scatter direction
   if (nearZero(scatter_direction)) {
     scatter_direction = record.m_normal;
@@ -15,7 +16,7 @@ bool ktp::Lambertian::scatter(const Ray& ray, const HitRecord& record, Color& at
 
 bool ktp::Metal::scatter(const Ray& ray, const HitRecord& record, Color& attenuation, Ray& scattered) const {
   Vector reflected {reflect(glm::normalize(ray.direction()), record.m_normal)};
-  scattered = Ray(record.m_point, reflected + m_fuzz * randomInUnitSphere());
+  scattered = Ray(record.m_point, reflected + m_fuzz * rng::randomInUnitSphere());
   attenuation = m_albedo;
   return (glm::dot(scattered.direction(), record.m_normal) > 0.0);
 }
@@ -37,7 +38,7 @@ bool ktp::Dielectric::scatter(const Ray& ray, const HitRecord& record, Color& at
 
   const bool cannot_refract {refraction_ratio * sin_theta > 1.0};
   Vector direction {};
-  if (cannot_refract || reflectance(cos_theta, refraction_ratio) > randomDouble()) {
+  if (cannot_refract || reflectance(cos_theta, refraction_ratio) > rng::randomDouble()) {
     direction = reflect(unit_direction, record.m_normal);
   } else {
     direction = refract(unit_direction, record.m_normal, refraction_ratio);

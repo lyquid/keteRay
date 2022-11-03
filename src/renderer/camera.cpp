@@ -1,4 +1,6 @@
 #include "camera.hpp"
+#include "random.hpp"
+#include "ray.hpp"
 #include <glm/glm.hpp>
 
 ktp::Camera::Camera(Point look_from, Point look_at, Vector vup, double focus_dist, double vfov, double aspect_ratio, double aperture) {
@@ -11,6 +13,12 @@ ktp::Camera::Camera(Point look_from, Point look_at, Vector vup, double focus_dis
     vup,
     vfov
   });
+}
+
+ktp::Ray ktp::Camera::getRay(double s, double t) const {
+  const Vector rd {m_lens_radius * rng::randomInUnitDisk()};
+  const Vector offset {m_u * rd.x + m_v * rd.y};
+  return Ray(m_origin + offset, m_lower_left_corner + s * m_horizontal + t * m_vertical - m_origin - offset);
 }
 
 void ktp::Camera::reset(const CameraConfig& config) {

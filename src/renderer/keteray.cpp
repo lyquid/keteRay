@@ -1,10 +1,10 @@
 #include "camera.hpp"
-#include "../world/hittable.hpp"
 #include "keteray.hpp"
-#include "../world/material.hpp"
+#include "random.hpp"
 #include "ray.hpp"
-#include <chrono>
-#include <random>
+#include "../world/hittable.hpp"
+#include "../world/material.hpp"
+#include <glm/gtx/norm.hpp>
 
 std::string ktp::createFileName(const RenderData& render_data, const ppm::PPMFileData& file_data) {
   return file_data.m_name + "_"
@@ -24,7 +24,7 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, in
   constexpr auto max_depth {50};
   // here we go!
   for (j = render_data.m_height - 1; j >= 0; --j) {
-    // std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
+    std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
     for (int i = 0; i < render_data.m_width; ++i) {
       Color pixel_color {};
       if (render_data.m_samples_per_pixel <= 1) {
@@ -36,8 +36,8 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, in
       } else {
         // multisampling
         for (int s = 0; s < render_data.m_samples_per_pixel; ++s) {
-          const auto u {(i + randomDouble()) / (render_data.m_width  - 1)};
-          const auto v {(j + randomDouble()) / (render_data.m_height - 1)};
+          const auto u {(i + rng::randomDouble()) / (render_data.m_width  - 1)};
+          const auto v {(j + rng::randomDouble()) / (render_data.m_height - 1)};
           const Ray ray {render_data.m_camera->getRay(u, v)};
           pixel_color += rayColor(ray, render_data.m_world, max_depth);
         }
@@ -56,45 +56,6 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, in
 bool ktp::nearZero(const Vector& v) {
   constexpr auto s {1e-8};
   return glm::abs(v.x) < s && glm::abs(v.y) < s && glm::abs(v.z) < s;
-}
-
-ktp::Color ktp::randomColor(double min, double max) {
-  return Color(randomDouble(min, max), randomDouble(min, max), randomDouble(min, max));
-}
-
-double ktp::randomDouble(double min, double max) {
-  static std::uniform_real_distribution<double> dist(min, max);
-  static std::mt19937 generator (std::chrono::steady_clock::now().time_since_epoch().count());
-  return dist(generator);
-}
-
-ktp::Vector ktp::randomInHemisphere(const Vector& normal) {
-  const Vector in_unit_sphere {randomInUnitSphere()};
-  return glm::dot(in_unit_sphere, normal) > 0.0 ? in_unit_sphere : -in_unit_sphere;
-}
-
-ktp::Vector ktp::randomInUnitDisk() {
-  while (true) {
-    const auto p {Vector(randomDouble(-1.0, 1.0), randomDouble(-1.0, 1.0), 0.0)};
-    if (glm::length2(p) >= 1.0) continue;
-    return p;
-  }
-}
-
-ktp::Vector ktp::randomInUnitSphere() {
-  while (true) {
-    const auto p {randomVector(-1.0, 1.0)};
-    if (glm::length2(p) >= 1.0) continue;
-    return p;
-  }
-}
-
-ktp::Vector ktp::randomUnitVector() {
-  return glm::normalize(randomVector());
-}
-
-ktp::Vector ktp::randomVector(double min, double max) {
-  return Vector(randomDouble(min, max), randomDouble(min, max), randomDouble(min, max));
 }
 
 ktp::Color ktp::rayColor(const Ray& ray, const Hittable* world, int depth) {

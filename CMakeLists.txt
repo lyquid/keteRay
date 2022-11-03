@@ -59,7 +59,7 @@ else()
 endif()
 
 add_subdirectory(src)
-add_subdirectory(src/gui)
+# add_subdirectory(src/gui)
 add_subdirectory(src/renderer)
 add_subdirectory(src/world)
 
