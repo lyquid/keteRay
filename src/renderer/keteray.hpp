@@ -12,7 +12,7 @@
 #ifndef KETERAY_SRC_RENDERER_KETERAY_HPP_
 #define KETERAY_SRC_RENDERER_KETERAY_HPP_
 
-#include "types.hpp"
+#include "renderer_types.hpp"
 #include "../libppm.hpp"
 #include <glm/geometric.hpp>
 #include <string>

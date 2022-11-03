@@ -3,7 +3,7 @@
 #include "scene.hpp"
 #include "sphere.hpp"
 #include "../renderer/random.hpp"
-#include "../renderer/types.hpp"
+#include "../renderer/renderer_types.hpp"
 #include <memory>
 
 ktp::HittableList ktp::randomScene() {

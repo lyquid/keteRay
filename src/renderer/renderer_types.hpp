@@ -1,5 +1,5 @@
 /**
- * @file types.hpp
+ * @file renderer_types.hpp
  * @author Alejandro Castillo Blanco (alexcastilloblanco@gmail.com)
  * @brief Types for the renderer.
  * @version 0.1
@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef KETERAY_SRC_RENDERER_TYPES_HPP_
-#define KETERAY_SRC_RENDERER_TYPES_HPP_
+#ifndef KETERAY_SRC_RENDERER_RENDERER_TYPES_HPP_
+#define KETERAY_SRC_RENDERER_RENDERER_TYPES_HPP_
 
 #include <glm/vec3.hpp>
 #include <limits>

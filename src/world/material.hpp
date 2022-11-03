@@ -14,7 +14,7 @@
 
 #include "texture.hpp"
 #include "world_types.hpp"
-#include "../renderer/types.hpp"
+#include "../renderer/renderer_types.hpp"
 
 namespace ktp {
 

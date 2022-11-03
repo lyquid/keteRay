@@ -12,7 +12,7 @@
 #ifndef KETERAY_SRC_RENDERER_CAMERA_HPP_
 #define KETERAY_SRC_RENDERER_CAMERA_HPP_
 
-#include "types.hpp"
+#include "renderer_types.hpp"
 
 namespace ktp {
 
