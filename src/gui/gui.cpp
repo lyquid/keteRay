@@ -54,31 +54,46 @@ void ktp::gui::layout() {
     }
      ImGui::EndMenuBar();
   }
+  static std::string message {};
+  static int progress {};
   static bool rendering {false};
   ImGui::BeginDisabled(rendering);
     ImGui::Separator();
-      fileSection(rendering);
+    fileSection(rendering);
     ImGui::Separator();
-      cameraSection(rendering);
+    cameraSection(rendering);
     ImGui::Separator();
-      renderSection(rendering);
+    renderSection(rendering);
     ImGui::Separator();
-      if (ImGui::Button("Render")) {
-        rendering = true;
-        std::cout << "Begin rendering at " << render_data->m_width << 'x' << render_data->m_height
-                  << '@' << render_data->m_samples_per_pixel << "spp.\n";
-        std::thread render_thread {[] {
-          keteRay(*render_data, *file_data);
-          ppm::makePPMFile(*file_data);
-          rendering = false;
-        }};
-        render_thread.detach();
-      }
-      ImGui::SameLine();
-      if (ImGui::Button("Randomize world")) {
-        *render_data->m_world = randomScene();
-      }
+    if (ImGui::Button("Render")) {
+      rendering = true;
+      message = "Begin rendering at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
+              + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n";
+      std::cout << message;
+      std::thread render_thread {[] {
+        keteRay(*render_data, *file_data, progress);
+        progress = 0;
+        ppm::makePPMFile(*file_data);
+        message = "Rendered at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
+                + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n" + "PPM file generated successfully!";
+        rendering = false;
+      }};
+      render_thread.detach();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Randomize world")) {
+      *render_data->m_world = randomScene();
+    }
   ImGui::EndDisabled();
+  ImGui::Separator();
+  ImGui::Separator();
+  ImGui::Text(message.c_str());
+  if (rendering) {
+    if (progress != 0)
+      ImGui::Text(("Scanlines remaining: " + std::to_string(progress)).c_str());
+    else
+      ImGui::Text("Generating ppm file...");
+  }
 }
 
 void ktp::gui::cameraSection(bool rendering) {

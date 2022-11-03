@@ -13,7 +13,7 @@ std::string ktp::createFileName(const RenderData& render_data, const ppm::PPMFil
     + std::to_string(render_data.m_samples_per_pixel) + "_samples.ppm";
 }
 
-void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data) {
+void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, int& j) {
   // config of file_data
   file_data.m_width  = render_data.m_width;
   file_data.m_height = render_data.m_height;
@@ -23,8 +23,8 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data) {
   // Recursion depth for rayColor
   constexpr auto max_depth {50};
   // here we go!
-  for (int j = render_data.m_height - 1; j >= 0; --j) {
-    std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
+  for (j = render_data.m_height - 1; j >= 0; --j) {
+    // std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
     for (int i = 0; i < render_data.m_width; ++i) {
       Color pixel_color {};
       if (render_data.m_samples_per_pixel <= 1) {

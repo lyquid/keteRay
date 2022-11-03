@@ -44,7 +44,7 @@ inline ppm::Color colorToPPM(const Color& color) {
 
 std::string createFileName(const RenderData& render_data, const ppm::PPMFileData& file_data);
 
-void keteRay(const RenderData& render_data, ppm::PPMFileData& file_data);
+void keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, int& j);
 
 /**
  * @brief Checks if a vector is near 0 in all dimensions.
