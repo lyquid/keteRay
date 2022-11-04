@@ -12,11 +12,26 @@
 #ifndef KETERAY_SRC_WORLD_SCENE_HPP_
 #define KETERAY_SRC_WORLD_SCENE_HPP_
 
+#include "hittable.hpp"
+#include "../types.hpp"
+#include <functional>
+#include <map>
+#include <string>
+#include <vector>
+
 namespace ktp {
 
-#include "../types.hpp"
+struct Scene {
+  std::function<HittableList()> m_function {};
+  HittableList m_world {};
+};
 
-HittableList randomScene();
+HittableList checkeredBallsScene();
+HittableList coverScene();
+
+void loadScenes();
+
+extern std::map<std::string, Scene> scenes;
 
 } // namespace ktp
 

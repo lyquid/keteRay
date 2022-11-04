@@ -24,7 +24,7 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, in
   constexpr auto max_depth {50};
   // here we go!
   for (j = render_data.m_height - 1; j >= 0; --j) {
-    std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
+    // std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
     for (int i = 0; i < render_data.m_width; ++i) {
       Color pixel_color {};
       if (render_data.m_samples_per_pixel <= 1) {
@@ -32,14 +32,14 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, in
         const auto u {static_cast<double>(i) / (render_data.m_width  - 1)};
         const auto v {static_cast<double>(j) / (render_data.m_height - 1)};
         const Ray ray {render_data.m_camera->getRay(u, v)};
-        pixel_color = rayColor(ray, render_data.m_world, max_depth);
+        pixel_color = rayColor(ray, render_data.m_scene.m_world, max_depth);
       } else {
         // multisampling
         for (int s = 0; s < render_data.m_samples_per_pixel; ++s) {
           const auto u {(i + rng::randomDouble()) / (render_data.m_width  - 1)};
           const auto v {(j + rng::randomDouble()) / (render_data.m_height - 1)};
           const Ray ray {render_data.m_camera->getRay(u, v)};
-          pixel_color += rayColor(ray, render_data.m_world, max_depth);
+          pixel_color += rayColor(ray, render_data.m_scene.m_world, max_depth);
         }
         const auto scale {1.0 / render_data.m_samples_per_pixel};
         pixel_color *= scale;
@@ -58,12 +58,12 @@ bool ktp::nearZero(const Vector& v) {
   return glm::abs(v.x) < s && glm::abs(v.y) < s && glm::abs(v.z) < s;
 }
 
-ktp::Color ktp::rayColor(const Ray& ray, const Hittable* world, int depth) {
+ktp::Color ktp::rayColor(const Ray& ray, const Hittable& world, int depth) {
   HitRecord record {};
   // exceeded the ray bounce limit, no more light is gathered.
   if (depth <= 0) return Color(0.0, 0.0, 0.0);
 
-  if (world->hit(ray, 0.001, k_INFINITY, record)) {
+  if (world.hit(ray, 0.001, k_INFINITY, record)) {
     Ray scattered {};
     Color attenuation {};
     if (record.m_material->scatter(ray, record, attenuation, scattered)) {

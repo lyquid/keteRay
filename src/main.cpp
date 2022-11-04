@@ -1,6 +1,6 @@
 #include "renderer/camera.hpp"
 #include "config.hpp"
-// #include "gui/gui.hpp"
+#include "gui/gui.hpp"
 #include "world/hittable.hpp"
 #include "./renderer/keteray.hpp"
 #include "world/material.hpp"
@@ -24,8 +24,8 @@ int main(int argc, char* argv[]) {
   processArgs(StringsVector(argv, argv + argc), render_config);
   // camera
   Camera camera {camera_config};
-  // world
-  HittableList world {randomScene()};
+  // scenes
+  loadScenes();
   // const MaterialPtr material_ground {std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0))};
   // const MaterialPtr material_center {std::make_shared<Lambertian>(Color(0.7, 0.3, 0.3))};
   // const MaterialPtr material_left   {std::make_shared<Dielectric>(1.5)};
@@ -40,22 +40,22 @@ int main(int argc, char* argv[]) {
   render_data.m_width = render_config.m_width;
   render_data.m_height = static_cast<int>(render_data.m_width / camera.aspectRatio());
   render_data.m_samples_per_pixel = render_config.m_samples;
-  render_data.m_world = &world;
+  render_data.m_scene = scenes[k_DEFAULT_SCENE];
   // image data
   ppm::PPMFileData file_data {};
   file_data.m_name = file_config.m_name;
   file_data.m_file_name = createFileName(render_data, file_data);
   // GUI
-  // gui::start(&render_data, &camera_config, &file_data);
+  gui::start(&render_data, &camera_config, &file_data);
   // render **to delete**
-  std::cout << "Begin rendering at " << render_data.m_width << 'x' << render_data.m_height
-            << '@' << render_data.m_samples_per_pixel << "spp.\n";
-  std::thread render_thread {[&] {
-    int progress {};
-    keteRay(render_data, file_data, progress);
-    ppm::makePPMFile(file_data);
-  }};
-  render_thread.join();
+  // std::cout << "Begin rendering at " << render_data.m_width << 'x' << render_data.m_height
+  //           << '@' << render_data.m_samples_per_pixel << "spp.\n";
+  // std::thread render_thread {[&] {
+  //   int progress {};
+  //   keteRay(render_data, file_data, progress);
+  //   ppm::makePPMFile(file_data);
+  // }};
+  // render_thread.join();
 
   return 0;
 }

@@ -15,12 +15,14 @@
 #include <glm/vec3.hpp>
 #include <limits>
 #include <memory>
+#include <string>
 
 namespace ktp {
 
 struct CameraConfig;
 struct HitRecord;
 struct RenderData;
+struct Scene;
 
 class AABB;
 class BVHnode;
@@ -46,6 +48,7 @@ using MaterialPtr = std::shared_ptr<Material>;
 using TexturePtr  = std::shared_ptr<Texture>;
 
 constexpr auto k_INFINITY {std::numeric_limits<double>::infinity()};
+const std::string k_DEFAULT_SCENE {"cover"};
 }
 
 #endif
