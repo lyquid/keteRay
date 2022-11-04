@@ -27,12 +27,11 @@ struct Scene {
 };
 
 namespace scn {
-  HittableList checkeredBallsScene();
+  void loadScenes();
+  HittableList checkeredSpheresScene();
   HittableList coverScene();
   HittableList threeSpheres();
 }
-
-void loadScenes();
 
 extern std::map<std::string, Scene> scenes;
 

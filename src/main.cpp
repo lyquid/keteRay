@@ -16,7 +16,7 @@ void processArgs(const StringsVector& args, ktp::RenderConfig& render_config);
 int main(int argc, char* argv[]) {
   using namespace ktp;
   // scenes
-  loadScenes();
+  scn::loadScenes();
   // config file
   CameraConfig camera_config {};
   FileConfig   file_config {};
