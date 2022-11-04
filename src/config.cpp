@@ -1,5 +1,6 @@
-#include "renderer/camera.hpp"
 #include "config.hpp"
+#include "renderer/camera.hpp"
+#include "world/scene.hpp"
 
 #ifndef __GNUC__
 void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, RenderConfig& render_config) {
@@ -39,6 +40,14 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
   file_config.m_name = config[0]["file"]["name"];
   // render
   render_config.m_samples = config[0]["render"]["samples"];
+  const std::string req_scene {config[0]["render"]["scene"]};
+  if (scenes.find(req_scene) != scenes.end()) {
+    // scene found
+    render_config.m_scene = config[0]["render"]["scene"];
+  } else {
+    // scene not found
+    std::cout << "Requested scene NOT found. Check you config file!\n";
+  }
   render_config.m_width   = config[0]["render"]["width"];
 }
 #endif

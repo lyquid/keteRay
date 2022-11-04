@@ -24,7 +24,7 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, in
   constexpr auto max_depth {50};
   // here we go!
   for (j = render_data.m_height - 1; j >= 0; --j) {
-    // std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
+    std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
     for (int i = 0; i < render_data.m_width; ++i) {
       Color pixel_color {};
       if (render_data.m_samples_per_pixel <= 1) {

@@ -20,7 +20,9 @@
 namespace ktp {
 
 struct CameraConfig;
+struct FileConfig;
 struct HitRecord;
+struct RenderConfig;
 struct RenderData;
 struct Scene;
 

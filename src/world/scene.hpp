@@ -26,8 +26,11 @@ struct Scene {
   HittableList m_world {};
 };
 
-HittableList checkeredBallsScene();
-HittableList coverScene();
+namespace scn {
+  HittableList checkeredBallsScene();
+  HittableList coverScene();
+  HittableList threeSpheres();
+}
 
 void loadScenes();
 

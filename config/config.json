@@ -13,6 +13,7 @@
   },
   "render": {
     "samples": 1,
+    "scene": "cover",
     "width": 400
   }
 }

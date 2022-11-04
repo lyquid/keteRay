@@ -7,17 +7,31 @@
 std::map<std::string, ktp::Scene> ktp::scenes {};
 
 void ktp::loadScenes() {
-  scenes.insert_or_assign(k_DEFAULT_SCENE, Scene{coverScene, coverScene()});
-  scenes.insert_or_assign("checkered spheres", Scene{checkeredBallsScene, checkeredBallsScene()});
+  scenes.insert_or_assign(k_DEFAULT_SCENE, Scene{scn::coverScene, scn::coverScene()});
+  scenes.insert_or_assign("checkered spheres", Scene{scn::checkeredBallsScene, scn::checkeredBallsScene()});
+  scenes.insert_or_assign("3 spheres", Scene{scn::threeSpheres, scn::threeSpheres()});
 }
 
-ktp::HittableList ktp::checkeredBallsScene() {
+ktp::HittableList ktp::scn::checkeredBallsScene() {
   HittableList world {};
   return world;
   // return HittableList(std::make_shared<BVHnode>(world));
 }
 
-ktp::HittableList ktp::coverScene() {
+ktp::HittableList ktp::scn::threeSpheres() {
+  HittableList world {};
+  const MaterialPtr material_ground {std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0))};
+  const MaterialPtr material_center {std::make_shared<Lambertian>(Color(0.7, 0.3, 0.3))};
+  const MaterialPtr material_left   {std::make_shared<Dielectric>(1.5)};
+  const MaterialPtr material_right  {std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.5)};
+  world.add(std::make_shared<Sphere>(Point( 0.0, -100.5, -1.0), 100.0, material_ground));
+  world.add(std::make_shared<Sphere>(Point( 0.0,    0.0, -1.0),   0.5, material_center));
+  world.add(std::make_shared<Sphere>(Point(-1.0,    0.0, -1.0),  -0.5, material_left));
+  world.add(std::make_shared<Sphere>(Point( 1.0,    0.0, -1.0),   0.5, material_right));
+  return HittableList(std::make_shared<BVHnode>(world));
+}
+
+ktp::HittableList ktp::scn::coverScene() {
   HittableList world {};
 
   const TexturePtr checker {std::make_shared<CheckerTexture>(Color(0.2, 0.3, 0.1), Color(0.9, 0.9, 0.9))};
@@ -52,9 +66,6 @@ ktp::HittableList ktp::coverScene() {
       }
     }
   }
-
-  const MaterialPtr material_checher {std::make_shared<Lambertian>(checker)};
-  world.add(std::make_shared<Sphere>(Point(-8.0, 1.0, 0.0), 1.0, material_checher));
 
   const MaterialPtr material2 {std::make_shared<Lambertian>(Color(0.4, 0.2, 0.1))};
   world.add(std::make_shared<Sphere>(Point(-4.0, 1.0, 0.0), 1.0, material2));
