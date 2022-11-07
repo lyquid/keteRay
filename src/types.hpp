@@ -36,6 +36,7 @@ class HittableList;
 class Lambertian;
 class Material;
 class Metal;
+class NoiseTexture;
 class Ray;
 class SolidColor;
 class Sphere;

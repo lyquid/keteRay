@@ -30,6 +30,7 @@ namespace scn {
   void loadScenes();
   HittableList checkeredSpheresScene();
   HittableList coverScene();
+  HittableList perlinSpheres();
   HittableList threeSpheres();
 }
 

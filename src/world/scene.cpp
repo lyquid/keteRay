@@ -10,6 +10,7 @@ void ktp::scn::loadScenes() {
   scenes.insert_or_assign(k_DEFAULT_SCENE, Scene{scn::coverScene, scn::coverScene()});
   scenes.insert_or_assign("checkered spheres", Scene{scn::checkeredSpheresScene, scn::checkeredSpheresScene()});
   scenes.insert_or_assign("3 spheres", Scene{scn::threeSpheres, scn::threeSpheres()});
+  scenes.insert_or_assign("perlin spheres", Scene{scn::perlinSpheres, scn::perlinSpheres()});
 }
 
 ktp::HittableList ktp::scn::checkeredSpheresScene() {
@@ -66,6 +67,14 @@ ktp::HittableList ktp::scn::coverScene() {
   world.add(std::make_shared<Sphere>(Point(4.0, 1.0, 0.0), 1.0, material3));
 
   return HittableList(std::make_shared<BVHnode>(world));
+}
+
+ktp::HittableList ktp::scn::perlinSpheres() {
+  HittableList world {};
+  const TexturePtr perlin {std::make_shared<NoiseTexture>(4.0)};
+  world.add(std::make_shared<Sphere>(Point(0.0, -1000.0, 0.0), 1000.0, std::make_shared<Lambertian>(perlin)));
+  world.add(std::make_shared<Sphere>(Point(0.0,     2.0, 0.0),    2.0, std::make_shared<Lambertian>(perlin)));
+  return world;
 }
 
 ktp::HittableList ktp::scn::threeSpheres() {

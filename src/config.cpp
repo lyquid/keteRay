@@ -46,7 +46,7 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
     render_config.m_scene = config[0]["render"]["scene"];
   } else {
     // scene not found
-    std::cout << "Requested scene NOT found. Check you config file!\n";
+    std::cout << "Requested scene NOT found. Check your config file!\n";
   }
   render_config.m_width   = config[0]["render"]["width"];
 }

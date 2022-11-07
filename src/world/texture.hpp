@@ -23,6 +23,15 @@ class Texture {
   virtual Color value(double u, double v, const Point& p) const = 0;
 };
 
+class NoiseTexture: public Texture {
+ public:
+  NoiseTexture() = default;
+  NoiseTexture(double scale): m_scale(scale) {}
+  Color value(double u, double v, const Vector& p) const override;
+ private:
+  double m_scale {1};
+};
+
 class SolidColor: public Texture {
  public:
   SolidColor() = default;
