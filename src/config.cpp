@@ -1,6 +1,8 @@
 #include "config.hpp"
 #include "renderer/camera.hpp"
 #include "world/scene.hpp"
+#include <algorithm> // std::transform
+#include <cctype> // std::tolower
 
 #ifndef __GNUC__
 void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, RenderConfig& render_config) {
@@ -19,7 +21,17 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
   file_config.m_name = config["file"]["name"];
   // render
   render_config.m_samples = config["render"]["samples"];
-  render_config.m_width   = config["render"]["width"];
+  std::string req_scene {config["render"]["scene"]};
+  std::transform(req_scene.begin(), req_scene.end(), req_scene.begin(),
+    [](unsigned char c){ return std::tolower(c); });
+  if (scenes.find(req_scene) != scenes.end()) {
+    // scene found
+    render_config.m_scene = req_scene;
+  } else {
+    // scene not found
+    std::cout << "Requested scene NOT found. Check your config file!\n";
+  }
+  render_config.m_width = config["render"]["width"];
 }
 #endif
 
@@ -40,14 +52,16 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
   file_config.m_name = config[0]["file"]["name"];
   // render
   render_config.m_samples = config[0]["render"]["samples"];
-  const std::string req_scene {config[0]["render"]["scene"]};
+  std::string req_scene {config[0]["render"]["scene"]};
+  std::transform(req_scene.begin(), req_scene.end(), req_scene.begin(),
+    [](unsigned char c){ return std::tolower(c); });
   if (scenes.find(req_scene) != scenes.end()) {
     // scene found
-    render_config.m_scene = config[0]["render"]["scene"];
+    render_config.m_scene = req_scene;
   } else {
     // scene not found
     std::cout << "Requested scene NOT found. Check your config file!\n";
   }
-  render_config.m_width   = config[0]["render"]["width"];
+  render_config.m_width = config[0]["render"]["width"];
 }
 #endif
