@@ -32,14 +32,14 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, in
         const auto u {static_cast<double>(i) / (render_data.m_width  - 1)};
         const auto v {static_cast<double>(j) / (render_data.m_height - 1)};
         const Ray ray {render_data.m_camera->getRay(u, v)};
-        pixel_color = rayColor(ray, render_data.m_scene.m_world, max_depth);
+        pixel_color = rayColor(ray, render_data.m_scene.m_background, render_data.m_scene.m_world, max_depth);
       } else {
         // multisampling
         for (int s = 0; s < render_data.m_samples_per_pixel; ++s) {
           const auto u {(i + rng::randomDouble()) / (render_data.m_width  - 1)};
           const auto v {(j + rng::randomDouble()) / (render_data.m_height - 1)};
           const Ray ray {render_data.m_camera->getRay(u, v)};
-          pixel_color += rayColor(ray, render_data.m_scene.m_world, max_depth);
+          pixel_color += rayColor(ray, render_data.m_scene.m_background, render_data.m_scene.m_world, max_depth);
         }
         const auto scale {1.0 / render_data.m_samples_per_pixel};
         pixel_color *= scale;
@@ -58,22 +58,21 @@ bool ktp::nearZero(const Vector& v) {
   return glm::abs(v.x) < s && glm::abs(v.y) < s && glm::abs(v.z) < s;
 }
 
-ktp::Color ktp::rayColor(const Ray& ray, const Hittable& world, int depth) {
+ktp::Color ktp::rayColor(const Ray& ray, const Color& background, const Hittable& world, int depth) {
   HitRecord record {};
   // exceeded the ray bounce limit, no more light is gathered.
   if (depth <= 0) return Color(0.0, 0.0, 0.0);
 
-  if (world.hit(ray, 0.001, k_INFINITY, record)) {
-    Ray scattered {};
-    Color attenuation {};
-    if (record.m_material->scatter(ray, record, attenuation, scattered)) {
-      return attenuation * rayColor(scattered, world, depth - 1);
-    }
-    return Color(0.0, 0.0, 0.0);
-  }
+  // if the ray hits nothing, return the background color.
+  if (!world.hit(ray, 0.001, k_INFINITY, record)) return background;
 
-  const auto t {0.5 * (ray.normalizeDirection().y + 1.0)};
-  return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
+  Ray scattered {};
+  Color attenuation {};
+  Color emitted {record.m_material->emitted(record.m_u, record.m_v, record.m_point)};
+
+  if (!record.m_material->scatter(ray, record, attenuation, scattered)) return emitted;
+
+  return emitted + attenuation * rayColor(scattered, background, world, depth - 1);
 }
 
 ktp::Vector ktp::refract(const Vector& uv, const Vector& n, double etai_over_etat) {

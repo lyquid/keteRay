@@ -20,12 +20,32 @@ namespace ktp {
 class Material {
  public:
   virtual ~Material() {}
+  virtual Color emitted(double u, double v, const Point& p) const {
+    return Color(0.0, 0.0, 0.0);
+  }
   virtual bool scatter(
     const Ray& ray,
     const HitRecord& record,
     Color& attenuation,
     Ray& scattered
   )  const = 0;
+};
+
+class DiffuseLight: public Material {
+ public:
+  DiffuseLight(TexturePtr texture): m_emit(texture) {}
+  DiffuseLight(Color color): m_emit(std::make_shared<SolidColor>(color)) {}
+  bool scatter(
+    const Ray& ray,
+    const HitRecord& record,
+    Color& attenuation,
+    Ray& scattered
+  ) const override { return false; }
+  virtual Color emitted(double u, double v, const Point& p) const override {
+    return m_emit->value(u, v, p);
+  }
+ private:
+  TexturePtr m_emit {nullptr};
 };
 
 class Lambertian: public Material {

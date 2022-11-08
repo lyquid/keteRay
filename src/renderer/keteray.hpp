@@ -44,7 +44,7 @@ void keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, int& j)
  */
 bool nearZero(const Vector& v);
 
-Color rayColor(const Ray& ray, const Hittable& world, int depth);
+Color rayColor(const Ray& ray, const Color& background, const Hittable& world, int depth);
 
 inline Vector reflect(const Vector& v, const Vector& normal) {
   return v - 2 * glm::dot(v, normal) * normal;

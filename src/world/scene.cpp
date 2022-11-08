@@ -1,4 +1,5 @@
 #include "material.hpp"
+#include "rectangle.hpp"
 #include "scene.hpp"
 #include "sphere.hpp"
 #include "../renderer/random.hpp"
@@ -7,10 +8,21 @@
 std::map<std::string, ktp::Scene> ktp::scenes {};
 
 void ktp::scn::loadScenes() {
-  scenes.insert_or_assign(k_DEFAULT_SCENE, Scene{scn::coverScene, scn::coverScene()});
-  scenes.insert_or_assign("checkered spheres", Scene{scn::checkeredSpheresScene, scn::checkeredSpheresScene()});
-  scenes.insert_or_assign("3 spheres", Scene{scn::threeSpheres, scn::threeSpheres()});
-  scenes.insert_or_assign("perlin spheres", Scene{scn::perlinSpheres, scn::perlinSpheres()});
+  scenes.insert_or_assign(k_DEFAULT_SCENE,
+    Scene{{0.7, 0.8, 1.0}, scn::coverScene, scn::coverScene()}
+  );
+  scenes.insert_or_assign("checkered spheres",
+    Scene{{0.7, 0.8, 1.0}, scn::checkeredSpheresScene, scn::checkeredSpheresScene()}
+  );
+  scenes.insert_or_assign("3 spheres",
+    Scene{{0.7, 0.8, 1.0}, scn::threeSpheres, scn::threeSpheres()}
+  );
+  scenes.insert_or_assign("perlin spheres",
+    Scene{{0.7, 0.8, 1.0}, scn::perlinSpheres, scn::perlinSpheres()}
+  );
+  scenes.insert_or_assign("simple light",
+    Scene{{0.0, 0.0, 0.0}, scn::simpleLight, scn::simpleLight()}
+  );
 }
 
 ktp::HittableList ktp::scn::checkeredSpheresScene() {
@@ -58,6 +70,7 @@ ktp::HittableList ktp::scn::coverScene() {
   }
 
   const MaterialPtr material2 {std::make_shared<Lambertian>(Color(0.4, 0.2, 0.1))};
+  // const MaterialPtr material2 {std::make_shared<DiffuseLight>(Color(100.0, 100.0, 100.0))};
   world.add(std::make_shared<Sphere>(Point(-4.0, 1.0, 0.0), 1.0, material2));
 
   const MaterialPtr material1 {std::make_shared<Dielectric>(1.5)};
@@ -74,6 +87,19 @@ ktp::HittableList ktp::scn::perlinSpheres() {
   const TexturePtr perlin {std::make_shared<NoiseTexture>(4.0)};
   world.add(std::make_shared<Sphere>(Point(0.0, -1000.0, 0.0), 1000.0, std::make_shared<Lambertian>(perlin)));
   world.add(std::make_shared<Sphere>(Point(0.0,     2.0, 0.0),    2.0, std::make_shared<Lambertian>(perlin)));
+  return world;
+}
+
+ktp::HittableList ktp::scn::simpleLight() {
+  HittableList world {};
+
+  const auto perlin_tex {std::make_shared<NoiseTexture>(4)};
+  world.add(std::make_shared<Sphere>(Point(0.0, -1000.0, 0.0), 1000.0, std::make_shared<Lambertian>(perlin_tex)));
+  world.add(std::make_shared<Sphere>(Point(0.0,     2.0, 0.0),    2.0, std::make_shared<Lambertian>(perlin_tex)));
+
+  const auto diff_light {std::make_shared<DiffuseLight>(Color(4.0, 4.0, 4.0))};
+  world.add(std::make_shared<Rectangle>(3.0, 5.0, 1.0, 3.0, -2.0, diff_light));
+
   return world;
 }
 

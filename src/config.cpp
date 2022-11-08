@@ -27,6 +27,7 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
   if (scenes.find(req_scene) != scenes.end()) {
     // scene found
     render_config.m_scene = req_scene;
+    // scenes[req_scene].m_background = jsonVectorToVector(config["render"]["backgroundColor"]);
   } else {
     // scene not found
     std::cout << "Requested scene NOT found. Check your config file!\n";
@@ -58,6 +59,7 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
   if (scenes.find(req_scene) != scenes.end()) {
     // scene found
     render_config.m_scene = req_scene;
+    // scenes[req_scene].m_background = jsonVectorToVector(config[0]["render"]["backgroundColor"]);
   } else {
     // scene not found
     std::cout << "Requested scene NOT found. Check your config file!\n";

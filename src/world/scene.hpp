@@ -22,6 +22,7 @@
 namespace ktp {
 
 struct Scene {
+  Color m_background {};
   std::function<HittableList()> m_function {};
   HittableList m_world {};
 };
@@ -31,6 +32,7 @@ namespace scn {
   HittableList checkeredSpheresScene();
   HittableList coverScene();
   HittableList perlinSpheres();
+  HittableList simpleLight();
   HittableList threeSpheres();
 }
 

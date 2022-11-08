@@ -12,7 +12,8 @@
     "name": "render"
   },
   "render": {
-    "samples": 1,
+    "backgroundColor": [0.7, 0.8, 1.0],
+    "samples": 10,
     "scene": "cover",
     "width": 400
   }
