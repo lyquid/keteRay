@@ -24,6 +24,7 @@ namespace ktp {
 struct Scene {
   Color m_background {};
   std::function<HittableList()> m_function {};
+  std::string m_name {};
   HittableList m_world {};
 };
 

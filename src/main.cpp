@@ -19,9 +19,8 @@ int main(int argc, char* argv[]) {
   scn::loadScenes();
   // config file
   CameraConfig camera_config {};
-  FileConfig   file_config {};
   RenderConfig render_config {};
-  parseConfigFile(camera_config, file_config, render_config);
+  parseConfigFile(camera_config, render_config);
   // args processing
   processArgs(StringsVector(argv, argv + argc), render_config);
   // camera
@@ -32,15 +31,13 @@ int main(int argc, char* argv[]) {
   render_data.m_width = render_config.m_width;
   render_data.m_height = static_cast<int>(render_data.m_width / camera.aspectRatio());
   render_data.m_samples_per_pixel = render_config.m_samples;
-  render_data.m_scene = scenes[render_config.m_scene];
+  render_data.m_scene = scenes[render_config.m_scene_name];
   // image data
   ppm::PPMFileData file_data {};
-  file_data.m_name = file_config.m_name;
-  file_data.m_file_name = createFileName(render_data, file_data);
   // GUI
   // gui::start(&render_data, &camera_config, &file_data);
   // render **to delete**
-  std::cout << "Begin rendering at " << render_data.m_width << 'x' << render_data.m_height
+  std::cout << "Begin rendering \"" << render_data.m_scene.m_name << "\" at " << render_data.m_width << 'x' << render_data.m_height
             << '@' << render_data.m_samples_per_pixel << "spp.\n";
   std::thread render_thread {[&] {
     int progress {};

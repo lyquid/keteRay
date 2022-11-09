@@ -21,11 +21,11 @@
 namespace ktp {
 
 struct RenderData {
-  Camera*   m_camera {nullptr};
-  int       m_height {};
-  int       m_samples_per_pixel {};
-  int       m_width {};
-  Scene m_scene {};
+  Camera* m_camera {nullptr};
+  int     m_height {};
+  int     m_samples_per_pixel {};
+  int     m_width {};
+  Scene   m_scene {};
 };
 
 inline ppm::Color colorToPPM(const Color& color) {

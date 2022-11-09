@@ -8,9 +8,6 @@
     "vertical": [0.0, 1.0,  0.0],
     "vFov": 20
   },
-  "file": {
-    "name": "render"
-  },
   "render": {
     "backgroundColor": [0.7, 0.8, 1.0],
     "samples": 10,

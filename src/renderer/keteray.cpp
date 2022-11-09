@@ -5,9 +5,12 @@
 #include "../world/hittable.hpp"
 #include "../world/material.hpp"
 #include <glm/gtx/norm.hpp>
+#include <algorithm> // std::replace
 
 std::string ktp::createFileName(const RenderData& render_data, const ppm::PPMFileData& file_data) {
-  return file_data.m_name + "_"
+  auto scene_name {render_data.m_scene.m_name};
+  std::replace(scene_name.begin(), scene_name.end(), ' ', '_');
+  return scene_name + "_"
     + std::to_string(render_data.m_width)             + "x"
     + std::to_string(render_data.m_height)            + "_"
     + std::to_string(render_data.m_samples_per_pixel) + "_samples.ppm";
@@ -20,8 +23,8 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, in
   file_data.m_pixels.clear();
   file_data.m_pixels.reserve(file_data.m_width * file_data.m_height);
   file_data.m_file_name = createFileName(render_data, file_data);
-  // Recursion depth for rayColor
-  constexpr auto max_depth {50};
+  // recursion depth for rayColor
+  constexpr auto k_MAX_DEPTH {50};
   // here we go!
   for (j = render_data.m_height - 1; j >= 0; --j) {
     std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
@@ -32,14 +35,14 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, in
         const auto u {static_cast<double>(i) / (render_data.m_width  - 1)};
         const auto v {static_cast<double>(j) / (render_data.m_height - 1)};
         const Ray ray {render_data.m_camera->getRay(u, v)};
-        pixel_color = rayColor(ray, render_data.m_scene.m_background, render_data.m_scene.m_world, max_depth);
+        pixel_color = rayColor(ray, render_data.m_scene.m_background, render_data.m_scene.m_world, k_MAX_DEPTH);
       } else {
         // multisampling
         for (int s = 0; s < render_data.m_samples_per_pixel; ++s) {
           const auto u {(i + rng::randomDouble()) / (render_data.m_width  - 1)};
           const auto v {(j + rng::randomDouble()) / (render_data.m_height - 1)};
           const Ray ray {render_data.m_camera->getRay(u, v)};
-          pixel_color += rayColor(ray, render_data.m_scene.m_background, render_data.m_scene.m_world, max_depth);
+          pixel_color += rayColor(ray, render_data.m_scene.m_background, render_data.m_scene.m_world, k_MAX_DEPTH);
         }
         const auto scale {1.0 / render_data.m_samples_per_pixel};
         pixel_color *= scale;
@@ -76,7 +79,7 @@ ktp::Color ktp::rayColor(const Ray& ray, const Color& background, const Hittable
 }
 
 ktp::Vector ktp::refract(const Vector& uv, const Vector& n, double etai_over_etat) {
-  const auto cos_theta {fmin(glm::dot(-uv, n), 1.0)};
+  const auto cos_theta {std::fmin(glm::dot(-uv, n), 1.0)};
   const Vector r_out_perp {etai_over_etat * (uv + cos_theta * n)};
   const Vector r_out_parallel {-glm::sqrt(glm::abs(1.0 - glm::length2(r_out_perp))) * n};
   return r_out_perp + r_out_parallel;

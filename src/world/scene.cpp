@@ -9,24 +9,42 @@
 std::map<std::string, ktp::Scene> ktp::scenes {};
 
 void ktp::scn::loadScenes() {
-  scenes.insert_or_assign(k_DEFAULT_SCENE,
-    Scene{{0.7, 0.8, 1.0}, scn::coverScene, scn::coverScene()}
-  );
-  scenes.insert_or_assign("checkered spheres",
-    Scene{{0.7, 0.8, 1.0}, scn::checkeredSpheresScene, scn::checkeredSpheresScene()}
-  );
-  scenes.insert_or_assign("earth",
-    Scene{{0.7, 0.8, 1.0}, scn::earth, scn::earth()}
-  );
-  scenes.insert_or_assign("3 spheres",
-    Scene{{0.7, 0.8, 1.0}, scn::threeSpheres, scn::threeSpheres()}
-  );
-  scenes.insert_or_assign("perlin spheres",
-    Scene{{0.7, 0.8, 1.0}, scn::perlinSpheres, scn::perlinSpheres()}
-  );
-  scenes.insert_or_assign("simple light",
-    Scene{{0.0, 0.0, 0.0}, scn::simpleLight, scn::simpleLight()}
-  );
+  Scene scene {};
+  scene.m_name = k_DEFAULT_SCENE; // cover
+  scene.m_background = {0.7, 0.8, 1.0};
+  scene.m_function = coverScene;
+  scene.m_world = coverScene();
+  scenes.insert_or_assign(scene.m_name, scene);
+  // checkered spheres
+  scene.m_name = "checkered spheres";
+  scene.m_background = {0.7, 0.8, 1.0};
+  scene.m_function = checkeredSpheresScene;
+  scene.m_world = checkeredSpheresScene();
+  scenes.insert_or_assign(scene.m_name, scene);
+  // earth
+  scene.m_name = "earth";
+  scene.m_background = {0.7, 0.8, 1.0};
+  scene.m_function = earth;
+  scene.m_world = earth();
+  scenes.insert_or_assign(scene.m_name, scene);
+  // 3 spheres
+  scene.m_name = "3 spheres";
+  scene.m_background = {0.7, 0.8, 1.0};
+  scene.m_function = threeSpheres;
+  scene.m_world = threeSpheres();
+  scenes.insert_or_assign(scene.m_name, scene);
+  // perlin spheres
+  scene.m_name = "perlin spheres";
+  scene.m_background = {0.7, 0.8, 1.0};
+  scene.m_function = perlinSpheres;
+  scene.m_world = perlinSpheres();
+  scenes.insert_or_assign(scene.m_name, scene);
+  // simple light
+  scene.m_name = "simple light";
+  scene.m_background = {0.0, 0.0, 0.0};
+  scene.m_function = simpleLight;
+  scene.m_world = simpleLight();
+  scenes.insert_or_assign(scene.m_name, scene);
 }
 
 ktp::HittableList ktp::scn::checkeredSpheresScene() {

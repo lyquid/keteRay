@@ -5,7 +5,7 @@
 #include <cctype> // std::tolower
 
 #ifndef __GNUC__
-void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, RenderConfig& render_config) {
+void ktp::parseConfigFile(CameraConfig& camera_config, RenderConfig& render_config) {
   std::ifstream file {"config.json"};
   const json config {json::parse(file)};
   // camera
@@ -17,8 +17,6 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
   camera_config.m_vfov       = config["camera"]["vFov"];
   camera_config.m_aperture   = config["camera"]["aperture"];
   camera_config.m_focus_dist = config["camera"]["focusDist"];
-  // file
-  file_config.m_name = config["file"]["name"];
   // render
   render_config.m_samples = config["render"]["samples"];
   std::string req_scene {config["render"]["scene"]};
@@ -26,7 +24,7 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
     [](unsigned char c){ return std::tolower(c); });
   if (scenes.find(req_scene) != scenes.end()) {
     // scene found
-    render_config.m_scene = req_scene;
+    render_config.m_scene_name = req_scene;
     // scenes[req_scene].m_background = jsonVectorToVector(config["render"]["backgroundColor"]);
   } else {
     // scene not found
@@ -37,7 +35,7 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
 #endif
 
 #ifdef __GNUC__
-void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, RenderConfig& render_config) {
+void ktp::parseConfigFile(CameraConfig& camera_config, RenderConfig& render_config) {
   std::ifstream file {"config.json"};
   const json config {json::parse(file)};
   // camera
@@ -49,8 +47,6 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
   camera_config.m_vfov       = config[0]["camera"]["vFov"];
   camera_config.m_aperture   = config[0]["camera"]["aperture"];
   camera_config.m_focus_dist = config[0]["camera"]["focusDist"];
-  // file
-  file_config.m_name = config[0]["file"]["name"];
   // render
   render_config.m_samples = config[0]["render"]["samples"];
   std::string req_scene {config[0]["render"]["scene"]};
@@ -58,7 +54,7 @@ void ktp::parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, 
     [](unsigned char c){ return std::tolower(c); });
   if (scenes.find(req_scene) != scenes.end()) {
     // scene found
-    render_config.m_scene = req_scene;
+    render_config.m_scene_name = req_scene;
     // scenes[req_scene].m_background = jsonVectorToVector(config[0]["render"]["backgroundColor"]);
   } else {
     // scene not found
