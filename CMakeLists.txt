@@ -67,5 +67,5 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-file(COPY ./config/ DESTINATION ./src)
+configure_file(./config/config.json ./src COPYONLY)
 file(COPY ./resources/ DESTINATION ./src/resources)

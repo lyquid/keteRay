@@ -14,7 +14,7 @@
   "render": {
     "backgroundColor": [0.7, 0.8, 1.0],
     "samples": 10,
-    "scene": "cover",
+    "scene": "earth",
     "width": 400
   }
 }

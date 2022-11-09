@@ -3,8 +3,6 @@ add_executable(keteray
   config.cpp
 )
 
-configure_file(../config/config.json ./ COPYONLY)
-
 target_compile_features(keteray PUBLIC cxx_std_17)
 set_target_properties(keteray PROPERTIES CXX_EXTENSIONS OFF)
 
