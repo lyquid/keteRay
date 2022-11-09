@@ -34,6 +34,7 @@ class Dielectric;
 class DiffuseLight;
 class Hittable;
 class HittableList;
+class ImageTexture;
 class Lambertian;
 class Material;
 class Metal;

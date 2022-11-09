@@ -2,6 +2,7 @@
 #include "rectangle.hpp"
 #include "scene.hpp"
 #include "sphere.hpp"
+#include "texture.hpp"
 #include "../renderer/random.hpp"
 #include <memory>
 
@@ -13,6 +14,9 @@ void ktp::scn::loadScenes() {
   );
   scenes.insert_or_assign("checkered spheres",
     Scene{{0.7, 0.8, 1.0}, scn::checkeredSpheresScene, scn::checkeredSpheresScene()}
+  );
+  scenes.insert_or_assign("earth",
+    Scene{{0.7, 0.8, 1.0}, scn::earth, scn::earth()}
   );
   scenes.insert_or_assign("3 spheres",
     Scene{{0.7, 0.8, 1.0}, scn::threeSpheres, scn::threeSpheres()}
@@ -80,6 +84,13 @@ ktp::HittableList ktp::scn::coverScene() {
   world.add(std::make_shared<Sphere>(Point(4.0, 1.0, 0.0), 1.0, material3));
 
   return HittableList(std::make_shared<BVHnode>(world));
+}
+
+ktp::HittableList ktp::scn::earth() {
+  const auto earth_texture {std::make_shared<ImageTexture>("resources/earthmario.jpg")};
+  const auto earth_surface {std::make_shared<Lambertian>(earth_texture)};
+  const auto globe {std::make_shared<Sphere>(Point(0.0, 0.0, 0.0), 2.0, earth_surface)};
+  return HittableList(globe);
 }
 
 ktp::HittableList ktp::scn::perlinSpheres() {

@@ -14,6 +14,7 @@
 
 #include "../types.hpp"
 #include <memory>
+#include <string>
 
 namespace ktp {
 
@@ -21,6 +22,19 @@ class Texture {
  public:
   virtual ~Texture() {}
   virtual Color value(double u, double v, const Point& p) const = 0;
+};
+
+class ImageTexture: public Texture {
+ public:
+  ImageTexture() = default;
+  ImageTexture(const std::string& file_name);
+  ~ImageTexture() { delete m_data; }
+  Color value(double u, double v, const Vector& p) const override;
+ private:
+  static constexpr int k_BYTES_PER_PIXEL {3};
+  unsigned char* m_data {nullptr};
+  int m_width{}, m_height{};
+  int m_bytes_per_scanline{};
 };
 
 class NoiseTexture: public Texture {

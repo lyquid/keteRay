@@ -66,3 +66,6 @@ add_subdirectory(src/world)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
+
+file(COPY ./config/ DESTINATION ./src)
+file(COPY ./resources/ DESTINATION ./src/resources)
