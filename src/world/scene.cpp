@@ -12,14 +12,14 @@ void ktp::scn::loadScenes() {
   Scene scene {};
   scene.m_name = k_DEFAULT_SCENE; // cover
   scene.m_background = {0.7, 0.8, 1.0};
-  scene.m_function = coverScene;
-  scene.m_world = coverScene();
+  scene.m_function = cover;
+  scene.m_world = cover();
   scenes.insert_or_assign(scene.m_name, scene);
-  // checkered spheres
-  scene.m_name = "checkered spheres";
+  // checkered
+  scene.m_name = "checkered";
   scene.m_background = {0.7, 0.8, 1.0};
-  scene.m_function = checkeredSpheresScene;
-  scene.m_world = checkeredSpheresScene();
+  scene.m_function = checkered;
+  scene.m_world = checkered();
   scenes.insert_or_assign(scene.m_name, scene);
   // earth
   scene.m_name = "earth";
@@ -33,8 +33,8 @@ void ktp::scn::loadScenes() {
   scene.m_function = threeSpheres;
   scene.m_world = threeSpheres();
   scenes.insert_or_assign(scene.m_name, scene);
-  // perlin spheres
-  scene.m_name = "perlin spheres";
+  // perlin
+  scene.m_name = "perlin";
   scene.m_background = {0.7, 0.8, 1.0};
   scene.m_function = perlin;
   scene.m_world = perlin();
@@ -53,7 +53,7 @@ void ktp::scn::loadScenes() {
   scenes.insert_or_assign(scene.m_name, scene);
 }
 
-ktp::HittableList ktp::scn::checkeredSpheresScene() {
+ktp::HittableList ktp::scn::checkered() {
   HittableList world {};
   const TexturePtr checker {std::make_shared<CheckerTexture>(Color(0.2, 0.3, 0.1), Color(0.9, 0.9, 0.9))};
   world.add(std::make_shared<Sphere>(Point(0,-10, 0), 10.0, std::make_shared<Lambertian>(checker)));
@@ -61,7 +61,7 @@ ktp::HittableList ktp::scn::checkeredSpheresScene() {
   return world;
 }
 
-ktp::HittableList ktp::scn::coverScene() {
+ktp::HittableList ktp::scn::cover() {
   HittableList world {};
 
   const TexturePtr checker {std::make_shared<CheckerTexture>(Color(0.2, 0.3, 0.1), Color(0.9, 0.9, 0.9))};

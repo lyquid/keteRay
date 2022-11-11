@@ -30,8 +30,8 @@ struct Scene {
 
 namespace scn {
   void loadScenes();
-  HittableList checkeredSpheresScene();
-  HittableList coverScene();
+  HittableList checkered();
+  HittableList cover();
   HittableList earth();
   HittableList perlin();
   HittableList simpleLight();
