@@ -34,7 +34,7 @@ class Material {
 class DiffuseLight: public Material {
  public:
   DiffuseLight(TexturePtr texture): m_emit(texture) {}
-  DiffuseLight(Color color): m_emit(std::make_shared<SolidColor>(color)) {}
+  DiffuseLight(Color color): m_emit(std::make_shared<SolidColorTexture>(color)) {}
   bool scatter(
     const Ray& ray,
     const HitRecord& record,
@@ -50,7 +50,7 @@ class DiffuseLight: public Material {
 
 class Lambertian: public Material {
  public:
-  Lambertian(const Color& albedo): m_albedo(std::make_shared<SolidColor>(albedo)) {}
+  Lambertian(const Color& albedo): m_albedo(std::make_shared<SolidColorTexture>(albedo)) {}
   Lambertian(TexturePtr albedo): m_albedo(albedo) {}
   bool scatter(
     const Ray& ray,
@@ -65,7 +65,7 @@ class Lambertian: public Material {
 class Metal: public Material {
  public:
   Metal(const Color& albedo, double fuzz = 0.0):
-    m_albedo(std::make_shared<SolidColor>(albedo)),
+    m_albedo(std::make_shared<SolidColorTexture>(albedo)),
     m_fuzz(fuzz < 1.0 ? fuzz : 1.0) {}
   Metal(TexturePtr albedo, double fuzz = 0.0):
     m_albedo(albedo),

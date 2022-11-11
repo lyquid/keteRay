@@ -30,6 +30,7 @@ struct Scene {
 
 namespace scn {
   void loadScenes();
+  TexturePtr randomTexture();
   HittableList checkered();
   HittableList cover();
   HittableList earth();

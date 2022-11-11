@@ -61,11 +61,11 @@ class NoiseTexture: public Texture {
   double m_scale {1};
 };
 
-class SolidColor: public Texture {
+class SolidColorTexture: public Texture {
  public:
-  SolidColor() = default;
-  SolidColor(const Color& color): m_color(color) {}
-  SolidColor(double r, double g, double b): m_color(Color(r, g, b)) {}
+  SolidColorTexture() = default;
+  SolidColorTexture(const Color& color): m_color(color) {}
+  SolidColorTexture(double r, double g, double b): m_color(Color(r, g, b)) {}
   Color value(double u, double v, const Vector& p) const override {
     return m_color;
   }
@@ -78,7 +78,7 @@ class CheckerTexture: public Texture {
   CheckerTexture() = default;
   CheckerTexture(TexturePtr even, TexturePtr odd): m_even(even), m_odd(odd) {}
   CheckerTexture(const Color& c1, const Color& c2):
-    m_even(std::make_shared<SolidColor>(c1)), m_odd(std::make_shared<SolidColor>(c2)) {}
+    m_even(std::make_shared<SolidColorTexture>(c1)), m_odd(std::make_shared<SolidColorTexture>(c2)) {}
   Color value(double u, double v, const Vector& p) const override;
  private:
   TexturePtr m_even {nullptr};

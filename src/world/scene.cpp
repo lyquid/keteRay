@@ -59,6 +59,33 @@ void ktp::scn::loadScenes() {
   scenes.insert_or_assign(scene.m_name, scene);
 }
 
+ktp::TexturePtr ktp::scn::randomTexture() {
+  constexpr auto k_NOISE_SCALE {4.0};
+  static const ImageTexture earth_texture {"resources/earthmap.jpg"};
+  static const ImageTexture mario_texture {"resources/earthmario.jpg"};
+  const auto lucky {rng::randomDouble()};
+  if (lucky <= 0.7) {
+    // solid color
+    const auto albedo {rng::randomColor() * rng::randomColor()};
+    return std::make_shared<SolidColorTexture>(albedo);
+  } else if (lucky <= 0.79) {
+    // noise texture
+    return std::make_shared<NoiseTexture>(k_NOISE_SCALE, rng::randomColor());
+  } else if (lucky <= 0.89) {
+    // turbulence texture
+    return std::make_shared<TurbulenceTexture>(k_NOISE_SCALE, rng::randomColor());
+  } else if (lucky <= 0.99) {
+    // marble texture
+    return std::make_shared<MarbleTexture>(k_NOISE_SCALE, rng::randomColor());
+  } else {
+    //image texture
+    if (rng::randomDouble() < 0.5)
+      return std::make_shared<ImageTexture>(earth_texture);
+    else
+      return std::make_shared<ImageTexture>(mario_texture);
+  }
+}
+
 ktp::HittableList ktp::scn::checkered() {
   HittableList world {};
   const TexturePtr checker {std::make_shared<CheckerTexture>(Color(0.2, 0.3, 0.1), Color(0.9, 0.9, 0.9))};
@@ -70,9 +97,11 @@ ktp::HittableList ktp::scn::checkered() {
 ktp::HittableList ktp::scn::cover() {
   HittableList world {};
 
-  const TexturePtr checker {std::make_shared<CheckerTexture>(Color(0.2, 0.3, 0.1), Color(0.9, 0.9, 0.9))};
+  const TexturePtr checker {std::make_shared<CheckerTexture>(
+    std::make_shared<TurbulenceTexture>(4.0, Color(0.2, 0.3, 0.1)),
+    std::make_shared<SolidColorTexture>(Color(0.9, 0.9, 0.9))
+  )};
   const MaterialPtr ground_material {std::make_shared<Lambertian>(checker)};
-  // const auto ground_material {std::make_shared<Lambertian>(Color(0.5, 0.5, 0.5))};
   world.add(std::make_shared<Sphere>(Point(0.0, -1000.0, 0.0), 1000.0, ground_material));
 
   for (int a = -11; a < 11; ++a) {
@@ -85,8 +114,8 @@ ktp::HittableList ktp::scn::cover() {
 
         if (choose_mat < 0.8) {
           // diffuse
-          const auto albedo {rng::randomColor() * rng::randomColor()};
-          sphere_material = std::make_shared<Lambertian>(albedo);
+          const auto texture {randomTexture()};
+          sphere_material = std::make_shared<Lambertian>(texture);
           world.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
         } else if (choose_mat < 0.95) {
           // metal
@@ -104,14 +133,11 @@ ktp::HittableList ktp::scn::cover() {
   }
 
   const MaterialPtr material2 {std::make_shared<Lambertian>(Color(0.4, 0.2, 0.1))};
-  // const MaterialPtr material2 {std::make_shared<DiffuseLight>(Color(100.0, 100.0, 100.0))};
   world.add(std::make_shared<Sphere>(Point(-4.0, 1.0, 0.0), 1.0, material2));
 
   const MaterialPtr material1 {std::make_shared<Dielectric>(1.5)};
   world.add(std::make_shared<Sphere>(Point(0.0, 1.0, 0.0), 1.0, material1));
 
-  // const TexturePtr turbulence {std::make_shared<TurbulenceTexture>(4.0)};
-  // const MaterialPtr material3 {std::make_shared<Metal>(turbulence, 0.0)};
   const MaterialPtr material3 {std::make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0)};
   world.add(std::make_shared<Sphere>(Point(4.0, 1.0, 0.0), 1.0, material3));
 
