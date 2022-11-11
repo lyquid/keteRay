@@ -5,6 +5,7 @@
 #include "texture.hpp"
 #include "../renderer/random.hpp"
 #include <memory>
+#include <iostream>
 
 std::map<std::string, ktp::Scene> ktp::scenes {};
 
@@ -60,9 +61,9 @@ void ktp::scn::loadScenes() {
 }
 
 ktp::TexturePtr ktp::scn::randomTexture() {
-  constexpr auto k_NOISE_SCALE {4.0};
   static const ImageTexture earth_texture {"resources/earthmap.jpg"};
   static const ImageTexture mario_texture {"resources/earthmario.jpg"};
+  const auto noise_scale {rng::randomDouble(4.0, 8.0)};
   const auto lucky {rng::randomDouble()};
   if (lucky <= 0.7) {
     // solid color
@@ -70,13 +71,13 @@ ktp::TexturePtr ktp::scn::randomTexture() {
     return std::make_shared<SolidColorTexture>(albedo);
   } else if (lucky <= 0.79) {
     // noise texture
-    return std::make_shared<NoiseTexture>(k_NOISE_SCALE, rng::randomColor());
+    return std::make_shared<NoiseTexture>(noise_scale, rng::randomColor());
   } else if (lucky <= 0.89) {
     // turbulence texture
-    return std::make_shared<TurbulenceTexture>(k_NOISE_SCALE, rng::randomColor());
+    return std::make_shared<TurbulenceTexture>(noise_scale, rng::randomColor());
   } else if (lucky <= 0.99) {
     // marble texture
-    return std::make_shared<MarbleTexture>(k_NOISE_SCALE, rng::randomColor());
+    return std::make_shared<MarbleTexture>(noise_scale, rng::randomColor());
   } else {
     //image texture
     if (rng::randomDouble() < 0.5)
