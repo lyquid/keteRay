@@ -27,6 +27,12 @@ void ktp::scn::loadScenes() {
   scene.m_function = earth;
   scene.m_world = earth();
   scenes.insert_or_assign(scene.m_name, scene);
+  // marble
+  scene.m_name = "marble";
+  scene.m_background = {0.7, 0.8, 1.0};
+  scene.m_function = marble;
+  scene.m_world = marble();
+  scenes.insert_or_assign(scene.m_name, scene);
   // 3 spheres
   scene.m_name = "3 spheres";
   scene.m_background = {0.7, 0.8, 1.0};
@@ -117,6 +123,14 @@ ktp::HittableList ktp::scn::earth() {
   const auto earth_surface {std::make_shared<Lambertian>(earth_texture)};
   const auto globe {std::make_shared<Sphere>(Point(0.0, 0.0, 0.0), 2.0, earth_surface)};
   return HittableList(globe);
+}
+
+ktp::HittableList ktp::scn::marble() {
+  HittableList world {};
+  const TexturePtr marble {std::make_shared<MarbleTexture>(4.0, Color{0.8, 0.2, 0.0})};
+  world.add(std::make_shared<Sphere>(Point(0.0, -1000.0, 0.0), 1000.0, std::make_shared<Lambertian>(marble)));
+  world.add(std::make_shared<Sphere>(Point(0.0,     2.0, 0.0),    2.0, std::make_shared<Lambertian>(marble)));
+  return world;
 }
 
 ktp::HittableList ktp::scn::perlin() {

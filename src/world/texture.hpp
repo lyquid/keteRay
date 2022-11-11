@@ -37,12 +37,27 @@ class ImageTexture: public Texture {
   int m_bytes_per_scanline{};
 };
 
+class MarbleTexture: public Texture {
+ public:
+  MarbleTexture() = default;
+  MarbleTexture(double scale, const Color& color = {1.0, 1.0, 1.0}):
+    m_color(color),
+    m_scale(scale) {}
+  Color value(double u, double v, const Vector& p) const override;
+ private:
+  Color m_color {1.0, 1.0, 1.0};
+  double m_scale {1};
+};
+
 class NoiseTexture: public Texture {
  public:
   NoiseTexture() = default;
-  NoiseTexture(double scale): m_scale(scale) {}
+  NoiseTexture(double scale, const Color& color = {1.0, 1.0, 1.0}):
+    m_color(color),
+    m_scale(scale) {}
   Color value(double u, double v, const Vector& p) const override;
  private:
+  Color m_color {1.0, 1.0, 1.0};
   double m_scale {1};
 };
 
@@ -73,10 +88,13 @@ class CheckerTexture: public Texture {
 class TurbulenceTexture: public Texture {
  public:
   TurbulenceTexture() = default;
-  TurbulenceTexture(double scale): m_scale(scale) {}
+  TurbulenceTexture(double scale, const Color& color = {1.0, 1.0, 1.0}):
+    m_color(color),
+    m_scale(scale) {}
+  static double turbulence(const Point& p, int depth = 7);
   Color value(double u, double v, const Vector& p) const override;
  private:
-  double turbulence(const Point& p, int depth = 7) const;
+  Color m_color {1.0, 1.0, 1.0};
   double m_scale {1};
 };
 

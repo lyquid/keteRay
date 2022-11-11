@@ -45,11 +45,15 @@ ktp::Color ktp::CheckerTexture::value(double u, double v, const Vector& p) const
   return sines < 0.0 ? m_odd->value(u, v, p) : m_even->value(u, v, p);
 }
 
-ktp::Color ktp::NoiseTexture::value(double u, double v, const Vector& p) const {
-  return {Color(1.0, 1.0, 1.0) * ((glm::perlin(p * m_scale) + 1.0) / 2.0 )};
+ktp::Color ktp::MarbleTexture::value(double u, double v, const Vector& p) const {
+  return m_color * 0.5 * (1.0 + glm::sin(m_scale * p.z + 10.0 * TurbulenceTexture::turbulence(p)));
 }
 
-double ktp::TurbulenceTexture::turbulence(const Point& p, int depth) const {
+ktp::Color ktp::NoiseTexture::value(double u, double v, const Vector& p) const {
+  return m_color * ((glm::perlin(p * m_scale) + 1.0) / 2.0 );
+}
+
+double ktp::TurbulenceTexture::turbulence(const Point& p, int depth) {
   auto accum {0.0};
   auto temp_p {p};
   auto weight {1.0};
@@ -63,5 +67,5 @@ double ktp::TurbulenceTexture::turbulence(const Point& p, int depth) const {
 }
 
 ktp::Color ktp::TurbulenceTexture::value(double u, double v, const Vector& p) const {
-  return Color(1.0, 1.0, 1.0) * turbulence(m_scale * p);
+  return m_color * turbulence(m_scale * p);
 }

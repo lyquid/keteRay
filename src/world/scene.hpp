@@ -33,6 +33,7 @@ namespace scn {
   HittableList checkered();
   HittableList cover();
   HittableList earth();
+  HittableList marble();
   HittableList perlin();
   HittableList simpleLight();
   HittableList threeSpheres();
