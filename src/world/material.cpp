@@ -8,9 +8,8 @@
 bool ktp::Lambertian::scatter(const Ray& ray, const HitRecord& record, Color& attenuation, Ray& scattered) const {
   Vector scatter_direction {record.m_normal + rng::randomUnitVector()};
   // degenerate scatter direction
-  if (nearZero(scatter_direction)) {
-    scatter_direction = record.m_normal;
-  }
+  if (nearZero(scatter_direction)) scatter_direction = record.m_normal;
+
   scattered = Ray(record.m_point, scatter_direction);
   attenuation = m_albedo->value(record.m_u, record.m_v, record.m_point);
   return true;
@@ -19,7 +18,7 @@ bool ktp::Lambertian::scatter(const Ray& ray, const HitRecord& record, Color& at
 // METAL
 
 bool ktp::Metal::scatter(const Ray& ray, const HitRecord& record, Color& attenuation, Ray& scattered) const {
-  Vector reflected {reflect(glm::normalize(ray.direction()), record.m_normal)};
+  const Vector reflected {reflect(glm::normalize(ray.direction()), record.m_normal)};
   scattered = Ray(record.m_point, reflected + m_fuzz * rng::randomInUnitSphere());
   attenuation = m_albedo;
   return (glm::dot(scattered.direction(), record.m_normal) > 0.0);

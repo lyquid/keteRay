@@ -44,6 +44,7 @@ class Rectangle;
 class SolidColor;
 class Sphere;
 class Texture;
+class TurbulenceTexture;
 
 using Color  = glm::dvec3;
 using Point  = glm::dvec3;

@@ -33,9 +33,10 @@ namespace scn {
   HittableList checkeredSpheresScene();
   HittableList coverScene();
   HittableList earth();
-  HittableList perlinSpheres();
+  HittableList perlin();
   HittableList simpleLight();
   HittableList threeSpheres();
+  HittableList turbulence();
 }
 
 extern std::map<std::string, Scene> scenes;

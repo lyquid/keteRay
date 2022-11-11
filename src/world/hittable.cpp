@@ -1,7 +1,7 @@
 #include "hittable.hpp"
 #include "../renderer/random.hpp"
 #include "../renderer/ray.hpp"
-#include <algorithm> // std::swap
+#include <algorithm> // std::swap, std::sort
 
 // AABB
 

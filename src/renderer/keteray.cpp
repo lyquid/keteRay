@@ -35,7 +35,7 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, in
         const auto u {static_cast<double>(i) / (render_data.m_width  - 1)};
         const auto v {static_cast<double>(j) / (render_data.m_height - 1)};
         const Ray ray {render_data.m_camera->getRay(u, v)};
-        pixel_color = rayColor(ray, render_data.m_scene.m_background, render_data.m_scene.m_world, k_MAX_DEPTH);
+        pixel_color += rayColor(ray, render_data.m_scene.m_background, render_data.m_scene.m_world, k_MAX_DEPTH);
       } else {
         // multisampling
         for (int s = 0; s < render_data.m_samples_per_pixel; ++s) {

@@ -36,14 +36,20 @@ void ktp::scn::loadScenes() {
   // perlin spheres
   scene.m_name = "perlin spheres";
   scene.m_background = {0.7, 0.8, 1.0};
-  scene.m_function = perlinSpheres;
-  scene.m_world = perlinSpheres();
+  scene.m_function = perlin;
+  scene.m_world = perlin();
   scenes.insert_or_assign(scene.m_name, scene);
   // simple light
   scene.m_name = "simple light";
   scene.m_background = {0.0, 0.0, 0.0};
   scene.m_function = simpleLight;
   scene.m_world = simpleLight();
+  scenes.insert_or_assign(scene.m_name, scene);
+  // turbulence
+  scene.m_name = "turbulence";
+  scene.m_background = {0.7, 0.8, 1.0};
+  scene.m_function = turbulence;
+  scene.m_world = turbulence();
   scenes.insert_or_assign(scene.m_name, scene);
 }
 
@@ -111,7 +117,7 @@ ktp::HittableList ktp::scn::earth() {
   return HittableList(globe);
 }
 
-ktp::HittableList ktp::scn::perlinSpheres() {
+ktp::HittableList ktp::scn::perlin() {
   HittableList world {};
   const TexturePtr perlin {std::make_shared<NoiseTexture>(4.0)};
   world.add(std::make_shared<Sphere>(Point(0.0, -1000.0, 0.0), 1000.0, std::make_shared<Lambertian>(perlin)));
@@ -124,10 +130,12 @@ ktp::HittableList ktp::scn::simpleLight() {
 
   const auto perlin_tex {std::make_shared<NoiseTexture>(4)};
   world.add(std::make_shared<Sphere>(Point(0.0, -1000.0, 0.0), 1000.0, std::make_shared<Lambertian>(perlin_tex)));
-  world.add(std::make_shared<Sphere>(Point(0.0,     2.0, 0.0),    2.0, std::make_shared<Lambertian>(perlin_tex)));
+  const auto earth_tex {std::make_shared<ImageTexture>("resources/earthmario.jpg")};
+  world.add(std::make_shared<Sphere>(Point(0.0,     2.0, 0.0),    2.0, std::make_shared<Lambertian>(earth_tex)));
 
   const auto diff_light {std::make_shared<DiffuseLight>(Color(4.0, 4.0, 4.0))};
   world.add(std::make_shared<Rectangle>(3.0, 5.0, 1.0, 3.0, -2.0, diff_light));
+  // world.add(std::make_shared<Sphere>(Point(0.0,     2.0, 0.0),    2.0, diff_light));
 
   return world;
 }
@@ -143,5 +151,13 @@ ktp::HittableList ktp::scn::threeSpheres() {
   world.add(std::make_shared<Sphere>(Point(-1.0,    0.0, -1.0),  -0.5, material_left));
   world.add(std::make_shared<Sphere>(Point( 1.0,    0.0, -1.0),   0.5, material_right));
   // return HittableList(std::make_shared<BVHnode>(world)); // this doesn't work
+  return world;
+}
+
+ktp::HittableList ktp::scn::turbulence() {
+  HittableList world {};
+  const TexturePtr turbulence {std::make_shared<TurbulenceTexture>(4.0)};
+  world.add(std::make_shared<Sphere>(Point(0.0, -1000.0, 0.0), 1000.0, std::make_shared<Lambertian>(turbulence)));
+  world.add(std::make_shared<Sphere>(Point(0.0,     2.0, 0.0),    2.0, std::make_shared<Lambertian>(turbulence)));
   return world;
 }

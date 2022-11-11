@@ -70,6 +70,16 @@ class CheckerTexture: public Texture {
   TexturePtr m_odd {nullptr};
 };
 
+class TurbulenceTexture: public Texture {
+ public:
+  TurbulenceTexture() = default;
+  TurbulenceTexture(double scale): m_scale(scale) {}
+  Color value(double u, double v, const Vector& p) const override;
+ private:
+  double turbulence(const Point& p, int depth = 7) const;
+  double m_scale {1};
+};
+
 } // namespace ktp
 
 #endif

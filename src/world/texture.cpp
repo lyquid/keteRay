@@ -48,3 +48,20 @@ ktp::Color ktp::CheckerTexture::value(double u, double v, const Vector& p) const
 ktp::Color ktp::NoiseTexture::value(double u, double v, const Vector& p) const {
   return {Color(1.0, 1.0, 1.0) * ((glm::perlin(p * m_scale) + 1.0) / 2.0 )};
 }
+
+double ktp::TurbulenceTexture::turbulence(const Point& p, int depth) const {
+  auto accum {0.0};
+  auto temp_p {p};
+  auto weight {1.0};
+
+  for (int i = 0; i < depth; ++i) {
+    accum += weight * glm::perlin(temp_p);
+    weight *= 0.5;
+    temp_p *= 2;
+  }
+  return glm::abs(accum);
+}
+
+ktp::Color ktp::TurbulenceTexture::value(double u, double v, const Vector& p) const {
+  return Color(1.0, 1.0, 1.0) * turbulence(m_scale * p);
+}
