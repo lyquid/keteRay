@@ -104,6 +104,8 @@ ktp::HittableList ktp::scn::cover() {
   const MaterialPtr material1 {std::make_shared<Dielectric>(1.5)};
   world.add(std::make_shared<Sphere>(Point(0.0, 1.0, 0.0), 1.0, material1));
 
+  // const TexturePtr turbulence {std::make_shared<TurbulenceTexture>(4.0)};
+  // const MaterialPtr material3 {std::make_shared<Metal>(turbulence, 0.0)};
   const MaterialPtr material3 {std::make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0)};
   world.add(std::make_shared<Sphere>(Point(4.0, 1.0, 0.0), 1.0, material3));
 

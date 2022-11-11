@@ -59,12 +59,15 @@ class Lambertian: public Material {
     Ray& scattered
   ) const override;
  private:
-  TexturePtr m_albedo {};
+  TexturePtr m_albedo {nullptr};
 };
 
 class Metal: public Material {
  public:
   Metal(const Color& albedo, double fuzz = 0.0):
+    m_albedo(std::make_shared<SolidColor>(albedo)),
+    m_fuzz(fuzz < 1.0 ? fuzz : 1.0) {}
+  Metal(TexturePtr albedo, double fuzz = 0.0):
     m_albedo(albedo),
     m_fuzz(fuzz < 1.0 ? fuzz : 1.0) {}
   bool scatter(
@@ -74,7 +77,7 @@ class Metal: public Material {
     Ray& scattered
   ) const override;
  private:
-  Color  m_albedo {};
+  TexturePtr m_albedo {nullptr};
   double m_fuzz {};
 };
 
