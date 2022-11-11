@@ -65,8 +65,7 @@ class Lambertian: public Material {
 class Metal: public Material {
  public:
   Metal(const Color& albedo, double fuzz = 0.0):
-    m_albedo(std::make_shared<SolidColorTexture>(albedo)),
-    m_fuzz(fuzz < 1.0 ? fuzz : 1.0) {}
+    Metal(std::make_shared<SolidColorTexture>(albedo), fuzz) {}
   Metal(TexturePtr albedo, double fuzz = 0.0):
     m_albedo(albedo),
     m_fuzz(fuzz < 1.0 ? fuzz : 1.0) {}
