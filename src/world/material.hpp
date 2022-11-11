@@ -50,7 +50,7 @@ class DiffuseLight: public Material {
 
 class Lambertian: public Material {
  public:
-  Lambertian(const Color& albedo): m_albedo(std::make_shared<SolidColorTexture>(albedo)) {}
+  Lambertian(const Color& albedo): Lambertian(std::make_shared<SolidColorTexture>(albedo)) {}
   Lambertian(TexturePtr albedo): m_albedo(albedo) {}
   bool scatter(
     const Ray& ray,
