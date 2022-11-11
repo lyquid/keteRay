@@ -5,7 +5,6 @@
 #include "texture.hpp"
 #include "../renderer/random.hpp"
 #include <memory>
-#include <iostream>
 
 std::map<std::string, ktp::Scene> ktp::scenes {};
 
