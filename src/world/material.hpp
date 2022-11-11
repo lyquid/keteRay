@@ -33,8 +33,8 @@ class Material {
 
 class DiffuseLight: public Material {
  public:
+  DiffuseLight(Color color): DiffuseLight(std::make_shared<SolidColorTexture>(color)) {}
   DiffuseLight(TexturePtr texture): m_emit(texture) {}
-  DiffuseLight(Color color): m_emit(std::make_shared<SolidColorTexture>(color)) {}
   bool scatter(
     const Ray& ray,
     const HitRecord& record,
