@@ -1,6 +1,6 @@
 #include "renderer/camera.hpp"
 #include "config.hpp"
-// #include "gui/gui.hpp"
+#include "gui/gui.hpp"
 #include "world/hittable.hpp"
 #include "./renderer/keteray.hpp"
 #include "world/material.hpp"
@@ -8,7 +8,6 @@
 #include "world/sphere.hpp"
 #include <algorithm> // find
 #include <memory>
-#include <thread> // to delete when gui works
 
 using StringsVector = std::vector<std::string>;
 void processArgs(const StringsVector& args, ktp::RenderConfig& render_config);
@@ -35,16 +34,7 @@ int main(int argc, char* argv[]) {
   // image data
   ppm::PPMFileData file_data {};
   // GUI
-  // gui::start(&render_data, &camera_config, &file_data);
-  // render **to delete**
-  std::cout << "Begin rendering \"" << render_data.m_scene.m_name << "\" at " << render_data.m_width << 'x' << render_data.m_height
-            << '@' << render_data.m_samples_per_pixel << "spp.\n";
-  std::thread render_thread {[&] {
-    int progress {};
-    keteRay(render_data, file_data, progress);
-    ppm::makePPMFile(file_data);
-  }};
-  render_thread.join();
+  gui::start(&render_data, &camera_config, &file_data);
 
   return 0;
 }

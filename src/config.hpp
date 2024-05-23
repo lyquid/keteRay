@@ -27,7 +27,7 @@ struct RenderConfig {
   int         m_width {400};
 };
 
-inline Vector jsonVectorToVector(nlohmann::json_abi_v3_11_2::json v) {
+inline Vector jsonVectorToVector(json v) {
   return Vector { v[0], v[1], v[2] };
 }
 

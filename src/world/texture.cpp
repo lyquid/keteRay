@@ -2,7 +2,7 @@
 #include <glm/gtc/noise.hpp>
 #include <glm/trigonometric.hpp>
 #define STB_IMAGE_IMPLEMENTATION
-#include "../../lib/stb_image.h"
+#include <stb_image.h>
 #include <algorithm> // std::clamp
 #include <fstream>
 #include <iostream>

@@ -47,10 +47,9 @@ if(DEFINED CMAKE_TOOLCHAIN_FILE)
   find_package(ImGui-SFML REQUIRED)
   find_package(nlohmann_json CONFIG REQUIRED)
   find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
+  find_package(Stb REQUIRED)
 else()
 	message(STATUS "Using CMake find modules")
-  add_subdirectory(lib/imgui-1.88)
-  add_subdirectory(lib/imgui-sfml)
   # Find the packages needed
 	# like: find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
   find_package(glm)
@@ -59,7 +58,7 @@ else()
 endif()
 
 add_subdirectory(src)
-# add_subdirectory(src/gui)
+add_subdirectory(src/gui)
 add_subdirectory(src/renderer)
 add_subdirectory(src/world)
 
@@ -67,5 +66,17 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-configure_file(./config/config.json ./src COPYONLY)
-file(COPY ./resources/ DESTINATION ./src/resources)
+# Ensure the debug directory exists
+set(DEBUG_DIR "${CMAKE_BINARY_DIR}/src/debug")
+if(NOT EXISTS ${DEBUG_DIR})
+  file(MAKE_DIRECTORY ${DEBUG_DIR})
+endif()
+
+# Ensure the resources directory exists
+set(RESOURCES_DIR "${CMAKE_BINARY_DIR}/src/debug/resources")
+if(NOT EXISTS ${RESOURCES_DIR})
+  file(MAKE_DIRECTORY ${RESOURCES_DIR})
+endif()
+
+configure_file(${CMAKE_SOURCE_DIR}/config/config.json ${CMAKE_BINARY_DIR}/src/debug COPYONLY)
+file(COPY ${CMAKE_SOURCE_DIR}/resources/ DESTINATION ${CMAKE_BINARY_DIR}/src/debug/resources)

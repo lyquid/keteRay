@@ -4,6 +4,7 @@
 #include "ray.hpp"
 #include "../world/hittable.hpp"
 #include "../world/material.hpp"
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/norm.hpp>
 #include <algorithm> // std::replace
 

@@ -1,5 +1,5 @@
 #include "../renderer/camera.hpp"
-#include "../gui/gui.hpp"
+#include "gui.hpp"
 #include "../world/hittable.hpp"
 #include "../renderer/keteray.hpp"
 #include "../libppm.hpp"

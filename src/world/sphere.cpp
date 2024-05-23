@@ -1,5 +1,6 @@
 #include "../renderer/ray.hpp"
 #include "sphere.hpp"
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/norm.hpp> // glm::dot, glm::length2
 #include <glm/gtc/constants.hpp> // glm::pi
 #include <cmath>
