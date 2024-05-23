@@ -11,23 +11,26 @@ project(
   LANGUAGES CXX
 )
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Let's nicely support folders in IDEs
+# Support folders in IDEs
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Only do these if this is the main project, and not if it is included through add_subdirectory
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-  # Testing only available if this is the main app
-  # Note this needs to be done in the main CMakeLists
-  # since it calls enable_testing, which must be in the
-  # main CMakeLists.
-  include(CTest)
-	enable_testing()
+# Macro to ensure a directory exists
+macro(ensure_directory_exists dir)
+  if(NOT EXISTS ${dir})
+    file(MAKE_DIRECTORY ${dir})
+  endif()
+endmacro()
 
-  # Docs only available if this is the main app
+# Only if this is the main project
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+  include(CTest)
+  enable_testing()
+
+  # Documentation can be added here
   # find_package(Doxygen)
   # if(Doxygen_FOUND)
   #   add_subdirectory(docs)
@@ -36,25 +39,57 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # endif()
 endif()
 
+# Vcpkg toolchain file and package finding
 if(DEFINED CMAKE_TOOLCHAIN_FILE)
-	message(STATUS "Using vcpkg toolchain file")
-  # For Windows: Prevent overriding the parent project's compiler/linker settings
+  message(STATUS "Using vcpkg toolchain file")
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-  # Find the packages needed
-	# like: find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
+
   find_package(glm CONFIG REQUIRED)
+  if(NOT glm_FOUND)
+    message(FATAL_ERROR "GLM not found")
+  endif()
+
   find_package(imgui CONFIG REQUIRED)
+  if(NOT imgui_FOUND)
+    message(FATAL_ERROR "imgui not found")
+  endif()
+
   find_package(ImGui-SFML REQUIRED)
+  if(NOT ImGui-SFML_FOUND)
+    message(FATAL_ERROR "ImGui-SFML not found")
+  endif()
+
   find_package(nlohmann_json CONFIG REQUIRED)
+  if(NOT nlohmann_json_FOUND)
+    message(FATAL_ERROR "nlohmann_json not found")
+  endif()
+
   find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
+  if(NOT SFML_FOUND)
+    message(FATAL_ERROR "SFML not found")
+  endif()
+
   find_package(Stb REQUIRED)
+  if(NOT Stb_FOUND)
+    message(FATAL_ERROR "Stb not found")
+  endif()
 else()
-	message(STATUS "Using CMake find modules")
-  # Find the packages needed
-	# like: find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
-  find_package(glm)
+  message(STATUS "Using CMake find modules")
+
+  find_package(glm REQUIRED)
+  if(NOT glm_FOUND)
+    message(FATAL_ERROR "GLM not found")
+  endif()
+
   find_package(nlohmann_json CONFIG REQUIRED)
+  if(NOT nlohmann_json_FOUND)
+    message(FATAL_ERROR "nlohmann_json not found")
+  endif()
+
   find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
+  if(NOT SFML_FOUND)
+    message(FATAL_ERROR "SFML not found")
+  endif()
 endif()
 
 add_subdirectory(src)
@@ -66,17 +101,10 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-# Ensure the debug directory exists
-set(DEBUG_DIR "${CMAKE_BINARY_DIR}/src/debug")
-if(NOT EXISTS ${DEBUG_DIR})
-  file(MAKE_DIRECTORY ${DEBUG_DIR})
-endif()
-
 # Ensure the resources directory exists
-set(RESOURCES_DIR "${CMAKE_BINARY_DIR}/src/debug/resources")
-if(NOT EXISTS ${RESOURCES_DIR})
-  file(MAKE_DIRECTORY ${RESOURCES_DIR})
-endif()
+ensure_directory_exists("${CMAKE_BINARY_DIR}/src/debug")
+ensure_directory_exists("${CMAKE_BINARY_DIR}/src/debug/resources")
 
-configure_file(${CMAKE_SOURCE_DIR}/config/config.json ${CMAKE_BINARY_DIR}/src/debug COPYONLY)
+# Configure and copy files
+configure_file(${CMAKE_SOURCE_DIR}/config/config.json ${CMAKE_BINARY_DIR}/src/debug/config.json COPYONLY)
 file(COPY ${CMAKE_SOURCE_DIR}/resources/ DESTINATION ${CMAKE_BINARY_DIR}/src/debug/resources)
