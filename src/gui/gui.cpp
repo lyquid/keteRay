@@ -1,5 +1,5 @@
 #include "../renderer/camera.hpp"
-#include "../gui/gui.hpp"
+#include "gui.hpp"
 #include "../world/hittable.hpp"
 #include "../renderer/keteray.hpp"
 #include "../libppm.hpp"
@@ -10,6 +10,7 @@
 #include <imgui-SFML.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <string>
 #include <thread>
 
 ktp::CameraConfig* ktp::gui::camera_data {nullptr};
@@ -34,7 +35,7 @@ void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, ppm::P
     }
     ImGui::SFML::Update(window, delta_clock.restart());
 
-    // ImGui::ShowDemoWindow();
+    ImGui::ShowDemoWindow();
     layout();
 
     window.clear();
@@ -45,7 +46,7 @@ void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, ppm::P
 }
 
 void ktp::gui::layout() {
-  ImGui::SetNextWindowSize(ImVec2(500, 440), ImGuiCond_FirstUseEver);
+  ImGui::SetNextWindowSize(ImVec2(510, 528), ImGuiCond_FirstUseEver);
 
   if (ImGui::BeginMenuBar()) {
     if (ImGui::BeginMenu("File")) {
@@ -54,30 +55,68 @@ void ktp::gui::layout() {
     }
      ImGui::EndMenuBar();
   }
+  static std::string message {};
+  static int progress {};
   static bool rendering {false};
   ImGui::BeginDisabled(rendering);
     ImGui::Separator();
-      fileSection(rendering);
+    sceneSection(rendering);
     ImGui::Separator();
-      cameraSection(rendering);
+    fileSection(rendering);
     ImGui::Separator();
-      renderSection(rendering);
+    cameraSection(rendering);
     ImGui::Separator();
-      if (ImGui::Button("Render")) {
-        rendering = true;
-        std::cout << "Begin rendering at " << render_data->m_width << 'x' << render_data->m_height
-                  << '@' << render_data->m_samples_per_pixel << "spp.\n";
-        std::thread render_thread {[] {
-          keteRay(*render_data, *file_data);
-          ppm::makePPMFile(*file_data);
-          rendering = false;
-        }};
-        render_thread.detach();
+    renderSection(rendering);
+    ImGui::Separator();
+    if (ImGui::Button("Render")) {
+      rendering = true;
+      message = "Begin rendering at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
+              + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n";
+      std::cout << message;
+      std::thread render_thread {[] {
+        keteRay(*render_data, *file_data, progress);
+        progress = 0;
+        ppm::makePPMFile(*file_data);
+        message = "Rendered at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
+                + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n" + "PPM file generated successfully!";
+        rendering = false;
+      }};
+      render_thread.detach();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Randomize world")) {
+      render_data->m_scene.m_world = render_data->m_scene.m_function();
+    }
+  ImGui::EndDisabled();
+  ImGui::Separator();
+  ImGui::Separator();
+  ImGui::Text(message.c_str());
+  if (rendering) {
+    if (progress != 0)
+      ImGui::Text(("Scanlines remaining: " + std::to_string(progress)).c_str());
+    else
+      ImGui::Text("Generating ppm file...");
+  }
+}
+
+void ktp::gui::sceneSection(bool rendering) {
+  ImGui::Text("Scene");
+  ImGui::BeginDisabled(rendering);
+    static ImGuiComboFlags flags {};
+    // here we store our selection data as an index.
+    static auto current_item {scenes.find(k_DEFAULT_SCENE)->first};
+    // pass in the preview value visible before opening the combo (it could be anything)
+    const char* combo_preview {scenes.find(current_item)->first.c_str()};
+    if (ImGui::BeginCombo("Choose a scene", combo_preview, flags)) {
+      for (auto it = scenes.begin(); it != scenes.end(); ++it) {
+        const bool is_selected {current_item == it->first};
+        if (ImGui::Selectable(it->first.c_str(), is_selected)) current_item = it->first;
+        // set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+        if (is_selected) ImGui::SetItemDefaultFocus();
       }
-      ImGui::SameLine();
-      if (ImGui::Button("Randomize world")) {
-        *render_data->m_world = randomScene();
-      }
+      render_data->m_scene = scenes[current_item];
+      ImGui::EndCombo();
+    }
   ImGui::EndDisabled();
 }
 

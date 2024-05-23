@@ -1,7 +1,7 @@
 #include "hittable.hpp"
-#include "../renderer/keteray.hpp"
+#include "../renderer/random.hpp"
 #include "../renderer/ray.hpp"
-#include <algorithm> // std::swap
+#include <algorithm> // std::swap, std::sort
 
 // AABB
 
@@ -34,7 +34,7 @@ ktp::AABB ktp::AABB::surroundingBox(const AABB& box0, const AABB& box1) {
 
 // BVHnode
 
-inline bool boxCompare(const ktp::HittablePtr a, const ktp::HittablePtr b, int axis) {
+inline bool boxCompare(const ktp::HittablePtr& a, const ktp::HittablePtr& b, int axis) {
   ktp::AABB box_a {};
   ktp::AABB box_b {};
 
@@ -50,7 +50,7 @@ inline bool boxCompareZ(const ktp::HittablePtr a, const ktp::HittablePtr b) { re
 
 ktp::BVHnode::BVHnode(const std::vector<HittablePtr>& src_objects, size_t start, size_t end) {
   auto objects {src_objects};
-  const int axis {randomInt(0, 2)};
+  const int axis {rng::randomInt(0, 2)};
   const auto comparator {(axis == 0) ? boxCompareX
                        : (axis == 1) ? boxCompareY : boxCompareZ};
 
