@@ -12,6 +12,7 @@
 #ifndef KTP_LIBPPM_HPP_
 #define KTP_LIBPPM_HPP_
 
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -24,19 +25,6 @@ struct Color;
 using Pixels = std::vector<Color>;
 void writePixel(std::ostream& out, const Color& color);
 // **** forward declarations ****
-
-/**
- * @brief Clamps a value between 2 numbers.
- * @param x The value to check.
- * @param min The minimun number.
- * @param max The maximun number.
- * @return double A number that is always between min and max.
- */
-inline double clamp(double x, double min, double max) {
-  if (x < min) return min;
-  if (x > max) return max;
-  return x;
-}
 
 /**
  * @brief A RGB color [0, 1].
@@ -126,9 +114,9 @@ inline void makePPMFile(const PPMFileData& data) {
  */
 inline void writePixel(std::ostream& out, const Color& color) {
   constexpr auto magic_num {256};
-  out << static_cast<int>(magic_num * clamp(color.r, 0.0, 0.999)) << ' '
-      << static_cast<int>(magic_num * clamp(color.g, 0.0, 0.999)) << ' '
-      << static_cast<int>(magic_num * clamp(color.b, 0.0, 0.999)) << '\n';
+  out << static_cast<int>(magic_num * std::clamp(color.r, 0.0, 0.999)) << ' '
+      << static_cast<int>(magic_num * std::clamp(color.g, 0.0, 0.999)) << ' '
+      << static_cast<int>(magic_num * std::clamp(color.b, 0.0, 0.999)) << '\n';
 }
 
 } // namespace libppm

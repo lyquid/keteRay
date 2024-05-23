@@ -9,20 +9,13 @@
  *
  */
 
-#ifndef KTP_HITTABLE_HPP_
-#define KTP_HITTABLE_HPP_
+#ifndef KETERAY_SRC_WORLD_HITTABLE_HPP_
+#define KETERAY_SRC_WORLD_HITTABLE_HPP_
 
-#include "../renderer/keteray.hpp"
-#include <memory>
+#include "../types.hpp"
 #include <vector>
 
 namespace ktp {
-
-class Material;
-class Ray;
-
-using HittablePtr = std::shared_ptr<Hittable>;
-using MaterialPtr = std::shared_ptr<Material>;
 
 struct HitRecord {
   bool        m_front_face {};
@@ -30,6 +23,8 @@ struct HitRecord {
   Vector      m_normal {};
   Point       m_point {};
   double      m_t {};
+  double      m_u {};
+  double      m_v {};
 
   void setFaceNormal(const Ray& ray, const Vector& outward_normal);
 };
@@ -74,7 +69,7 @@ class HittableList: public Hittable {
   bool hit(const Ray& ray, double t_min, double t_max, HitRecord& record) const override;
 
  private:
- 
+
   std::vector<HittablePtr> m_objects {};
 };
 

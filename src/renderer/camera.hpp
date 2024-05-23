@@ -9,10 +9,10 @@
  *
  */
 
-#ifndef KTP_CAMERA_HPP_
-#define KTP_CAMERA_HPP_
+#ifndef KETERAY_SRC_RENDERER_CAMERA_HPP_
+#define KETERAY_SRC_RENDERER_CAMERA_HPP_
 
-#include "ray.hpp"
+#include "../types.hpp"
 
 namespace ktp {
 
@@ -72,11 +72,7 @@ class Camera {
    */
   auto aspectRatio() const { return m_aspect_ratio; }
 
-  Ray getRay(double s, double t) const {
-    const Vector rd {m_lens_radius * randomInUnitDisk()};
-    const Vector offset {m_u * rd.x + m_v * rd.y};
-    return Ray(m_origin + offset, m_lower_left_corner + s * m_horizontal + t * m_vertical - m_origin - offset);
-  }
+  Ray getRay(double s, double t) const;
 
   void reset(const CameraConfig& config);
 
@@ -91,6 +87,6 @@ class Camera {
   double m_lens_radius {};
 };
 
-}
+} // namespace ktp
 
 #endif

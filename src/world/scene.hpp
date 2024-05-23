@@ -9,14 +9,39 @@
  *
  */
 
-#ifndef KTP_SCENE_HPP_
-#define KTP_SCENE_HPP_
+#ifndef KETERAY_SRC_WORLD_SCENE_HPP_
+#define KETERAY_SRC_WORLD_SCENE_HPP_
+
+#include "hittable.hpp"
+#include "../types.hpp"
+#include <functional>
+#include <map>
+#include <string>
+#include <vector>
 
 namespace ktp {
 
-class HittableList;
+struct Scene {
+  Color m_background {};
+  std::function<HittableList()> m_function {};
+  std::string m_name {};
+  HittableList m_world {};
+};
 
-HittableList randomScene();
+namespace scn {
+  void loadScenes();
+  TexturePtr randomTexture();
+  HittableList checkered();
+  HittableList cover();
+  HittableList earth();
+  HittableList marble();
+  HittableList perlin();
+  HittableList simpleLight();
+  HittableList threeSpheres();
+  HittableList turbulence();
+}
+
+extern std::map<std::string, Scene> scenes;
 
 } // namespace ktp
 

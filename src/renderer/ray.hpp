@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef KTP_RAY_HPP_
-#define KTP_RAY_HPP_
+#ifndef KETERAY_SRC_RENDERER_RAY_HPP_
+#define KETERAY_SRC_RENDERER_RAY_HPP_
 
 #include "keteray.hpp"
 #include <glm/geometric.hpp> // glm::normalize

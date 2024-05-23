@@ -9,9 +9,10 @@
  *
  */
 
-#ifndef KTP_CONFIG_HPP_
-#define KTP_CONFIG_HPP_
+#ifndef KETERAY_SRC_CONFIG_HPP_
+#define KETERAY_SRC_CONFIG_HPP_
 
+#include "types.hpp"
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>
@@ -20,22 +21,17 @@ namespace ktp {
 
 using json = nlohmann::json;
 
-struct CameraConfig;
-
-struct FileConfig {
-  std::string m_name {"render"};
-};
-
 struct RenderConfig {
-  int m_samples {100};
-  int m_width {400};
+  int         m_samples {100};
+  std::string m_scene_name {k_DEFAULT_SCENE};
+  int         m_width {400};
 };
 
-inline Vector jsonVectorToVector(nlohmann::json_abi_v3_11_2::json v) {
+inline Vector jsonVectorToVector(json v) {
   return Vector { v[0], v[1], v[2] };
 }
 
-void parseConfigFile(CameraConfig& camera_config, FileConfig& file_config, RenderConfig& render_config);
+void parseConfigFile(CameraConfig& camera_config, RenderConfig& render_config);
 
 } // namespace ktp
 

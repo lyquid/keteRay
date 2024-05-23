@@ -9,33 +9,23 @@
  *
  */
 
-#ifndef KTP_KETERAY_HPP_
-#define KTP_KETERAY_HPP_
+#ifndef KETERAY_SRC_RENDERER_KETERAY_HPP_
+#define KETERAY_SRC_RENDERER_KETERAY_HPP_
 
+#include "../types.hpp"
 #include "../libppm.hpp"
-#include <glm/gtx/norm.hpp>
-#include <glm/vec3.hpp>
-#include <limits>
+#include "../world/scene.hpp"
+#include <glm/geometric.hpp>
 #include <string>
 
 namespace ktp {
 
-using Color  = glm::dvec3;
-using Point  = glm::dvec3;
-using Vector = glm::dvec3;
-
-class Camera;
-class Ray;
-class Hittable;
-
-constexpr auto k_INFINITY {std::numeric_limits<double>::infinity()};
-
 struct RenderData {
-  Camera*   m_camera {nullptr};
-  int       m_height {};
-  int       m_samples_per_pixel {};
-  int       m_width {};
-  Hittable* m_world {nullptr};
+  Camera* m_camera {nullptr};
+  int     m_height {};
+  int     m_samples_per_pixel {};
+  int     m_width {};
+  Scene   m_scene {};
 };
 
 inline ppm::Color colorToPPM(const Color& color) {
@@ -44,7 +34,7 @@ inline ppm::Color colorToPPM(const Color& color) {
 
 std::string createFileName(const RenderData& render_data, const ppm::PPMFileData& file_data);
 
-void keteRay(const RenderData& render_data, ppm::PPMFileData& file_data);
+void keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, int& j);
 
 /**
  * @brief Checks if a vector is near 0 in all dimensions.
@@ -54,28 +44,7 @@ void keteRay(const RenderData& render_data, ppm::PPMFileData& file_data);
  */
 bool nearZero(const Vector& v);
 
-Color randomColor(double min = 0.0, double max = 1.0);
-
-double randomDouble(double min = 0.0, double max = 1.0);
-
-// Alternate diffuse.
-Vector randomInHemisphere(const Vector& normal);
-
-Vector randomInUnitDisk();
-
-inline int randomInt(int min, int max) {
-  return static_cast<int>(randomDouble(min, max + 1));
-}
-
-// Hack diffuse
-Vector randomInUnitSphere();
-
-// Lambertian diffuse.
-Vector randomUnitVector();
-
-Vector randomVector(double min = 0.0, double max = 1.0);
-
-Color rayColor(const Ray& ray, const Hittable* world, int depth);
+Color rayColor(const Ray& ray, const Color& background, const Hittable& world, int depth);
 
 inline Vector reflect(const Vector& v, const Vector& normal) {
   return v - 2 * glm::dot(v, normal) * normal;

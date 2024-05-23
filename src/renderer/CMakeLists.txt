@@ -1,6 +1,7 @@
 add_library(keteRayRenderer
   camera.cpp
   keteray.cpp
+  random.cpp
 )
 
 if(DEFINED CMAKE_TOOLCHAIN_FILE)
