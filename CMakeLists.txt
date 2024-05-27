@@ -25,6 +25,11 @@ macro(ensure_directory_exists dir)
   endif()
 endmacro()
 
+# Macro to copy files
+macro(copy_files src dst)
+  file(COPY ${src} DESTINATION ${dst})
+endmacro()
+
 # Only if this is the main project
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   include(CTest)
@@ -104,7 +109,11 @@ include(CPack)
 # Ensure the resources directory exists
 ensure_directory_exists("${CMAKE_BINARY_DIR}/src/debug")
 ensure_directory_exists("${CMAKE_BINARY_DIR}/src/debug/resources")
+ensure_directory_exists("${CMAKE_BINARY_DIR}/src/Release")
+ensure_directory_exists("${CMAKE_BINARY_DIR}/src/Release/resources")
 
 # Configure and copy files
 configure_file(${CMAKE_SOURCE_DIR}/config/config.json ${CMAKE_BINARY_DIR}/src/debug/config.json COPYONLY)
-file(COPY ${CMAKE_SOURCE_DIR}/resources/ DESTINATION ${CMAKE_BINARY_DIR}/src/debug/resources)
+configure_file(${CMAKE_SOURCE_DIR}/config/config.json ${CMAKE_BINARY_DIR}/src/Release/config.json COPYONLY)
+copy_files(${CMAKE_SOURCE_DIR}/resources/ ${CMAKE_BINARY_DIR}/src/debug/resources)
+copy_files(${CMAKE_SOURCE_DIR}/resources/ ${CMAKE_BINARY_DIR}/src/Release/resources)
