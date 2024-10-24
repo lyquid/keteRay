@@ -35,12 +35,14 @@ void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, ppm::P
     }
     ImGui::SFML::Update(window, delta_clock.restart());
 
-    ImGui::ShowDemoWindow();
+    // ImGui::ShowDemoWindow();
     layout();
 
     window.clear();
     ImGui::SFML::Render(window);
     window.display();
+
+    sf::sleep(sf::milliseconds(k_WAIT_TIME));
   }
   ImGui::SFML::Shutdown();
 }
