@@ -11,7 +11,7 @@ project(
   LANGUAGES CXX
 )
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -74,10 +74,6 @@ if(DEFINED CMAKE_TOOLCHAIN_FILE)
     message(FATAL_ERROR "SFML not found")
   endif()
 
-  find_package(Stb REQUIRED)
-  if(NOT Stb_FOUND)
-    message(FATAL_ERROR "Stb not found")
-  endif()
 else()
   message(STATUS "Using CMake find modules")
 

@@ -3,12 +3,12 @@ add_executable(keteray
   config.cpp
 )
 
-target_compile_features(keteray PUBLIC cxx_std_17)
+target_compile_features(keteray PUBLIC cxx_std_23)
 set_target_properties(keteray PROPERTIES CXX_EXTENSIONS OFF)
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 	set(MY_DEBUG_OPTIONS /Wall /RTC)
-	set(MY_RELEASE_OPTIONS /w3 /O2)
+	set(MY_RELEASE_OPTIONS /w3 /O3)
 	target_compile_options(keteray PUBLIC "$<$<CONFIG:DEBUG>:${MY_DEBUG_OPTIONS}>")
 	target_compile_options(keteray PUBLIC "$<$<CONFIG:RELEASE>:${MY_RELEASE_OPTIONS}>")
 
