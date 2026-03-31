@@ -5,8 +5,11 @@
 #include <iostream>
 
 ktp::ImageTexture::ImageTexture(const std::string& file_name) {
-  if (!m_image.loadFromFile(file_name)) {
+  const auto loaded {sf::Image::loadFromFile(file_name)};
+  if (!loaded) {
     std::cerr << "ERROR: Could not load texture image file '" << file_name << "'.\n";
+  } else {
+    m_image = *loaded;
   }
 }
 
@@ -26,7 +29,7 @@ ktp::Color ktp::ImageTexture::value(double u, double v, const Vector& p) const {
   if (pixel_y >= m_image.getSize().y) pixel_y = m_image.getSize().y - 1u;
 
   constexpr auto k_COLOR_SCALE {1.0 / 255.0};
-  const auto pixel {m_image.getPixel(pixel_x, pixel_y)};
+  const auto pixel {m_image.getPixel({pixel_x, pixel_y})};
 
   return Color(pixel.r * k_COLOR_SCALE, pixel.g * k_COLOR_SCALE, pixel.b * k_COLOR_SCALE);
 }
