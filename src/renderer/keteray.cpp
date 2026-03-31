@@ -7,6 +7,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/norm.hpp>
 #include <algorithm> // std::replace
+#include <atomic>
 
 std::string ktp::createFileName(const RenderData& render_data, const ppm::PPMFileData& file_data) {
   auto scene_name {render_data.m_scene.m_name};
@@ -17,7 +18,7 @@ std::string ktp::createFileName(const RenderData& render_data, const ppm::PPMFil
     + std::to_string(render_data.m_samples_per_pixel) + "_samples.png";
 }
 
-void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, int& j) {
+void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, std::atomic<int>& j) {
   // config of file_data
   file_data.m_width  = render_data.m_width;
   file_data.m_height = render_data.m_height;
@@ -28,20 +29,20 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, in
   constexpr auto k_MAX_DEPTH {50};
   // here we go!
   for (j = render_data.m_height - 1; j >= 0; --j) {
-    std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
+    std::cout << "\rScanlines remaining: " << j.load() << ' ' << std::flush;
     for (int i = 0; i < render_data.m_width; ++i) {
       Color pixel_color {};
       if (render_data.m_samples_per_pixel <= 1) {
         // no multisampling
         const auto u {static_cast<double>(i) / (render_data.m_width  - 1)};
-        const auto v {static_cast<double>(j) / (render_data.m_height - 1)};
+        const auto v {static_cast<double>(j.load()) / (render_data.m_height - 1)};
         const Ray ray {render_data.m_camera->getRay(u, v)};
         pixel_color += rayColor(ray, render_data.m_scene.m_background, render_data.m_scene.m_world, k_MAX_DEPTH);
       } else {
         // multisampling
         for (int s = 0; s < render_data.m_samples_per_pixel; ++s) {
           const auto u {(i + rng::randomDouble()) / (render_data.m_width  - 1)};
-          const auto v {(j + rng::randomDouble()) / (render_data.m_height - 1)};
+          const auto v {(j.load() + rng::randomDouble()) / (render_data.m_height - 1)};
           const Ray ray {render_data.m_camera->getRay(u, v)};
           pixel_color += rayColor(ray, render_data.m_scene.m_background, render_data.m_scene.m_world, k_MAX_DEPTH);
         }
