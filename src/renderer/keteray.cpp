@@ -81,7 +81,7 @@ ktp::Color ktp::rayColor(const Ray& ray, const Color& background, const Hittable
 }
 
 ktp::Vector ktp::refract(const Vector& uv, const Vector& n, double etai_over_etat) {
-  const auto cos_theta {std::fmin(glm::dot(-uv, n), 1.0)};
+  const auto cos_theta {glm::min(glm::dot(-uv, n), 1.0)};
   const Vector r_out_perp {etai_over_etat * (uv + cos_theta * n)};
   const Vector r_out_parallel {-glm::sqrt(glm::abs(1.0 - glm::length2(r_out_perp))) * n};
   return r_out_perp + r_out_parallel;
