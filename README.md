@@ -107,17 +107,17 @@ cmake --build build --config Release --parallel
 ## 🚀 Usage
 
 ```bash
-# Run with default config
-./build/src/debug/keteRay
+# Run with default config (binary is built into build/src/)
+cd build/src && ./keteray
 
 # Override samples per pixel (more = prettier, slower)
-./build/src/debug/keteRay samples=50
+cd build/src && ./keteray samples=50
 
 # Override render width
-./build/src/debug/keteRay width=1920
+cd build/src && ./keteray width=1920
 
 # Combine spells
-./build/src/debug/keteRay samples=100 width=1280
+cd build/src && ./keteray samples=100 width=1280
 ```
 
 A live preview window will open — watch as the image materialises scanline by scanline, like a Polaroid from another dimension. When rendering is done, click **Save PPM** to write the image to disk.

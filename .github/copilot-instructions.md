@@ -46,7 +46,7 @@ resources/      # Image files used as textures
 
 | Thing | Convention | Example |
 |---|---|---|
-| Types / classes | `PascalCase` | `HittableList`, `BVHnode` |
+| Types / classes | `CamelCase` | `HittableList`, `Lambertian` |
 | Functions / methods | `camelCase` | `getRay()`, `nearZero()` |
 | Member variables | `m_snake_case` | `m_aspect_ratio`, `m_width` |
 | Free constants | `k_UPPER_SNAKE` | `k_INFINITY`, `k_MAX_DEPTH` |
