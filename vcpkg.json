@@ -8,7 +8,6 @@
     "imgui",
     "imgui-sfml",
     "nlohmann-json",
-    "sfml",
-    "stb"
+    "sfml"
   ]
 }

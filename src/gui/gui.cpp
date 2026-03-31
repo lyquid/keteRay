@@ -10,8 +10,12 @@
 #include <imgui-SFML.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <algorithm> // std::clamp
+#include <atomic>
+#include <mutex>
 #include <string>
 #include <thread>
+#include <vector>
 
 ktp::CameraConfig* ktp::gui::camera_data {nullptr};
 ppm::PPMFileData*  ktp::gui::file_data {nullptr};
@@ -56,8 +60,9 @@ void ktp::gui::layout() {
      ImGui::EndMenuBar();
   }
   static std::string message {};
-  static int progress {};
-  static bool rendering {false};
+  static std::mutex message_mutex {};
+  static std::atomic<int> progress {};
+  static std::atomic<bool> rendering {false};
   ImGui::BeginDisabled(rendering);
     ImGui::Separator();
     sceneSection(rendering);
@@ -76,9 +81,39 @@ void ktp::gui::layout() {
       std::thread render_thread {[] {
         keteRay(*render_data, *file_data, progress);
         progress = 0;
-        ppm::makePPMFile(*file_data);
-        message = "Rendered at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
-                + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n" + "PPM file generated successfully!";
+        // Build an sf::Image from the rendered pixels and save as PNG
+        sf::Image image {};
+        constexpr auto k_BYTES_PER_PIXEL_RGBA {4};
+        constexpr auto k_COLOR_LEVELS {256};
+        std::vector<sf::Uint8> sfml_pixels {};
+        sfml_pixels.reserve(static_cast<std::size_t>(file_data->m_width) *
+                            static_cast<std::size_t>(file_data->m_height) *
+                            static_cast<std::size_t>(k_BYTES_PER_PIXEL_RGBA));
+        for (const auto& color : file_data->m_pixels) {
+          sfml_pixels.push_back(static_cast<sf::Uint8>(k_COLOR_LEVELS * std::clamp(color.r, 0.0, 0.999)));
+          sfml_pixels.push_back(static_cast<sf::Uint8>(k_COLOR_LEVELS * std::clamp(color.g, 0.0, 0.999)));
+          sfml_pixels.push_back(static_cast<sf::Uint8>(k_COLOR_LEVELS * std::clamp(color.b, 0.0, 0.999)));
+          sfml_pixels.push_back(255u);
+        }
+        image.create(
+          static_cast<unsigned int>(file_data->m_width),
+          static_cast<unsigned int>(file_data->m_height),
+          sfml_pixels.data()
+        );
+        if (image.saveToFile(file_data->m_file_name)) {
+          std::cout << "\rPNG file saved successfully!\n";
+          {
+            std::lock_guard<std::mutex> lock {message_mutex};
+            message = "Rendered at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
+                    + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n" + "PNG file saved successfully!";
+          }
+        } else {
+          std::cerr << "ERROR: Could not save PNG file '" << file_data->m_file_name << "'.\n";
+          {
+            std::lock_guard<std::mutex> lock {message_mutex};
+            message = "ERROR: Could not save PNG file '" + file_data->m_file_name + "'.";
+          }
+        }
         rendering = false;
       }};
       render_thread.detach();
@@ -90,12 +125,17 @@ void ktp::gui::layout() {
   ImGui::EndDisabled();
   ImGui::Separator();
   ImGui::Separator();
-  ImGui::Text(message.c_str());
+  std::string current_message {};
+  {
+    std::lock_guard<std::mutex> lock {message_mutex};
+    current_message = message;
+  }
+  ImGui::Text(current_message.c_str());
   if (rendering) {
     if (progress != 0)
-      ImGui::Text(("Scanlines remaining: " + std::to_string(progress)).c_str());
+      ImGui::Text(("Scanlines remaining: " + std::to_string(progress.load())).c_str());
     else
-      ImGui::Text("Generating ppm file...");
+      ImGui::Text("Saving PNG file...");
   }
 }
 

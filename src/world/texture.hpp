@@ -13,6 +13,7 @@
 #define KETERAY_SRC_WORLD_TEXTURE_HPP_
 
 #include "../types.hpp"
+#include <SFML/Graphics/Image.hpp>
 #include <memory>
 #include <string>
 
@@ -28,13 +29,9 @@ class ImageTexture: public Texture {
  public:
   ImageTexture() = default;
   ImageTexture(const std::string& file_name);
-  ~ImageTexture() { delete m_data; }
   Color value(double u, double v, const Vector& p) const override;
  private:
-  static constexpr int k_BYTES_PER_PIXEL {3};
-  unsigned char* m_data {nullptr};
-  int m_width{}, m_height{};
-  int m_bytes_per_scanline{};
+  sf::Image m_image {};
 };
 
 class MarbleTexture: public Texture {
