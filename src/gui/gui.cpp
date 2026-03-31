@@ -85,6 +85,11 @@ void ktp::gui::layout() {
         constexpr auto k_BYTES_PER_PIXEL_RGBA {4};
         constexpr auto k_COLOR_LEVELS {256};
         std::vector<std::uint8_t> sfml_pixels {};
+        if (file_data->m_width <= 0 || file_data->m_height <= 0) {
+          std::cerr << "ERROR: Invalid image dimensions (" << file_data->m_width << 'x' << file_data->m_height << ").\n";
+          rendering = false;
+          return;
+        }
         sfml_pixels.reserve(static_cast<std::size_t>(file_data->m_width) *
                             static_cast<std::size_t>(file_data->m_height) *
                             static_cast<std::size_t>(k_BYTES_PER_PIXEL_RGBA));
