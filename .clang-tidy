@@ -1,0 +1,37 @@
+# keteRay — clang-tidy configuration
+# Enforces C++ Core Guidelines as commanded by the Ancient Ones (Bjarne & Herb)
+
+---
+# Enable a curated set of checks:
+#   - clang-analyzer: static analysis
+#   - cppcoreguidelines: Bjarne's sacred scrolls
+#   - modernize: embrace C++20, abandon the old ways
+#   - performance: thou shalt not copy unnecessarily
+#   - readability: future-you will thank present-you
+#   - bugprone: catch the sneaky gremlins
+
+Checks: >
+  clang-analyzer-*,
+  cppcoreguidelines-*,
+  modernize-*,
+  performance-*,
+  readability-*,
+  bugprone-*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -readability-magic-numbers,
+  -readability-identifier-naming,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -modernize-use-trailing-return-type,
+  -readability-identifier-length,
+  -cppcoreguidelines-pro-type-vararg,
+  -cppcoreguidelines-non-private-member-variables-in-classes
+
+WarningsAsErrors: ''
+
+HeaderFilterRegex: '.*/(src)/.*\.(hpp|h)$'
+
+CheckOptions:
+  - key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+    value: 'true'
+  - key: modernize-use-default-member-init.UseAssignment
+    value: 'false'
