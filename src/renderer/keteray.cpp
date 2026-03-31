@@ -11,6 +11,7 @@
 #include <algorithm> // std::replace
 #include <atomic>
 #include <cstdint>
+#include <iostream>
 
 std::string ktp::createFileName(const RenderData& render_data) {
   auto scene_name {render_data.m_scene.m_name};
