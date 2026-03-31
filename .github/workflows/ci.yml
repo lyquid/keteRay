@@ -42,6 +42,15 @@ jobs:
             libglm-dev \
             nlohmann-json3-dev \
             libgl1-mesa-dev \
+            libx11-dev \
+            libxrandr-dev \
+            libxcursor-dev \
+            libxi-dev \
+            libudev-dev \
+            libopenal-dev \
+            libvorbis-dev \
+            libflac-dev \
+            libfreetype-dev \
             clang clang-tidy \
             pkg-config
 
@@ -89,6 +98,15 @@ jobs:
             libglm-dev \
             nlohmann-json3-dev \
             libgl1-mesa-dev \
+            libx11-dev \
+            libxrandr-dev \
+            libxcursor-dev \
+            libxi-dev \
+            libudev-dev \
+            libopenal-dev \
+            libvorbis-dev \
+            libflac-dev \
+            libfreetype-dev \
             clang clang-tidy \
             pkg-config
 
