@@ -3,12 +3,15 @@
   "name": "keteray",
   "version": "0.1.0",
   "description": "One weekend++ ray tracer by ketepincho.",
-  "builtin-baseline": "fa86ef0534bd613dd5e7a46f069745cf514ad221",
+  "builtin-baseline": "596c7b12a7958343e22077fb4c9b2ee5a9a8e7fa",
   "dependencies": [
     "glm",
     "imgui",
     "imgui-sfml",
     "nlohmann-json",
     "sfml"
+  ],
+  "overrides": [
+    { "name": "sfml", "version": "3.0.2" }
   ]
 }
