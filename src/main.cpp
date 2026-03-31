@@ -2,7 +2,7 @@
 #include "config.hpp"
 #include "gui/gui.hpp"
 #include "world/hittable.hpp"
-#include "./renderer/keteray.hpp"
+#include "renderer/keteray.hpp"
 #include "world/material.hpp"
 #include "world/scene.hpp"
 #include "world/sphere.hpp"
@@ -32,9 +32,9 @@ int main(int argc, char* argv[]) {
   render_data.m_samples_per_pixel = render_config.m_samples;
   render_data.m_scene = scenes[render_config.m_scene_name];
   // image data
-  ppm::PPMFileData file_data {};
+  ImageData image_data {};
   // GUI
-  gui::start(&render_data, &camera_config, &file_data);
+  gui::start(&render_data, &camera_config, &image_data);
 
   return 0;
 }

@@ -1,7 +1,6 @@
 #include "random.hpp"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/norm.hpp>
-#include <chrono>
 #include <random>
 
 ktp::Color ktp::rng::randomColor(double min, double max) {
@@ -9,7 +8,7 @@ ktp::Color ktp::rng::randomColor(double min, double max) {
 }
 
 double ktp::rng::randomDouble(double min, double max) {
-  static std::mt19937 generator (std::chrono::steady_clock::now().time_since_epoch().count());
+  static std::mt19937 generator {std::random_device{}()};
   std::uniform_real_distribution<double> dist(min, max);
   return dist(generator);
 }

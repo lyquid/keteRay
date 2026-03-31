@@ -10,7 +10,7 @@
 #include <algorithm> // std::replace
 #include <atomic>
 
-std::string ktp::createFileName(const RenderData& render_data, const ppm::PPMFileData& file_data) {
+std::string ktp::createFileName(const RenderData& render_data, const ImageData& image_data) {
   auto scene_name {render_data.m_scene.m_name};
   std::replace(scene_name.begin(), scene_name.end(), ' ', '_');
   return scene_name + "_"
@@ -19,13 +19,13 @@ std::string ktp::createFileName(const RenderData& render_data, const ppm::PPMFil
     + std::to_string(render_data.m_samples_per_pixel) + "_samples.png";
 }
 
-void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, std::atomic<int>& j) {
-  // config of file_data
-  file_data.m_width  = render_data.m_width;
-  file_data.m_height = render_data.m_height;
-  file_data.m_pixels.clear();
-  file_data.m_pixels.reserve(file_data.m_width * file_data.m_height);
-  file_data.m_file_name = createFileName(render_data, file_data);
+void ktp::keteRay(const RenderData& render_data, ImageData& image_data, std::atomic<int>& j) {
+  // config of image_data
+  image_data.m_width  = render_data.m_width;
+  image_data.m_height = render_data.m_height;
+  image_data.m_pixels.clear();
+  image_data.m_pixels.reserve(image_data.m_width * image_data.m_height);
+  image_data.m_file_name = createFileName(render_data, image_data);
   // recursion depth for rayColor
   constexpr auto k_MAX_DEPTH {50};
   // here we go!
@@ -53,7 +53,7 @@ void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, st
       // gamma correction
       pixel_color = glm::sqrt(pixel_color);
       // final pixel color to the data
-      file_data.m_pixels.push_back(colorToPPM(pixel_color));
+      image_data.m_pixels.push_back(pixel_color);
     }
   }
   std::cout << "\rRendering finished.                                      \n";

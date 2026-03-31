@@ -12,22 +12,21 @@
 #ifndef KETERAY_SRC_GUI_GUI_HPP_
 #define KETERAY_SRC_GUI_GUI_HPP_
 
-namespace ppm { struct PPMFileData; }
-
 namespace ktp {
 
 struct CameraConfig;
+struct ImageData;
 struct RenderData;
 
 namespace gui {
 
 extern CameraConfig* camera_data;
-extern ppm::PPMFileData* file_data;
-extern RenderData* render_data;
+extern ImageData*    file_data;
+extern RenderData*   render_data;
 
-void start(RenderData* render_data_in, CameraConfig* camera_in, ppm::PPMFileData* file_data_in);
+void start(RenderData* render_data_in, CameraConfig* camera_in, ImageData* file_data_in);
 
-void layout();
+bool layout();
 void cameraSection(bool rendering);
 void fileSection(bool rendering);
 void renderSection(bool rendering);

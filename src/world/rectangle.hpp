@@ -21,7 +21,7 @@ class Rectangle: public Hittable {
 
   Rectangle() = default;
   Rectangle(double x0, double x1, double y0, double y1, double k, MaterialPtr mat):
-    m_x0(x0), m_x1(x1), m_y0(y0), m_y1(y1), m_k(k), m_material(mat) {};
+    m_x0(x0), m_x1(x1), m_y0(y0), m_y1(y1), m_k(k), m_material(mat) {}
 
   bool boundingBox(AABB& output_box) const override;
   bool hit(const Ray& ray, double t_min, double t_max, HitRecord& record) const override;

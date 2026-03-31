@@ -2,7 +2,7 @@
 #include "material.hpp"
 #include "../renderer/random.hpp"
 #include "../renderer/ray.hpp"
-#include <algorithm> // std::min
+#include <glm/common.hpp>      // glm::min
 
 // LAMBERTIAN (MATT)
 
@@ -39,7 +39,7 @@ bool ktp::Dielectric::scatter(const Ray& ray, const HitRecord& record, Color& at
   const auto refraction_ratio {record.m_front_face ? 1.0 / m_ir : m_ir};
 
   const Vector unit_direction {glm::normalize(ray.direction())};
-  const auto cos_theta {std::min(glm::dot(-unit_direction, record.m_normal), 1.0)};
+  const auto cos_theta {glm::min(glm::dot(-unit_direction, record.m_normal), 1.0)};
   const auto sin_theta {glm::sqrt(1.0 - cos_theta * cos_theta)};
 
   const bool cannot_refract {refraction_ratio * sin_theta > 1.0};

@@ -1,7 +1,8 @@
 #include "hittable.hpp"
 #include "../renderer/random.hpp"
 #include "../renderer/ray.hpp"
-#include <algorithm> // std::swap, std::sort
+#include <glm/common.hpp>      // glm::min, glm::max
+#include <algorithm>           // std::swap, std::sort
 
 // AABB
 
@@ -19,17 +20,7 @@ bool ktp::AABB::hit(const Ray& ray, double t_min, double t_max) const {
 }
 
 ktp::AABB ktp::AABB::surroundingBox(const AABB& box0, const AABB& box1) {
-  const Point small{
-    std::min(box0.min().x, box1.min().x),
-    std::min(box0.min().y, box1.min().y),
-    std::min(box0.min().z, box1.min().z)
-  };
-  const Point big{
-    std::max(box0.max().x, box1.max().x),
-    std::max(box0.max().y, box1.max().y),
-    std::max(box0.max().z, box1.max().z)
-  };
-  return AABB{small, big};
+  return AABB{glm::min(box0.min(), box1.min()), glm::max(box0.max(), box1.max())};
 }
 
 // BVHnode

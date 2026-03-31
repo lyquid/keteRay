@@ -2,7 +2,6 @@
 #include "gui.hpp"
 #include "../world/hittable.hpp"
 #include "../renderer/keteray.hpp"
-#include "../libppm.hpp"
 #include "../world/scene.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/common.hpp>       // glm::clamp
@@ -19,10 +18,10 @@
 #include <vector>
 
 ktp::CameraConfig* ktp::gui::camera_data {nullptr};
-ppm::PPMFileData*  ktp::gui::file_data {nullptr};
+ktp::ImageData*    ktp::gui::file_data {nullptr};
 ktp::RenderData*   ktp::gui::render_data {nullptr};
 
-void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, ppm::PPMFileData* file_data_in) {
+void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, ImageData* file_data_in) {
   camera_data = camera_in;
   file_data = file_data_in;
   render_data = render_data_in;
@@ -39,7 +38,7 @@ void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, ppm::P
     ImGui::SFML::Update(window, delta_clock.restart());
 
     ImGui::ShowDemoWindow();
-    layout();
+    if (layout()) window.close();
 
     window.clear();
     ImGui::SFML::Render(window);
@@ -48,99 +47,106 @@ void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, ppm::P
   ImGui::SFML::Shutdown();
 }
 
-void ktp::gui::layout() {
+bool ktp::gui::layout() {
+  bool should_close {false};
   ImGui::SetNextWindowSize(ImVec2(510, 528), ImGuiCond_FirstUseEver);
 
-  if (ImGui::BeginMenuBar()) {
-    if (ImGui::BeginMenu("File")) {
-      ImGui::MenuItem("Close");
-      ImGui::EndMenu();
+  if (ImGui::Begin("keteRay", nullptr, ImGuiWindowFlags_MenuBar)) {
+    if (ImGui::BeginMenuBar()) {
+      if (ImGui::BeginMenu("File")) {
+        if (ImGui::MenuItem("Close")) should_close = true;
+        ImGui::EndMenu();
+      }
+      ImGui::EndMenuBar();
     }
-     ImGui::EndMenuBar();
-  }
-  static std::string message {};
-  static std::mutex message_mutex {};
-  static std::atomic<int> progress {};
-  static std::atomic<bool> rendering {false};
-  ImGui::BeginDisabled(rendering);
-    ImGui::Separator();
-    sceneSection(rendering);
-    ImGui::Separator();
-    fileSection(rendering);
-    ImGui::Separator();
-    cameraSection(rendering);
-    ImGui::Separator();
-    renderSection(rendering);
-    ImGui::Separator();
-    if (ImGui::Button("Render")) {
-      rendering = true;
-      message = "Begin rendering at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
-              + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n";
-      std::cout << message;
-      std::thread render_thread {[] {
-        keteRay(*render_data, *file_data, progress);
-        progress = 0;
-        // Build an sf::Image from the rendered pixels and save as PNG
-        sf::Image image {};
-        constexpr auto k_BYTES_PER_PIXEL_RGBA {4};
-        constexpr auto k_COLOR_LEVELS {256};
-        std::vector<std::uint8_t> sfml_pixels {};
-        if (file_data->m_width <= 0 || file_data->m_height <= 0) {
-          std::cerr << "ERROR: Invalid image dimensions (" << file_data->m_width << 'x' << file_data->m_height << ").\n";
+    static std::string message {};
+    static std::mutex message_mutex {};
+    static std::atomic<int> progress {};
+    static std::atomic<bool> rendering {false};
+    ImGui::BeginDisabled(rendering);
+      ImGui::Separator();
+      sceneSection(rendering);
+      ImGui::Separator();
+      fileSection(rendering);
+      ImGui::Separator();
+      cameraSection(rendering);
+      ImGui::Separator();
+      renderSection(rendering);
+      ImGui::Separator();
+      if (ImGui::Button("Render")) {
+        rendering = true;
+        message = "Begin rendering at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
+                + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n";
+        std::cout << message;
+        std::thread render_thread {[] {
+          keteRay(*render_data, *file_data, progress);
+          progress = 0;
+          // Build an sf::Image from the rendered pixels and save as PNG
+          sf::Image image {};
+          constexpr auto k_BYTES_PER_PIXEL_RGBA {4};
+          constexpr auto k_COLOR_LEVELS {256};
+          std::vector<std::uint8_t> sfml_pixels {};
+          if (file_data->m_width <= 0 || file_data->m_height <= 0) {
+            std::cerr << "ERROR: Invalid image dimensions (" << file_data->m_width << 'x' << file_data->m_height << ").\n";
+            rendering = false;
+            return;
+          }
+          sfml_pixels.reserve(static_cast<std::size_t>(file_data->m_width) *
+                              static_cast<std::size_t>(file_data->m_height) *
+                              static_cast<std::size_t>(k_BYTES_PER_PIXEL_RGBA));
+          for (const auto& color : file_data->m_pixels) {
+            sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.r, 0.0, 0.999)));
+            sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.g, 0.0, 0.999)));
+            sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.b, 0.0, 0.999)));
+            sfml_pixels.push_back(255u);
+          }
+          image.resize(
+            {static_cast<unsigned int>(file_data->m_width),
+             static_cast<unsigned int>(file_data->m_height)},
+            sfml_pixels.data()
+          );
+          if (image.saveToFile(file_data->m_file_name)) {
+            std::cout << "\rPNG file saved successfully!\n";
+            {
+              std::lock_guard<std::mutex> lock {message_mutex};
+              message = "Rendered at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
+                      + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n" + "PNG file saved successfully!";
+            }
+          } else {
+            std::cerr << "ERROR: Could not save PNG file '" << file_data->m_file_name << "'.\n";
+            {
+              std::lock_guard<std::mutex> lock {message_mutex};
+              message = "ERROR: Could not save PNG file '" + file_data->m_file_name + "'.";
+            }
+          }
           rendering = false;
-          return;
-        }
-        sfml_pixels.reserve(static_cast<std::size_t>(file_data->m_width) *
-                            static_cast<std::size_t>(file_data->m_height) *
-                            static_cast<std::size_t>(k_BYTES_PER_PIXEL_RGBA));
-        for (const auto& color : file_data->m_pixels) {
-          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.r, 0.0, 0.999)));
-          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.g, 0.0, 0.999)));
-          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.b, 0.0, 0.999)));
-          sfml_pixels.push_back(255u);
-        }
-        image.resize(
-          {static_cast<unsigned int>(file_data->m_width),
-           static_cast<unsigned int>(file_data->m_height)},
-          sfml_pixels.data()
-        );
-        if (image.saveToFile(file_data->m_file_name)) {
-          std::cout << "\rPNG file saved successfully!\n";
-          {
-            std::lock_guard<std::mutex> lock {message_mutex};
-            message = "Rendered at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
-                    + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n" + "PNG file saved successfully!";
-          }
-        } else {
-          std::cerr << "ERROR: Could not save PNG file '" << file_data->m_file_name << "'.\n";
-          {
-            std::lock_guard<std::mutex> lock {message_mutex};
-            message = "ERROR: Could not save PNG file '" + file_data->m_file_name + "'.";
-          }
-        }
-        rendering = false;
-      }};
-      render_thread.detach();
+        }};
+        render_thread.detach();
+      }
+      ImGui::SameLine();
+      if (ImGui::Button("Randomize world")) {
+        render_data->m_scene.m_world = render_data->m_scene.m_function();
+      }
+    ImGui::EndDisabled();
+    ImGui::Separator();
+    ImGui::Separator();
+    std::string current_message {};
+    {
+      std::lock_guard<std::mutex> lock {message_mutex};
+      current_message = message;
     }
-    ImGui::SameLine();
-    if (ImGui::Button("Randomize world")) {
-      render_data->m_scene.m_world = render_data->m_scene.m_function();
+    ImGui::TextUnformatted(current_message.data(), current_message.data() + current_message.size());
+    if (rendering) {
+      if (progress != 0) {
+        const auto scanline_msg {"Scanlines remaining: " + std::to_string(progress.load())};
+        ImGui::TextUnformatted(scanline_msg.data(), scanline_msg.data() + scanline_msg.size());
+      } else {
+        ImGui::TextUnformatted("Saving PNG file...");
+      }
     }
-  ImGui::EndDisabled();
-  ImGui::Separator();
-  ImGui::Separator();
-  std::string current_message {};
-  {
-    std::lock_guard<std::mutex> lock {message_mutex};
-    current_message = message;
   }
-  ImGui::Text(current_message.c_str());
-  if (rendering) {
-    if (progress != 0)
-      ImGui::Text(("Scanlines remaining: " + std::to_string(progress.load())).c_str());
-    else
-      ImGui::Text("Saving PNG file...");
-  }
+  ImGui::End();
+  return should_close;
 }
 
 void ktp::gui::sceneSection(bool rendering) {
