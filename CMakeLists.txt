@@ -41,19 +41,19 @@ if(DEFINED CMAKE_TOOLCHAIN_FILE)
   # For Windows: Prevent overriding the parent project's compiler/linker settings
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   # Find the packages needed
-	# like: find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
+	# like: find_package(SFML COMPONENTS Window Graphics CONFIG REQUIRED)
   find_package(glm CONFIG REQUIRED)
   find_package(imgui CONFIG REQUIRED)
   find_package(ImGui-SFML REQUIRED)
   find_package(nlohmann_json CONFIG REQUIRED)
-  find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
+  find_package(SFML COMPONENTS Window Graphics CONFIG REQUIRED)
 else()
 	message(STATUS "Using CMake find modules")
   # Find the packages needed
-	# like: find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
+	# like: find_package(SFML COMPONENTS Window Graphics CONFIG REQUIRED)
   find_package(glm)
   find_package(nlohmann_json CONFIG REQUIRED)
-  find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
+  find_package(SFML COMPONENTS Window Graphics CONFIG REQUIRED)
 endif()
 
 add_subdirectory(src)

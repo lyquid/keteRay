@@ -13,7 +13,7 @@ void ktp::Sphere::getSphereUV(const Point& p, double& u, double& v) {
   //     <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
   //     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
 
-  const auto theta {glm::acos(-p.y)};
+  const auto theta {std::acos(-p.y)};
   const auto phi {std::atan2(-p.z, p.x) + glm::pi<double>()};
 
   u = phi / (glm::two_pi<double>());

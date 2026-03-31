@@ -10,7 +10,7 @@ add_library(keteRayWorld
 if(DEFINED CMAKE_TOOLCHAIN_FILE)
   target_link_libraries(keteRayWorld PRIVATE
     glm::glm
-    sfml-graphics
+    SFML::Graphics
   )
 else()
   target_link_libraries(keteRayWorld PRIVATE

@@ -38,7 +38,6 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends \
             cmake ninja-build \
-            libsfml-dev \
             libglm-dev \
             nlohmann-json3-dev \
             libgl1-mesa-dev \
@@ -94,7 +93,6 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends \
             cmake ninja-build \
-            libsfml-dev \
             libglm-dev \
             nlohmann-json3-dev \
             libgl1-mesa-dev \

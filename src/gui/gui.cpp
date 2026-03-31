@@ -12,6 +12,7 @@
 #include <SFML/Window.hpp>
 #include <algorithm> // std::clamp
 #include <atomic>
+#include <cstdint>
 #include <mutex>
 #include <string>
 #include <thread>
@@ -26,16 +27,14 @@ void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, ppm::P
   file_data = file_data_in;
   render_data = render_data_in;
 
-  sf::VideoMode desktop {sf::VideoMode::getDesktopMode()};
-  sf::RenderWindow window {sf::VideoMode(1024, 768, desktop.bitsPerPixel), "keteRay"};
+  sf::RenderWindow window {sf::VideoMode({1024u, 768u}), "keteRay"};
   if (!ImGui::SFML::Init(window)) return;
 
   sf::Clock delta_clock {};
   while (window.isOpen()) {
-    sf::Event event {};
-    while (window.pollEvent(event)) {
-      ImGui::SFML::ProcessEvent(window, event);
-      if (event.type == sf::Event::Closed) window.close();
+    while (const auto event = window.pollEvent()) {
+      ImGui::SFML::ProcessEvent(window, *event);
+      if (event->is<sf::Event::Closed>()) window.close();
     }
     ImGui::SFML::Update(window, delta_clock.restart());
 
@@ -85,19 +84,24 @@ void ktp::gui::layout() {
         sf::Image image {};
         constexpr auto k_BYTES_PER_PIXEL_RGBA {4};
         constexpr auto k_COLOR_LEVELS {256};
-        std::vector<sf::Uint8> sfml_pixels {};
+        std::vector<std::uint8_t> sfml_pixels {};
+        if (file_data->m_width <= 0 || file_data->m_height <= 0) {
+          std::cerr << "ERROR: Invalid image dimensions (" << file_data->m_width << 'x' << file_data->m_height << ").\n";
+          rendering = false;
+          return;
+        }
         sfml_pixels.reserve(static_cast<std::size_t>(file_data->m_width) *
                             static_cast<std::size_t>(file_data->m_height) *
                             static_cast<std::size_t>(k_BYTES_PER_PIXEL_RGBA));
         for (const auto& color : file_data->m_pixels) {
-          sfml_pixels.push_back(static_cast<sf::Uint8>(k_COLOR_LEVELS * std::clamp(color.r, 0.0, 0.999)));
-          sfml_pixels.push_back(static_cast<sf::Uint8>(k_COLOR_LEVELS * std::clamp(color.g, 0.0, 0.999)));
-          sfml_pixels.push_back(static_cast<sf::Uint8>(k_COLOR_LEVELS * std::clamp(color.b, 0.0, 0.999)));
+          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * std::clamp(color.r, 0.0, 0.999)));
+          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * std::clamp(color.g, 0.0, 0.999)));
+          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * std::clamp(color.b, 0.0, 0.999)));
           sfml_pixels.push_back(255u);
         }
-        image.create(
-          static_cast<unsigned int>(file_data->m_width),
-          static_cast<unsigned int>(file_data->m_height),
+        image.resize(
+          {static_cast<unsigned int>(file_data->m_width),
+           static_cast<unsigned int>(file_data->m_height)},
           sfml_pixels.data()
         );
         if (image.saveToFile(file_data->m_file_name)) {
