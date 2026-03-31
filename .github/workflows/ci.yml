@@ -1,0 +1,129 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────
+  # Job 1: Build — "One does not simply walk into CMake without errors"
+  # ─────────────────────────────────────────────────────────────────
+  build:
+    name: "🔨 Build (${{ matrix.os }})"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: "📥 Checkout the One Repository"
+        uses: actions/checkout@v4
+
+      - name: "📦 Install system dependencies"
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            cmake ninja-build \
+            libsfml-dev \
+            libglm-dev \
+            nlohmann-json3-dev \
+            libstb-dev \
+            libgl1-mesa-dev \
+            clang clang-tidy \
+            pkg-config
+
+      - name: "🛠️ Install imgui & imgui-sfml via vcpkg"
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: 'vcpkg.json'
+
+      - name: "⚙️ Configure CMake (the ancient incantation)"
+        run: |
+          cmake -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+            -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_CXX_STANDARD=20
+
+      - name: "🏗️ Build (may the compiler be with you)"
+        run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel
+
+      - name: "📤 Upload compile_commands.json for clang-tidy"
+        uses: actions/upload-artifact@v4
+        with:
+          name: compile-commands-${{ matrix.os }}
+          path: build/compile_commands.json
+
+  # ─────────────────────────────────────────────────────────────────
+  # Job 2: Lint — "Bjarne watches over your code style"
+  # ─────────────────────────────────────────────────────────────────
+  lint:
+    name: "🧹 clang-tidy (C++ Core Guidelines)"
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: "📥 Checkout the One Repository"
+        uses: actions/checkout@v4
+
+      - name: "📦 Install system dependencies"
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            cmake ninja-build \
+            libsfml-dev \
+            libglm-dev \
+            nlohmann-json3-dev \
+            libstb-dev \
+            libgl1-mesa-dev \
+            clang clang-tidy \
+            pkg-config
+
+      - name: "🛠️ Install imgui & imgui-sfml via vcpkg"
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: 'vcpkg.json'
+
+      - name: "📥 Download compile_commands.json"
+        uses: actions/download-artifact@v4
+        with:
+          name: compile-commands-ubuntu-latest
+          path: build
+
+      - name: "🔍 Run clang-tidy (the Eye of Sauron for code style)"
+        run: |
+          FILES=$(find src -name '*.cpp' | tr '\n' ' ')
+          echo "Analysing: $FILES"
+          clang-tidy \
+            -p build \
+            --config-file=.clang-tidy \
+            $FILES \
+            2>&1 | tee clang-tidy-report.txt
+          # Fail if clang-tidy emitted any warnings/errors
+          if grep -qE '(warning|error):' clang-tidy-report.txt; then
+            echo "❌ clang-tidy found issues — Bjarne is displeased."
+            exit 1
+          fi
+          echo "✅ clang-tidy passed — Bjarne nods approvingly."
+
+      - name: "📤 Upload clang-tidy report"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clang-tidy-report
+          path: clang-tidy-report.txt
