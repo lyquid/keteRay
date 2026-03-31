@@ -6,8 +6,8 @@ if(DEFINED CMAKE_TOOLCHAIN_FILE)
 target_link_libraries(keteRayGUI PRIVATE
   imgui::imgui
   ImGui-SFML::ImGui-SFML
-  sfml-graphics
-  sfml-window
+  SFML::Graphics
+  SFML::Window
 )
 else()
 target_link_libraries(keteRayGUI PRIVATE
