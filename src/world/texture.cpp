@@ -5,11 +5,8 @@
 #include <iostream>
 
 ktp::ImageTexture::ImageTexture(const std::string& file_name) {
-  auto loaded {sf::Image::loadFromFile(file_name)};
-  if (!loaded) {
+  if (!m_image.loadFromFile(file_name)) {
     std::cerr << "ERROR: Could not load texture image file '" << file_name << "'.\n";
-  } else {
-    m_image = std::move(*loaded);
   }
 }
 
