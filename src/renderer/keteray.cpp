@@ -6,6 +6,7 @@
 #include "../world/material.hpp"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/norm.hpp>
+#include <glm/common.hpp>       // glm::min
 #include <algorithm> // std::replace
 #include <atomic>
 
