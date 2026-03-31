@@ -119,6 +119,6 @@ inline void writePixel(std::ostream& out, const Color& color) {
       << static_cast<int>(magic_num * glm::clamp(color.b, 0.0, 0.999)) << '\n';
 }
 
-} // namespace libppm
+} // namespace ppm
 
-#endif // LIBPPM_HPP_
+#endif // KTP_LIBPPM_HPP_

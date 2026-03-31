@@ -20,14 +20,14 @@ bool ktp::AABB::hit(const Ray& ray, double t_min, double t_max) const {
 
 ktp::AABB ktp::AABB::surroundingBox(const AABB& box0, const AABB& box1) {
   const Point small{
-    fmin(box0.min().x, box1.min().x),
-    fmin(box0.min().y, box1.min().y),
-    fmin(box0.min().z, box1.min().z)
+    std::min(box0.min().x, box1.min().x),
+    std::min(box0.min().y, box1.min().y),
+    std::min(box0.min().z, box1.min().z)
   };
   const Point big{
-    fmax(box0.max().x, box1.max().x),
-    fmax(box0.max().y, box1.max().y),
-    fmax(box0.max().z, box1.max().z)
+    std::max(box0.max().x, box1.max().x),
+    std::max(box0.max().y, box1.max().y),
+    std::max(box0.max().z, box1.max().z)
   };
   return AABB{small, big};
 }

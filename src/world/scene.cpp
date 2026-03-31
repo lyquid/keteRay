@@ -60,8 +60,8 @@ void ktp::scn::loadScenes() {
 }
 
 ktp::TexturePtr ktp::scn::randomTexture() {
-  static const ImageTexture earth_texture {"resources/earthmap.jpg"};
-  static const ImageTexture mario_texture {"resources/earthmario.jpg"};
+  static const auto earth_texture {std::make_shared<ImageTexture>("resources/earthmap.jpg")};
+  static const auto mario_texture {std::make_shared<ImageTexture>("resources/earthmario.jpg")};
   const auto noise_scale {rng::randomDouble(4.0, 8.0)};
   const auto lucky {rng::randomDouble()};
   if (lucky <= 0.7) {
@@ -78,11 +78,8 @@ ktp::TexturePtr ktp::scn::randomTexture() {
     // marble texture
     return std::make_shared<MarbleTexture>(noise_scale, rng::randomColor());
   } else {
-    //image texture
-    if (rng::randomDouble() < 0.5)
-      return std::make_shared<ImageTexture>(earth_texture);
-    else
-      return std::make_shared<ImageTexture>(mario_texture);
+    // image texture
+    return (rng::randomDouble() < 0.5) ? earth_texture : mario_texture;
   }
 }
 
