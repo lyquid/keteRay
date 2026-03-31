@@ -5,12 +5,12 @@
 #include "../libppm.hpp"
 #include "../world/scene.hpp"
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/common.hpp>       // glm::clamp
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <imgui-SFML.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <algorithm> // std::clamp
 #include <atomic>
 #include <cstdint>
 #include <mutex>
@@ -94,9 +94,9 @@ void ktp::gui::layout() {
                             static_cast<std::size_t>(file_data->m_height) *
                             static_cast<std::size_t>(k_BYTES_PER_PIXEL_RGBA));
         for (const auto& color : file_data->m_pixels) {
-          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * std::clamp(color.r, 0.0, 0.999)));
-          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * std::clamp(color.g, 0.0, 0.999)));
-          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * std::clamp(color.b, 0.0, 0.999)));
+          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.r, 0.0, 0.999)));
+          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.g, 0.0, 0.999)));
+          sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.b, 0.0, 0.999)));
           sfml_pixels.push_back(255u);
         }
         image.resize(

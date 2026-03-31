@@ -12,7 +12,7 @@
 #ifndef KTP_LIBPPM_HPP_
 #define KTP_LIBPPM_HPP_
 
-#include <algorithm>
+#include <glm/common.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -114,9 +114,9 @@ inline void makePPMFile(const PPMFileData& data) {
  */
 inline void writePixel(std::ostream& out, const Color& color) {
   constexpr auto magic_num {256};
-  out << static_cast<int>(magic_num * std::clamp(color.r, 0.0, 0.999)) << ' '
-      << static_cast<int>(magic_num * std::clamp(color.g, 0.0, 0.999)) << ' '
-      << static_cast<int>(magic_num * std::clamp(color.b, 0.0, 0.999)) << '\n';
+  out << static_cast<int>(magic_num * glm::clamp(color.r, 0.0, 0.999)) << ' '
+      << static_cast<int>(magic_num * glm::clamp(color.g, 0.0, 0.999)) << ' '
+      << static_cast<int>(magic_num * glm::clamp(color.b, 0.0, 0.999)) << '\n';
 }
 
 } // namespace libppm

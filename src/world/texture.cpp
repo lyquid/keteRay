@@ -1,7 +1,7 @@
 #include "texture.hpp"
+#include <glm/common.hpp>       // glm::clamp
 #include <glm/gtc/noise.hpp>
 #include <glm/trigonometric.hpp>
-#include <algorithm> // std::clamp
 #include <iostream>
 
 ktp::ImageTexture::ImageTexture(const std::string& file_name) {
@@ -15,8 +15,8 @@ ktp::Color ktp::ImageTexture::value(double u, double v, const Vector& p) const {
   if (m_image.getSize().x == 0 || m_image.getSize().y == 0) return Color(0.0, 1.0, 1.0);
 
   // Clamp input texture coordinates to [0,1] x [1,0]
-  u = std::clamp(u, 0.0, 1.0);
-  v = 1.0 - std::clamp(v, 0.0, 1.0);  // Flip V to image coordinates
+  u = glm::clamp(u, 0.0, 1.0);
+  v = 1.0 - glm::clamp(v, 0.0, 1.0);  // Flip V to image coordinates
 
   auto pixel_x {static_cast<unsigned int>(u * static_cast<double>(m_image.getSize().x))};
   auto pixel_y {static_cast<unsigned int>(v * static_cast<double>(m_image.getSize().y))};

@@ -3,7 +3,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/norm.hpp> // glm::dot, glm::length2
 #include <glm/gtc/constants.hpp> // glm::pi
-#include <cmath>
+#include <glm/trigonometric.hpp> // glm::acos, glm::atan
 
 void ktp::Sphere::getSphereUV(const Point& p, double& u, double& v) {
   // p: a given point on the sphere of radius one, centered at the origin.
@@ -13,8 +13,8 @@ void ktp::Sphere::getSphereUV(const Point& p, double& u, double& v) {
   //     <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
   //     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
 
-  const auto theta {std::acos(-p.y)};
-  const auto phi {std::atan2(-p.z, p.x) + glm::pi<double>()};
+  const auto theta {glm::acos(-p.y)};
+  const auto phi {glm::atan(-p.z, p.x) + glm::pi<double>()};
 
   u = phi / (glm::two_pi<double>());
   v = theta / glm::pi<double>();
