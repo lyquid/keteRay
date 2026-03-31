@@ -7,9 +7,11 @@ add_library(keteRayRenderer
 if(DEFINED CMAKE_TOOLCHAIN_FILE)
 target_link_libraries(keteRayRenderer PRIVATE
   glm::glm
+  SFML::Graphics
 )
 else()
 target_link_libraries(keteRayRenderer PRIVATE
   glm
+  SFML::Graphics
 )
 endif()

@@ -11,20 +11,19 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <atomic>
-#include <cstdint>
 #include <mutex>
 #include <string>
 #include <thread>
-#include <vector>
 
 ktp::CameraConfig* ktp::gui::camera_data {nullptr};
-ktp::ImageData*    ktp::gui::file_data {nullptr};
+std::string*       ktp::gui::file_name {nullptr};
 ktp::RenderData*   ktp::gui::render_data {nullptr};
 
-void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, ImageData* file_data_in) {
+void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, std::string* file_name_in) {
   camera_data = camera_in;
-  file_data = file_data_in;
+  file_name = file_name_in;
   render_data = render_data_in;
+  *file_name = createFileName(*render_data);
 
   sf::RenderWindow window {sf::VideoMode({1024u, 768u}), "keteRay"};
   if (!ImGui::SFML::Init(window)) return;
@@ -79,33 +78,15 @@ bool ktp::gui::layout() {
                 + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n";
         std::cout << message;
         std::thread render_thread {[] {
-          keteRay(*render_data, *file_data, progress);
-          progress = 0;
-          // Build an sf::Image from the rendered pixels and save as PNG
-          sf::Image image {};
-          constexpr auto k_BYTES_PER_PIXEL_RGBA {4};
-          constexpr auto k_COLOR_LEVELS {256};
-          std::vector<std::uint8_t> sfml_pixels {};
-          if (file_data->m_width <= 0 || file_data->m_height <= 0) {
-            std::cerr << "ERROR: Invalid image dimensions (" << file_data->m_width << 'x' << file_data->m_height << ").\n";
+          if (render_data->m_width <= 0 || render_data->m_height <= 0) {
+            std::cerr << "ERROR: Invalid image dimensions (" << render_data->m_width << 'x' << render_data->m_height << ").\n";
             rendering = false;
             return;
           }
-          sfml_pixels.reserve(static_cast<std::size_t>(file_data->m_width) *
-                              static_cast<std::size_t>(file_data->m_height) *
-                              static_cast<std::size_t>(k_BYTES_PER_PIXEL_RGBA));
-          for (const auto& color : file_data->m_pixels) {
-            sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.r, 0.0, 0.999)));
-            sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.g, 0.0, 0.999)));
-            sfml_pixels.push_back(static_cast<std::uint8_t>(k_COLOR_LEVELS * glm::clamp(color.b, 0.0, 0.999)));
-            sfml_pixels.push_back(255u);
-          }
-          image.resize(
-            {static_cast<unsigned int>(file_data->m_width),
-             static_cast<unsigned int>(file_data->m_height)},
-            sfml_pixels.data()
-          );
-          if (image.saveToFile(file_data->m_file_name)) {
+          sf::Image image {};
+          keteRay(*render_data, image, progress);
+          progress = 0;
+          if (image.saveToFile(*file_name)) {
             std::cout << "\rPNG file saved successfully!\n";
             {
               std::lock_guard<std::mutex> lock {message_mutex};
@@ -113,10 +94,10 @@ bool ktp::gui::layout() {
                       + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n" + "PNG file saved successfully!";
             }
           } else {
-            std::cerr << "ERROR: Could not save PNG file '" << file_data->m_file_name << "'.\n";
+            std::cerr << "ERROR: Could not save PNG file '" << *file_name << "'.\n";
             {
               std::lock_guard<std::mutex> lock {message_mutex};
-              message = "ERROR: Could not save PNG file '" + file_data->m_file_name + "'.";
+              message = "ERROR: Could not save PNG file '" + *file_name + "'.";
             }
           }
           rendering = false;
@@ -220,7 +201,7 @@ void ktp::gui::cameraSection(bool rendering) {
 void ktp::gui::fileSection(bool rendering) {
   ImGui::Text("Image file");
   ImGui::BeginDisabled(true);
-    ImGui::InputText("File name", &file_data->m_file_name);
+    ImGui::InputText("File name", file_name);
   ImGui::EndDisabled();
 }
 
@@ -229,15 +210,15 @@ void ktp::gui::renderSection(bool rendering) {
   ImGui::BeginDisabled(rendering);
   if (ImGui::InputInt("Width", &render_data->m_width)) {
     render_data->m_height = static_cast<int>(render_data->m_width / render_data->m_camera->aspectRatio());
-    file_data->m_file_name = createFileName(*render_data, *file_data);
+    *file_name = createFileName(*render_data);
   }
   ImGui::BeginDisabled(true);
     if (ImGui::InputInt("Height", &render_data->m_height)) {
-      file_data->m_file_name = createFileName(*render_data, *file_data);
+      *file_name = createFileName(*render_data);
     }
   ImGui::EndDisabled();
   if (ImGui::InputInt("Samples per pixel", &render_data->m_samples_per_pixel)) {
-    file_data->m_file_name = createFileName(*render_data, *file_data);
+    *file_name = createFileName(*render_data);
   }
   ImGui::EndDisabled();
 }

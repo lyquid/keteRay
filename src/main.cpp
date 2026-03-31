@@ -31,10 +31,10 @@ int main(int argc, char* argv[]) {
   render_data.m_height = static_cast<int>(render_data.m_width / camera.aspectRatio());
   render_data.m_samples_per_pixel = render_config.m_samples;
   render_data.m_scene = scenes[render_config.m_scene_name];
-  // image data
-  ImageData image_data {};
+  // file name for the rendered output
+  std::string file_name {};
   // GUI
-  gui::start(&render_data, &camera_config, &image_data);
+  gui::start(&render_data, &camera_config, &file_name);
 
   return 0;
 }
