@@ -10,6 +10,8 @@
 #include <imgui-SFML.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <algorithm> // std::clamp
+#include <iostream>
 #include <string>
 #include <thread>
 
@@ -76,9 +78,31 @@ void ktp::gui::layout() {
       std::thread render_thread {[] {
         keteRay(*render_data, *file_data, progress);
         progress = 0;
-        ppm::makePPMFile(*file_data);
-        message = "Rendered at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
-                + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n" + "PPM file generated successfully!";
+        // Build an sf::Image from the rendered pixels and save as PNG
+        sf::Image image {};
+        constexpr auto k_BYTES_PER_PIXEL_RGBA {4};
+        constexpr auto k_COLOR_LEVELS {256};
+        std::vector<sf::Uint8> sfml_pixels {};
+        sfml_pixels.reserve(static_cast<std::size_t>(file_data->m_width * file_data->m_height * k_BYTES_PER_PIXEL_RGBA));
+        for (const auto& color : file_data->m_pixels) {
+          sfml_pixels.push_back(static_cast<sf::Uint8>(k_COLOR_LEVELS * std::clamp(color.r, 0.0, 0.999)));
+          sfml_pixels.push_back(static_cast<sf::Uint8>(k_COLOR_LEVELS * std::clamp(color.g, 0.0, 0.999)));
+          sfml_pixels.push_back(static_cast<sf::Uint8>(k_COLOR_LEVELS * std::clamp(color.b, 0.0, 0.999)));
+          sfml_pixels.push_back(255u);
+        }
+        image.create(
+          static_cast<unsigned int>(file_data->m_width),
+          static_cast<unsigned int>(file_data->m_height),
+          sfml_pixels.data()
+        );
+        if (image.saveToFile(file_data->m_file_name)) {
+          std::cout << "\rPNG file saved successfully!\n";
+          message = "Rendered at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
+                  + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n" + "PNG file saved successfully!";
+        } else {
+          std::cerr << "ERROR: Could not save PNG file '" << file_data->m_file_name << "'.\n";
+          message = "ERROR: Could not save PNG file '" + file_data->m_file_name + "'.";
+        }
         rendering = false;
       }};
       render_thread.detach();
@@ -95,7 +119,7 @@ void ktp::gui::layout() {
     if (progress != 0)
       ImGui::Text(("Scanlines remaining: " + std::to_string(progress)).c_str());
     else
-      ImGui::Text("Generating ppm file...");
+      ImGui::Text("Saving PNG file...");
   }
 }
 

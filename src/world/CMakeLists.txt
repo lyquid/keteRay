@@ -7,14 +7,14 @@ add_library(keteRayWorld
   texture.cpp
 )
 
-target_include_directories(keteRayWorld PRIVATE ${Stb_INCLUDE_DIR})
-
 if(DEFINED CMAKE_TOOLCHAIN_FILE)
   target_link_libraries(keteRayWorld PRIVATE
     glm::glm
+    sfml-graphics
   )
 else()
   target_link_libraries(keteRayWorld PRIVATE
     glm
+    sfml-graphics
   )
 endif()

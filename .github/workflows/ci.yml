@@ -41,7 +41,6 @@ jobs:
             libsfml-dev \
             libglm-dev \
             nlohmann-json3-dev \
-            libstb-dev \
             libgl1-mesa-dev \
             clang clang-tidy \
             pkg-config
@@ -89,7 +88,6 @@ jobs:
             libsfml-dev \
             libglm-dev \
             nlohmann-json3-dev \
-            libstb-dev \
             libgl1-mesa-dev \
             clang clang-tidy \
             pkg-config

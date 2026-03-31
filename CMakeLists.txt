@@ -47,7 +47,6 @@ if(DEFINED CMAKE_TOOLCHAIN_FILE)
   find_package(ImGui-SFML REQUIRED)
   find_package(nlohmann_json CONFIG REQUIRED)
   find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
-  find_package(Stb REQUIRED)
 else()
 	message(STATUS "Using CMake find modules")
   # Find the packages needed

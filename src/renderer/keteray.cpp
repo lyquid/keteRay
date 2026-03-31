@@ -14,7 +14,7 @@ std::string ktp::createFileName(const RenderData& render_data, const ppm::PPMFil
   return scene_name + "_"
     + std::to_string(render_data.m_width)             + "x"
     + std::to_string(render_data.m_height)            + "_"
-    + std::to_string(render_data.m_samples_per_pixel) + "_samples.ppm";
+    + std::to_string(render_data.m_samples_per_pixel) + "_samples.png";
 }
 
 void ktp::keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, int& j) {
