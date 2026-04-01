@@ -33,7 +33,7 @@ It renders scenes with:
 - 📦 **Bounding Volume Hierarchy (BVH)** — because `O(n)` intersection tests are so 1984
 - 📷 **Configurable camera** with depth of field and arbitrary positioning
 - 🖼️ **Live GUI** powered by **SFML + Dear ImGui** — watch pixels materialize in real time
-- 💾 **PPM image export** — timeless and dependency-free, like a good pair of jorts
+- 💾 **PNG image export** — saved automatically after rendering via SFML, named after the scene, dimensions, and sample count
 
 ---
 
@@ -48,7 +48,6 @@ keteRay/
 │   ├── renderer/     # Camera, ray marching logic, BVH, random utilities
 │   ├── world/        # Hittables, materials, textures, scenes
 │   ├── config.cpp/hpp# Config file parsing (nlohmann_json)
-│   ├── libppm.hpp    # PPM image writer — one header to rule them all
 │   ├── types.hpp     # Global type aliases and forward declarations
 │   └── main.cpp      # The One Entry Point
 ├── CMakeLists.txt    # CMake build system (C++20)
@@ -120,7 +119,7 @@ cd build/src && ./keteray width=1920
 cd build/src && ./keteray samples=100 width=1280
 ```
 
-A live preview window will open — watch as the image materialises scanline by scanline, like a Polaroid from another dimension. When rendering is done, click **Save PPM** to write the image to disk.
+A live GUI window will open — watch as the image materialises scanline by scanline, like a Polaroid from another dimension. When rendering is done, the PNG file is saved automatically to the working directory, named after the active scene, resolution, and sample count (e.g. `earth_400x225_10_samples.png`).
 
 ### Tweaking the Config
 
