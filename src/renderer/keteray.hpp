@@ -13,8 +13,8 @@
 #define KETERAY_SRC_RENDERER_KETERAY_HPP_
 
 #include "../types.hpp"
-#include "../libppm.hpp"
 #include "../world/scene.hpp"
+#include <SFML/Graphics/Image.hpp>
 #include <atomic>
 #include <glm/geometric.hpp>
 #include <string>
@@ -29,13 +29,9 @@ struct RenderData {
   Scene   m_scene {};
 };
 
-inline ppm::Color colorToPPM(const Color& color) {
-  return ppm::Color{color.r, color.g, color.b};
-}
+std::string createFileName(const RenderData& render_data);
 
-std::string createFileName(const RenderData& render_data, const ppm::PPMFileData& file_data);
-
-void keteRay(const RenderData& render_data, ppm::PPMFileData& file_data, std::atomic<int>& j);
+void keteRay(const RenderData& render_data, sf::Image& image, std::atomic<int>& j);
 
 /**
  * @brief Checks if a vector is near 0 in all dimensions.
