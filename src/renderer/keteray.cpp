@@ -25,6 +25,12 @@ std::string ktp::createFileName(const RenderData& render_data) {
 void ktp::keteRay(const RenderData& render_data, sf::Image& image, std::atomic<int>& j) {
   constexpr auto k_MAX_DEPTH {50};
   constexpr auto k_COLOR_LEVELS {256};
+  if (render_data.m_width < 2 || render_data.m_height < 2) {
+    std::cerr << "keteRay: image dimensions must be at least 2x2, got "
+              << render_data.m_width << 'x' << render_data.m_height << '\n';
+    j = -1;
+    return;
+  }
   image.resize({static_cast<unsigned>(render_data.m_width), static_cast<unsigned>(render_data.m_height)});
   // here we go!
   for (j = render_data.m_height - 1; j >= 0; --j) {

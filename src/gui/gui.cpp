@@ -20,6 +20,8 @@ ktp::CameraConfig* ktp::gui::camera_data {nullptr};
 std::string*       ktp::gui::file_name {nullptr};
 ktp::RenderData*   ktp::gui::render_data {nullptr};
 
+static std::thread s_render_thread {};
+
 void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, std::string* file_name_in) {
   camera_data = camera_in;
   file_name = file_name_in;
@@ -44,6 +46,7 @@ void ktp::gui::start(RenderData* render_data_in, CameraConfig* camera_in, std::s
     ImGui::SFML::Render(window);
     window.display();
   }
+  if (s_render_thread.joinable()) s_render_thread.join();
   ImGui::SFML::Shutdown();
 }
 
@@ -78,9 +81,10 @@ bool ktp::gui::layout() {
         message = "Begin rendering at " + std::to_string(render_data->m_width) + 'x' + std::to_string(render_data->m_height)
                 + '@' + std::to_string(render_data->m_samples_per_pixel) + "spp.\n";
         std::cout << message;
-        std::thread render_thread {[] {
-          if (render_data->m_width <= 0 || render_data->m_height <= 0) {
-            std::cerr << "ERROR: Invalid image dimensions (" << render_data->m_width << 'x' << render_data->m_height << ").\n";
+        s_render_thread = std::thread{[] {
+          if (render_data->m_width < 2 || render_data->m_height < 2) {
+            std::cerr << "ERROR: Invalid image dimensions (" << render_data->m_width << 'x' << render_data->m_height
+                      << "). Width and height must both be greater than 1.\n";
             rendering = false;
             return;
           }
@@ -103,7 +107,7 @@ bool ktp::gui::layout() {
           }
           rendering = false;
         }};
-        render_thread.detach();
+        // no detach — thread is joined in start() before shutdown
       }
       ImGui::SameLine();
       if (ImGui::Button("Randomize world")) {
@@ -147,6 +151,7 @@ void ktp::gui::sceneSection(bool rendering) {
         if (is_selected) ImGui::SetItemDefaultFocus();
       }
       render_data->m_scene = scenes[current_item];
+      *file_name = createFileName(*render_data);
       ImGui::EndCombo();
     }
   ImGui::EndDisabled();

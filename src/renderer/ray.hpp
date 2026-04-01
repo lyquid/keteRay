@@ -21,7 +21,7 @@ class Ray {
  public:
 
   constexpr Ray() = default;
-  constexpr Ray(const glm::dvec3& origin, const glm::dvec3& direction): m_direction(direction), m_origin(origin) {}
+  constexpr Ray(const Point& origin, const Vector& direction): m_direction(direction), m_origin(origin) {}
 
   constexpr Point at(double t) const { return m_origin + t * m_direction; }
   constexpr auto direction() const { return m_direction; }
